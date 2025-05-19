@@ -1,0 +1,10 @@
+{
+    "welcomeMessage": "Welcome to My AI Platform!",
+    "buttons": {
+        "getStarted": "Get Started",
+        "learnMore": "Learn More"
+    },
+    "chat": {
+        "inputPlaceholder": "Type your message..."
+    }
+}

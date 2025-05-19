@@ -1,0 +1,10 @@
+{
+    "welcomeMessage": "欢迎来到我的 AI 平台！",
+    "buttons": {
+        "getStarted": "开始使用",
+        "learnMore": "了解更多"
+    },
+    "chat": {
+        "inputPlaceholder": "输入你的消息..."
+    }
+}
