@@ -21,7 +21,7 @@ interface AgentSelectorProps {
   initialSearchTerm?: string // Pass the term after @
 }
 
-const SELECTOR_MIN_WIDTH = 300
+const SELECTOR_MIN_WIDTH = 150 // 将宽度减半（从300减为150）
 const SELECTOR_OFFSET = 8 // Slightly more offset for popover appearance
 
 export default function AgentSelector({
@@ -89,7 +89,7 @@ export default function AgentSelector({
         position: 'absolute',
         top: `${topPosition}px`,
         left: `${triggerRect.left + window.scrollX}px`,
-        width: `${Math.max(triggerRect.width, SELECTOR_MIN_WIDTH)}px`,
+        width: `${SELECTOR_MIN_WIDTH}px`,
         zIndex: 50,
       })
     }
@@ -129,11 +129,11 @@ export default function AgentSelector({
     <div
       ref={commandRef}
       style={positionStyles}
-      className="rounded-md border bg-popover text-popover-foreground shadow-md outline-none animate-in fade-in-0 zoom-in-95"
+      className="rounded-md border bg-popover text-popover-foreground shadow-md outline-none animate-in fade-in-0 zoom-in-95 min-w-[150px] max-w-[200px] w-[150px]"
     >
       <Command
         shouldFilter={true} // Let Command handle filtering based on CommandInput
-        // loop // Optional: enable looping through items with arrow keys
+        loop // 启用循环导航，使用上下箭头键在选项之间循环
       >
         <CommandInput
           placeholder="Search agents..."

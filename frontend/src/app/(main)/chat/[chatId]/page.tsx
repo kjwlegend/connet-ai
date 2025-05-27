@@ -291,6 +291,7 @@ export default function ChatPage({ params }: { params: { chatId: string } }) {
         return
       }
 
+      // 立即显示AgentSelector，不需要等待输入文本
       setShowAgentSelector(true)
       setAtMentionSearchTerm(potentialAgentNamePart)
       return
