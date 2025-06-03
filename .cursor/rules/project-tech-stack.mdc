@@ -1,0 +1,97 @@
+---
+description: project stack
+globs: 
+---
+# AI 协作平台 - Project Tech Stack
+
+## Frontend
+- **Framework**: Next.js (React with App Router)
+- **Language**: TypeScript
+- **Styling**: Tailwind CSS
+- **UI Components**: shadcn/ui
+- **State Management**: Zustand
+- **Authentication**: NextAuth.js (with FastAPI backend integration)
+- **Internationalization**: i18n support (English/Chinese)
+- **Real-time Communication**: FastAPI WebSockets (native WebSocket API)
+- **Package Manager**: pnpm
+- **Build Tools**: Next.js built-in (Webpack/SWC)
+
+## Backend
+- **Language**: Python
+- **Framework**: FastAPI
+- **ASGI Server**: Uvicorn (managed by Gunicorn for production)
+- **Authentication**: FastAPI Security (OAuth2 with JWT)
+- **API Architecture**: REST with WebSocket support
+- **Task Queue**: ARQ (Async Redis Queue)
+
+## AI & LLM Integration
+- **AI Framework**: LangChain
+- **AI Orchestration**: LangGraph
+- **Multi-Agent System**: Custom implementation with @ mention system
+- **Vector Database**: ChromaDB (initial) / pgvector (PostgreSQL integration)
+- **Memory Management**: LangChain memory modules
+
+## Database
+- **Primary Database**: PostgreSQL
+- **ORM**: TORTOISE_ORM (Python)
+- **Database Migrations**: Aerich
+- **Vector Storage**: pgvector (PostgreSQL extension) / ChromaDB
+- **Caching**: Redis
+
+## Infrastructure & DevOps
+- **Containerization**: Docker, Docker Compose
+- **Development Environment**: Local Docker setup
+- **Database**: PostgreSQL with pgvector extension
+- **Cache Layer**: Redis server
+- **Task Processing**: ARQ workers with Redis
+
+## Payment & Commerce (Future)
+- **Payment Gateway**: Stripe (recommended)
+- **Subscription Management**: Stripe Subscriptions
+- **Webhook Processing**: FastAPI endpoints with ARQ task queue
+
+## Authentication & Security
+- **Backend Auth**: FastAPI Security with OAuth2/JWT
+- **Frontend Auth**: NextAuth.js integration
+- **Social Login**: OAuth providers (Google, GitHub)
+- **Session Management**: JWT tokens
+- **API Security**: Input validation with Pydantic
+
+## Development Tools
+- **Version Control**: Git
+- **Code Quality**: 
+  - Python: Black, Flake8/Ruff, isort, mypy
+  - Frontend: ESLint, Prettier
+- **Pre-commit Hooks**: pre-commit framework
+- **Testing**: Pytest (backend), Jest/React Testing Library (frontend)
+- **Dependency Management**: 
+  - Python: PDM or Poetry
+  - Frontend: npm/pnpm
+
+## Project Architecture
+- **Design Pattern**: Microservices-ready monolith
+- **API Versioning**: `/api/v1/` structure
+- **Real-time Features**: WebSocket connections for chat
+- **Async Processing**: ARQ for background tasks
+- **Plugin System**: Extensible architecture for AI agents and external integrations
+
+## Environment Configuration
+- **Development**: Docker Compose with hot reloading
+- **Testing**: Automated testing with CI/CD pipeline
+- **Production**: Containerized deployment with Gunicorn/Uvicorn
+- **Environment Variables**: `.env` files with example templates
+
+## Future Integrations
+- **Third-party APIs**: OAuth 2.0 client flows for external services
+- **Plugin Architecture**: Dynamic tool/agent loading system
+- **Secrets Management**: HashiCorp Vault or cloud secret managers
+- **Advanced Auth**: Auth0, Clerk, or Supabase Auth consideration
+
+---
+
+**Development Phases**:
+- **Phase 1**: Human-AI collaboration with @ mention system
+- **Phase 2**: Autonomous AI task planning and execution
+- **Commercial Features**: User registration, subscription management, plugin marketplace
+
+**Note**: This is a bilingual platform (Chinese/English) with focus on AI agent collaboration and extensible plugin architecture.
