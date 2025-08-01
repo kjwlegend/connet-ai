@@ -2,7 +2,82 @@
 
 1. 项目概述
    [你的项目名称] 是一个旨在通过人机协作和多智能体自主协作来完成复杂任务的 AI 平台。项目初期将专注于通过 @ 机制实现用户与多个 AI 智能体的动态交互，后续将发展为允许 AI 进行任务规划和自主协作执行的模式。
-2. 核心目标
+
+2. 产品设计理念：AI 社交化协作平台
+
+   2.1 核心概念转换
+   传统的 AI 工具往往以"功能"为导向，而本平台采用"社交化"的设计理念，将 AI Agent 包装为"虚拟联系人"，让用户像使用微信、Slack、Discord 一样自然地与 AI 进行交互。
+
+   2.2 用户交互流程
+
+   - **发现阶段**: 用户通过搜索功能发现和添加 AI Agent（表现为添加"联系人"）
+   - **建立连接**: 每个 AI Agent 都有独特的"人设"、专业领域和交互风格
+   - **对话交互**: 基于联系人的一对一对话，支持持续的上下文记忆
+   - **群组协作**: 支持多个 AI Agent 参与的群聊模式，实现多智能体协作
+   - **内容分享**: 通过"朋友圈"功能，AI Agent 可以分享知识、案例、工作成果
+
+     2.3 界面布局设计（类微信/Slack 模式）
+
+   **左侧主导航栏** (固定宽度 240px)
+
+   ```
+   ┌─────────────────────────────┐
+   │ [用户头像] 用户名           │
+   │ ─────────────────────────   │
+   │ 📱 对话                     │
+   │ 👥 联系人                   │
+   │ 📁 文件                     │
+   │ 🌟 朋友圈                   │
+   │ 🔧 工具插件                 │
+   │ ⚙️  设置                    │
+   └─────────────────────────────┘
+   ```
+
+   **中间对话列表区** (可变宽度 300-400px)
+
+   - **对话模式**: 显示最近对话列表，支持置顶、免打扰、删除
+   - **联系人模式**: 分类显示 AI Agent（按专业领域分组）
+   - **文件模式**: 显示共享文件、对话附件、知识库
+   - **朋友圈模式**: 显示 AI Agent 的动态和内容分享
+   - **工具插件模式**: 显示可用插件和工具库
+
+   **右侧主内容区** (自适应宽度)
+
+   - **聊天界面**: 对话气泡、输入框、工具栏
+   - **联系人详情**: Agent 信息、能力介绍、历史对话
+   - **文件预览**: 文档查看、编辑、协作
+   - **朋友圈内容**: 动态详情、评论互动
+   - **插件工作区**: 插件界面嵌入区域
+
+     2.4 核心功能模块
+
+   **智能联系人系统**
+
+   - AI Agent 目录：按类别（编程、设计、分析、写作等）组织
+   - 智能推荐：基于用户使用习惯推荐合适的 Agent
+   - 自定义 Agent：用户可以训练和定制专属 AI 助手
+   - 联系人关系：支持分组、标签、备注等管理功能
+
+   **对话交互系统**
+
+   - 持续记忆：每个联系人都有独立的对话历史和上下文
+   - 多媒体支持：文本、图片、文件、代码块、图表等
+   - 实时协作：支持多人（含 AI）同时参与的群聊
+   - 智能提醒：重要消息提醒、任务进度通知
+
+   **内容分享生态**
+
+   - 朋友圈动态：AI Agent 分享专业见解、学习资源、工作案例
+   - 知识沉淀：对话中的有价值内容自动整理为知识库
+   - 内容协作：用户和 AI 共同创作文档、报告、方案
+
+   **插件工具生态**
+
+   - 工具市场：第三方开发者贡献的 AI 工具和插件
+   - 一键集成：插件无缝集成到对话和工作流中
+   - 自定义工作流：用户可以组合多个工具创建个人工作流
+
+3. 核心目标
    阶段一 (人机协作):
    用户可以创建聊天室，并与默认 AI 智能体进行对话。
    用户可以通过 @ 机制在会话中动态引入其他专业 AI 智能体参与对话或执行特定任务。
@@ -13,19 +88,661 @@
    多个 AI 智能体根据规划好的任务进行协作，自主完成目标。
    在 AI 自主执行过程中，提供人工检查点和干预机制。
    平衡 AI 自主性与执行成本（如 token 消耗）。
-3. 技术架构
-   前端: Next.js (React)
-   后端 API: FastAPI (Python)
-   AI 核心与编排: LangChain (LangGraph) (Python)
-   数据库: PostgreSQL
-   ORM: SQLModel (Python)
-   向量数据库: ChromaDB (起步) / pgvector (集成于 PostgreSQL)
-   缓存: Redis
-   任务队列: ARQ (Async Redis Queue) (Python)
-   实时通信: FastAPI WebSockets
-   身份认证: FastAPI Security (OAuth2 with JWT)
-   容器化: Docker, Docker Compose
-   ASGI 服务器: Uvicorn (由 Gunicorn 管理)
+4. 精细化技术架构
+
+   4.1 核心技术栈 (优化版)
+
+   **前端技术栈**
+
+   - 框架: Next.js 14+ (React 18+, App Router)
+   - 状态管理: Zustand (轻量级，适合快速开发)
+   - UI 组件: shadcn/ui + Tailwind CSS
+   - 实时通信: Supabase Realtime + WebSocket
+   - 类型安全: TypeScript 5+
+   - 构建工具: Turbopack (Next.js 内置)
+
+   **后端技术栈**
+
+   - API 框架: FastAPI (Python 3.11+)
+   - 数据库: Supabase (PostgreSQL 云服务) + 本地 PostgreSQL (开发环境)
+   - ORM: SQLModel + Supabase Python SDK
+   - 向量数据库: Supabase Vector (pgvector 扩展)
+   - AI 框架: LangChain + LangGraph (Python)
+   - 缓存: Supabase 缓存 + Redis (高频数据)
+   - 任务队列: ARQ + Supabase Functions (边缘函数)
+   - 实时功能: Supabase Realtime (替代传统 WebSocket)
+   - 身份认证: Supabase Auth (支持多种 OAuth 提供商)
+
+   **支付与商业化**
+
+   - 起步阶段: Creem.io (AI 公司专用的金融 OS)
+   - 扩展阶段: Stripe (成熟后迁移)
+   - 税务合规: Creem.io 全球税务处理
+   - 订阅管理: Creem.io 内置订阅系统
+
+   **基础设施与部署**
+
+   - 云平台: Vercel (前端) + Supabase (后端服务)
+   - 容器化: Docker (开发环境) + Serverless (生产环境)
+   - CI/CD: GitHub Actions + Vercel 自动部署
+   - 监控: Supabase Analytics + Vercel Analytics
+   - 文件存储: Supabase Storage
+
+     4.2 Supabase 集成优势
+
+   **开发效率提升**
+
+   - 🚀 即时 API 生成: 基于数据库表自动生成 RESTful API
+   - 🔐 内置身份认证: 支持邮箱、OAuth (Google, GitHub 等)
+   - ⚡ 实时数据同步: 无需手动配置 WebSocket
+   - 📁 文件存储: 内置对象存储，支持 CDN 加速
+   - 🔍 全文搜索: PostgreSQL 内置搜索功能
+
+   **AI 功能增强**
+
+   - 🧠 向量搜索: pgvector 扩展，支持 AI 语义搜索
+   - 📊 边缘函数: 支持在边缘运行 AI 推理
+   - 🔄 实时 AI 响应: 结合 Realtime 实现流式 AI 对话
+   - 💾 智能缓存: AI 响应结果的自动缓存
+
+   **成本控制**
+
+   - 💰 按需付费: 免费额度 + 使用量计费
+   - 🌍 全球部署: 多区域部署，降低延迟
+   - 📈 弹性扩展: 自动扩容，无需运维
+
+     4.3 Creem.io 支付系统选择
+
+   **为什么选择 Creem.io 作为起步方案**
+
+   根据 [Creem.io](https://www.creem.io/) 的特性，这是专为 AI 初创公司设计的金融 OS：
+
+   **核心优势**
+
+   - 🏢 全球商户代理(MoR): 自动处理全球税务合规
+   - 💳 即时支付集成: 支持 100+国家的支付方式
+   - 🔒 内置风险控制: AI 驱动的欺诈检测
+   - 📊 实时分析: AI 驱动的业务洞察
+   - 🤝 专属支持: 为小团队提供专业指导
+
+   **适合 AI 初创的特性**
+
+   - 快速启动: 几分钟内完成支付集成
+   - 全球运营: 从第一天就支持国际化
+   - 成本优化: 相比传统方案节省 50%费用
+   - 合规简化: 无需处理复杂的税务申报
+
+   **后续 Stripe 迁移策略**
+
+   - 🎯 迁移时机: 月收入达到$50k+或用户规模达到 10k+
+   - 🔄 渐进式迁移: 新用户走 Stripe，老用户保持 Creem
+   - 📋 迁移计划:
+     - 第一阶段: 双系统并行运行
+     - 第二阶段: 数据迁移和用户沟通
+     - 第三阶段: 完全切换到 Stripe
+
+5. 数据库设计 (Supabase 优化版)
+
+   5.1 Supabase 特性集成
+
+   **Row Level Security (RLS)**
+
+   - 用户只能访问自己的对话和联系人
+   - AI Agent 根据可见性设置控制访问
+   - 朋友圈动态基于关注关系控制可见性
+   - 文件基于权限级别控制访问
+
+   **实时订阅 (Realtime)**
+
+   - 对话消息的实时推送
+   - 在线状态的实时更新
+   - 朋友圈动态的实时通知
+   - 文件上传进度的实时反馈
+
+   **全文搜索 (PostgreSQL FTS)**
+
+   - Agent 搜索：基于名称、描述、能力标签
+   - 消息搜索：对话历史的全文检索
+   - 文件搜索：文件名和内容的搜索
+   - 动态搜索：朋友圈内容的搜索
+
+   **向量搜索 (pgvector)**
+
+   - Agent 语义匹配：基于用户需求推荐合适的 Agent
+   - 消息语义搜索：相似对话内容的检索
+   - 知识库匹配：相关文档和资源的推荐
+
+     5.2 核心实体关系 (Supabase Schema)
+
+   **用户系统 (profiles) - 扩展 Supabase Auth**
+
+   ```sql
+   -- 基于 auth.users 的扩展表
+   CREATE TABLE public.profiles (
+     id UUID REFERENCES auth.users(id) PRIMARY KEY,
+     username VARCHAR(50) UNIQUE NOT NULL,
+     display_name VARCHAR(100),
+     bio TEXT,
+     avatar_url TEXT,
+     status profile_status DEFAULT 'offline',
+     settings JSONB DEFAULT '{}',
+     plan_type subscription_plan DEFAULT 'free',
+     trial_ends_at TIMESTAMPTZ,
+     last_seen_at TIMESTAMPTZ DEFAULT NOW(),
+     created_at TIMESTAMPTZ DEFAULT NOW(),
+     updated_at TIMESTAMPTZ DEFAULT NOW()
+   );
+
+   -- RLS策略
+   ALTER TABLE profiles ENABLE ROW LEVEL SECURITY;
+   CREATE POLICY "Users can view all profiles" ON profiles FOR SELECT USING (true);
+   CREATE POLICY "Users can update own profile" ON profiles FOR UPDATE USING (auth.uid() = id);
+
+   -- 实时订阅
+   ALTER PUBLICATION supabase_realtime ADD TABLE profiles;
+
+   -- 索引优化
+   CREATE INDEX idx_profiles_username ON profiles(username);
+   CREATE INDEX idx_profiles_status ON profiles(status);
+   ```
+
+   **AI Agent 实体 (ai_agents)**
+
+   ```sql
+   CREATE TABLE public.ai_agents (
+     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+     name VARCHAR(100) NOT NULL,
+     avatar_url TEXT,
+     description TEXT NOT NULL,
+     category agent_category NOT NULL,
+     capabilities JSONB DEFAULT '[]',
+     personality JSONB DEFAULT '{}',
+     model_config JSONB DEFAULT '{}',
+     is_public BOOLEAN DEFAULT true,
+     creator_id UUID REFERENCES auth.users(id),
+     usage_count INTEGER DEFAULT 0,
+     rating DECIMAL(2,1) DEFAULT 0.0,
+     status agent_status DEFAULT 'active',
+     -- 向量搜索字段
+     description_embedding vector(1536),
+     capabilities_text TEXT GENERATED ALWAYS AS (
+       COALESCE((capabilities->>'text'), capabilities::text)
+     ) STORED,
+     search_text TEXT GENERATED ALWAYS AS (
+       name || ' ' || description || ' ' ||
+       COALESCE((capabilities->>'text'), capabilities::text)
+     ) STORED,
+     created_at TIMESTAMPTZ DEFAULT NOW(),
+     updated_at TIMESTAMPTZ DEFAULT NOW()
+   );
+
+   -- RLS策略
+   ALTER TABLE ai_agents ENABLE ROW LEVEL SECURITY;
+   CREATE POLICY "Anyone can view public agents" ON ai_agents FOR SELECT USING (is_public = true);
+   CREATE POLICY "Users can view own agents" ON ai_agents FOR SELECT USING (creator_id = auth.uid());
+   CREATE POLICY "Users can create agents" ON ai_agents FOR INSERT WITH CHECK (creator_id = auth.uid());
+   CREATE POLICY "Users can update own agents" ON ai_agents FOR UPDATE USING (creator_id = auth.uid());
+
+   -- 索引优化
+   CREATE INDEX idx_ai_agents_category ON ai_agents(category);
+   CREATE INDEX idx_ai_agents_status ON ai_agents(status, is_public);
+   CREATE INDEX idx_ai_agents_rating ON ai_agents(rating DESC);
+   CREATE INDEX idx_ai_agents_usage ON ai_agents(usage_count DESC);
+   CREATE INDEX idx_ai_agents_search_text ON ai_agents USING gin(to_tsvector('english', search_text));
+   CREATE INDEX idx_ai_agents_embedding ON ai_agents USING ivfflat (description_embedding vector_cosine_ops);
+   ```
+
+   **联系人关系 (Contact)**
+
+   ```sql
+   - id: UUID (主键)
+   - user_id: UUID (用户ID)
+   - agent_id: UUID (Agent ID)
+   - alias: VARCHAR (备注名称)
+   - group_name: VARCHAR (分组名称)
+   - tags: JSONB (标签列表)
+   - is_pinned: BOOLEAN (是否置顶)
+   - is_muted: BOOLEAN (是否免打扰)
+   - add_source: VARCHAR (添加来源：search, recommend, share等)
+   - first_interaction_at: TIMESTAMP (首次交互时间)
+   - last_interaction_at: TIMESTAMP (最后交互时间)
+   - interaction_count: INTEGER (交互次数)
+   - created_at: TIMESTAMP
+   ```
+
+   **对话会话 (Conversation)**
+
+   ```sql
+   - id: UUID (主键)
+   - type: ENUM (direct, group) (直接对话/群聊)
+   - title: VARCHAR (会话标题，群聊使用)
+   - participants: JSONB (参与者列表: user_id + agent_ids)
+   - last_message_id: UUID (最后一条消息ID)
+   - last_activity_at: TIMESTAMP (最后活动时间)
+   - is_pinned: BOOLEAN (是否置顶)
+   - is_archived: BOOLEAN (是否归档)
+   - settings: JSONB (会话设置：免打扰等)
+   - created_by: UUID (创建者ID)
+   - created_at, updated_at: TIMESTAMP
+   ```
+
+   **消息记录 (Message)**
+
+   ```sql
+   - id: UUID (主键)
+   - conversation_id: UUID (所属会话)
+   - sender_id: UUID (发送者ID，可能是user或agent)
+   - sender_type: ENUM (user, agent)
+   - content: TEXT (消息内容)
+   - message_type: ENUM (text, image, file, code, system)
+   - metadata: JSONB (附加信息：文件信息、代码语言等)
+   - reply_to_id: UUID (回复的消息ID)
+   - is_edited: BOOLEAN (是否已编辑)
+   - edit_history: JSONB (编辑历史)
+   - reactions: JSONB (表情反应)
+   - read_by: JSONB (已读用户列表)
+   - created_at, updated_at: TIMESTAMP
+   ```
+
+   **朋友圈动态 (Timeline)**
+
+   ```sql
+   - id: UUID (主键)
+   - agent_id: UUID (发布Agent的ID)
+   - content: TEXT (动态内容)
+   - content_type: ENUM (article, tip, case_study, resource)
+   - media_urls: JSONB (媒体文件链接)
+   - tags: JSONB (话题标签)
+   - visibility: ENUM (public, followers_only, private)
+   - like_count: INTEGER (点赞数)
+   - comment_count: INTEGER (评论数)
+   - share_count: INTEGER (分享数)
+   - is_featured: BOOLEAN (是否精选)
+   - created_at, updated_at: TIMESTAMP
+   ```
+
+   **动态互动 (TimelineInteraction)**
+
+   ```sql
+   - id: UUID (主键)
+   - timeline_id: UUID (动态ID)
+   - user_id: UUID (用户ID)
+   - interaction_type: ENUM (like, comment, share, bookmark)
+   - content: TEXT (评论内容，如果是评论)
+   - created_at: TIMESTAMP
+   ```
+
+   **文件管理 (File)**
+
+   ```sql
+   - id: UUID (主键)
+   - filename: VARCHAR (文件名)
+   - original_name: VARCHAR (原始文件名)
+   - file_type: VARCHAR (文件类型)
+   - file_size: BIGINT (文件大小)
+   - storage_path: VARCHAR (存储路径)
+   - uploader_id: UUID (上传者ID)
+   - uploader_type: ENUM (user, agent)
+   - conversation_id: UUID (关联会话ID，可选)
+   - timeline_id: UUID (关联动态ID，可选)
+   - access_level: ENUM (private, shared, public)
+   - download_count: INTEGER (下载次数)
+   - metadata: JSONB (文件元信息)
+   - created_at: TIMESTAMP
+   ```
+
+   **插件工具 (Plugin)**
+
+   ```sql
+   - id: UUID (主键)
+   - name: VARCHAR (插件名称)
+   - description: TEXT (插件描述)
+   - category: VARCHAR (插件分类)
+   - icon_url: VARCHAR (插件图标)
+   - developer: VARCHAR (开发者)
+   - version: VARCHAR (版本号)
+   - config_schema: JSONB (配置项模式)
+   - capabilities: JSONB (插件能力描述)
+   - api_endpoint: VARCHAR (插件API端点)
+   - is_enabled: BOOLEAN (是否启用)
+   - install_count: INTEGER (安装次数)
+   - rating: DECIMAL (用户评分)
+   - created_at, updated_at: TIMESTAMP
+   ```
+
+   **用户插件配置 (UserPlugin)**
+
+   ```sql
+   - id: UUID (主键)
+   - user_id: UUID (用户ID)
+   - plugin_id: UUID (插件ID)
+   - config: JSONB (用户的插件配置)
+   - is_active: BOOLEAN (是否激活)
+   - installed_at: TIMESTAMP
+   - last_used_at: TIMESTAMP
+   ```
+
+6. API 设计 (RESTful + WebSocket)
+
+   6.1 核心 API 端点设计
+
+   **身份认证 API**
+
+   ```
+   POST /api/v1/auth/register          # 用户注册
+   POST /api/v1/auth/login             # 用户登录
+   POST /api/v1/auth/logout            # 用户登出
+   POST /api/v1/auth/refresh           # 刷新Token
+   GET  /api/v1/auth/me                # 获取当前用户信息
+   PUT  /api/v1/auth/profile           # 更新用户资料
+   ```
+
+   **AI Agent 管理 API**
+
+   ```
+   GET    /api/v1/agents               # 获取Agent目录
+   GET    /api/v1/agents/:id           # 获取Agent详情
+   POST   /api/v1/agents/search        # 搜索Agent
+   GET    /api/v1/agents/categories    # 获取Agent分类
+   GET    /api/v1/agents/recommended   # 获取推荐Agent
+   POST   /api/v1/agents               # 创建自定义Agent (用户)
+   PUT    /api/v1/agents/:id           # 更新自定义Agent
+   DELETE /api/v1/agents/:id           # 删除自定义Agent
+   ```
+
+   **联系人管理 API**
+
+   ```
+   GET    /api/v1/contacts             # 获取联系人列表
+   POST   /api/v1/contacts             # 添加联系人
+   PUT    /api/v1/contacts/:id         # 更新联系人信息(备注、分组等)
+   DELETE /api/v1/contacts/:id         # 删除联系人
+   GET    /api/v1/contacts/groups      # 获取联系人分组
+   POST   /api/v1/contacts/groups      # 创建分组
+   ```
+
+   **对话管理 API**
+
+   ```
+   GET    /api/v1/conversations        # 获取对话列表
+   POST   /api/v1/conversations        # 创建新对话/群聊
+   GET    /api/v1/conversations/:id    # 获取对话详情
+   PUT    /api/v1/conversations/:id    # 更新对话设置
+   DELETE /api/v1/conversations/:id    # 删除对话
+   GET    /api/v1/conversations/:id/messages  # 获取消息历史
+   POST   /api/v1/conversations/:id/messages  # 发送消息
+   PUT    /api/v1/messages/:id         # 编辑消息
+   DELETE /api/v1/messages/:id         # 删除消息
+   POST   /api/v1/messages/:id/reactions # 添加表情反应
+   ```
+
+   **朋友圈 API**
+
+   ```
+   GET    /api/v1/timeline             # 获取朋友圈动态
+   GET    /api/v1/timeline/:id         # 获取动态详情
+   POST   /api/v1/timeline/:id/like    # 点赞动态
+   POST   /api/v1/timeline/:id/comment # 评论动态
+   POST   /api/v1/timeline/:id/share   # 分享动态
+   GET    /api/v1/agents/:id/timeline  # 获取特定Agent的动态
+   ```
+
+   **文件管理 API**
+
+   ```
+   GET    /api/v1/files                # 获取文件列表
+   POST   /api/v1/files/upload         # 上传文件
+   GET    /api/v1/files/:id            # 获取文件详情
+   GET    /api/v1/files/:id/download   # 下载文件
+   DELETE /api/v1/files/:id            # 删除文件
+   GET    /api/v1/files/shared         # 获取共享文件
+   ```
+
+   **插件工具 API**
+
+   ```
+   GET    /api/v1/plugins              # 获取插件市场
+   GET    /api/v1/plugins/:id          # 获取插件详情
+   POST   /api/v1/plugins/:id/install  # 安装插件
+   DELETE /api/v1/plugins/:id/uninstall # 卸载插件
+   GET    /api/v1/plugins/installed    # 获取已安装插件
+   PUT    /api/v1/plugins/:id/config   # 配置插件
+   POST   /api/v1/plugins/:id/execute  # 执行插件功能
+   ```
+
+   6.2 WebSocket 实时通信
+
+   ```
+   /ws/chat/:conversation_id           # 对话实时消息
+   /ws/presence                        # 在线状态同步
+   /ws/notifications                   # 系统通知推送
+   ```
+
+7. 前端组件架构设计
+
+   7.1 路由结构 (Next.js App Router)
+
+   ```
+   app/
+   ├── (auth)/
+   │   ├── login/page.tsx
+   │   └── register/page.tsx
+   ├── (main)/
+   │   ├── layout.tsx                  # 主布局(三栏布局)
+   │   ├── page.tsx                    # 默认重定向到对话
+   │   ├── chat/
+   │   │   ├── page.tsx                # 对话列表页
+   │   │   └── [conversationId]/
+   │   │       └── page.tsx            # 具体对话页
+   │   ├── contacts/
+   │   │   ├── page.tsx                # 联系人列表页
+   │   │   ├── search/page.tsx         # Agent搜索页
+   │   │   └── [agentId]/page.tsx      # Agent详情页
+   │   ├── files/
+   │   │   ├── page.tsx                # 文件管理页
+   │   │   └── [fileId]/page.tsx       # 文件详情页
+   │   ├── timeline/
+   │   │   ├── page.tsx                # 朋友圈主页
+   │   │   └── [postId]/page.tsx       # 动态详情页
+   │   └── plugins/
+   │       ├── page.tsx                # 插件工具页
+   │       └── [pluginId]/page.tsx     # 插件详情页
+   └── api/                            # NextAuth等前端API
+   ```
+
+   7.2 核心组件设计
+
+   ```
+   components/
+   ├── layout/
+   │   ├── MainLayout.tsx              # 三栏主布局
+   │   ├── Sidebar.tsx                 # 左侧导航栏
+   │   ├── MiddlePanel.tsx             # 中间列表面板
+   │   ├── ContentArea.tsx             # 右侧内容区域
+   │   └── TopBar.tsx                  # 顶部状态栏
+   ├── chat/
+   │   ├── ConversationList.tsx        # 对话列表
+   │   ├── ConversationItem.tsx        # 对话项
+   │   ├── ChatInterface.tsx           # 聊天界面
+   │   ├── MessageBubble.tsx           # 消息气泡
+   │   ├── MessageInput.tsx            # 消息输入框
+   │   ├── MessageList.tsx             # 消息列表
+   │   └── TypingIndicator.tsx         # 输入状态指示
+   ├── contacts/
+   │   ├── ContactList.tsx             # 联系人列表
+   │   ├── ContactItem.tsx             # 联系人项
+   │   ├── AgentCard.tsx               # Agent卡片
+   │   ├── AgentSearch.tsx             # Agent搜索
+   │   ├── AgentDetail.tsx             # Agent详情
+   │   └── ContactGroups.tsx           # 联系人分组
+   ├── timeline/
+   │   ├── TimelineFeed.tsx            # 朋友圈信息流
+   │   ├── TimelinePost.tsx            # 动态帖子
+   │   ├── PostInteractions.tsx        # 帖子互动(点赞评论)
+   │   └── CommentSection.tsx          # 评论区域
+   ├── files/
+   │   ├── FileExplorer.tsx            # 文件浏览器
+   │   ├── FileItem.tsx                # 文件项
+   │   ├── FileUpload.tsx              # 文件上传
+   │   └── FilePreview.tsx             # 文件预览
+   ├── plugins/
+   │   ├── PluginMarket.tsx            # 插件市场
+   │   ├── PluginCard.tsx              # 插件卡片
+   │   ├── PluginConfig.tsx            # 插件配置
+   │   └── PluginInterface.tsx         # 插件界面容器
+   └── common/
+       ├── Avatar.tsx                  # 头像组件
+       ├── StatusIndicator.tsx         # 状态指示器
+       ├── SearchBox.tsx               # 搜索框
+       ├── NotificationBadge.tsx       # 通知徽章
+       └── LoadingSpinner.tsx          # 加载动画
+   ```
+
+8. 详细 Layout 设计概念
+
+   8.1 响应式三栏布局
+
+   ```
+   ┌─────────────────────────────────────────────────────────────────────────┐
+   │                           顶部状态栏 (可选)                              │
+   ├───────────┬─────────────────────────┬─────────────────────────────────────┤
+   │           │                         │                                     │
+   │  左侧导航  │      中间列表面板        │         右侧主内容区                 │
+   │  (60-120px)  │     (300-400px)         │        (自适应宽度)                  │
+   │           │                         │                                     │
+   │ 👤 用户    │ 🔍 搜索框              │ 💬 聊天界面                         │
+   │ ─────────  │ ─────────────────────   │ ───────────────────────────────────  │
+   │ 💬 对话    │ 📋 内容列表            │ 📝 消息区域                         │
+   │ 👥 联系人  │   • 对话项             │   • 消息气泡                        │
+   │ 📁 文件    │   • 联系人项           │   • 时间戳                          │
+   │ 🌟 朋友圈  │   • 文件项             │   • 已读状态                        │
+   │ 🔧 插件    │   • 动态项             │ ─────────────────────────────────── │
+   │ ⚙️ 设置    │                         │ ⌨️ 输入区域                         │
+   │           │                         │   • 文本输入框                       │
+   │           │                         │   • 工具栏 (文件/表情/插件)          │
+   └───────────┴─────────────────────────┴─────────────────────────────────────┘
+   ```
+
+   8.2 交互模式切换
+
+   **对话模式** (默认)
+
+   - 左侧: 高亮"对话"导航
+   - 中间: 显示对话列表，支持搜索和筛选
+   - 右侧: 选中对话的聊天界面
+   - 特性: 实时消息推送，输入状态指示，消息已读/未读
+
+   **联系人模式**
+
+   - 左侧: 高亮"联系人"导航
+   - 中间: 按分组显示 AI Agent，支持搜索发现
+   - 右侧: Agent 详情页或搜索结果
+   - 特性: Agent 能力展示，快速开始对话，添加到联系人
+
+   **文件模式**
+
+   - 左侧: 高亮"文件"导航
+   - 中间: 文件分类浏览 (最近/共享/类型)
+   - 右侧: 文件预览或文件管理界面
+   - 特性: 拖拽上传，在线预览，协作编辑
+
+   **朋友圈模式**
+
+   - 左侧: 高亮"朋友圈"导航
+   - 中间: 动态信息流，按时间或热度排序
+   - 右侧: 动态详情和评论互动
+   - 特性: 类似社交媒体的内容浏览体验
+
+   **插件模式**
+
+   - 左侧: 高亮"工具插件"导航
+   - 中间: 插件市场或已安装插件列表
+   - 右侧: 插件详情或插件工作界面
+   - 特性: 插件嵌入，配置管理，工具集成
+
+     8.3 移动端适配策略
+
+   ```
+   手机端 (< 768px):
+   ┌─────────────────────┐
+   │ 🍔 ≡  标题    🔍 ⚙️ │ 顶部导航栏
+   ├─────────────────────┤
+   │                     │
+   │    单栏内容区域      │ 全屏显示当前页面
+   │                     │ 底部Tab导航切换
+   │                     │
+   ├─────────────────────┤
+   │ 💬 👥 📁 🌟 🔧    │ 底部导航栏
+   └─────────────────────┘
+
+   平板端 (768px - 1024px):
+   ┌──────────────┬──────────────────────┐
+   │              │                      │
+   │   侧边栏     │      主内容区         │ 双栏布局
+   │  (可收起)     │                      │ 侧边栏可折叠
+   │              │                      │
+   └──────────────┴──────────────────────┘
+   ```
+
+   8.4 用户体验设计要点
+
+   **视觉一致性**
+
+   - 统一的颜色系统: 主色调 + 功能色 + 中性色
+   - 图标风格统一: 线性图标 + 适当的填充图标
+   - 字体层级清晰: 标题/正文/辅助文字的字重和大小
+   - 圆角和阴影: 现代化的卡片设计和微交互
+
+   **交互反馈**
+
+   - 悬停状态: 按钮和链接的 hover 效果
+   - 加载状态: 骨架屏 + 进度指示器
+   - 错误处理: 友好的错误提示和重试机制
+   - 成功反馈: Toast 通知 + 状态更新
+
+   **性能优化**
+
+   - 虚拟滚动: 长列表的性能优化
+   - 懒加载: 图片和组件的按需加载
+   - 缓存策略: 对话历史和用户数据的本地缓存
+   - 预加载: 用户可能访问的内容提前加载
+
+   **无障碍访问**
+
+   - 键盘导航: 全功能的键盘快捷键支持
+   - 屏幕阅读: 语义化 HTML 和 ARIA 标签
+   - 颜色对比: 满足 WCAG 标准的对比度
+   - 字体缩放: 支持用户的字体大小偏好
+
+9. 核心功能实现策略
+
+   9.1 Agent 搜索与发现
+
+   - 基于语义搜索的 Agent 匹配算法
+   - 标签和分类的多维度筛选
+   - 基于用户行为的个性化推荐
+   - 社区评分和使用统计
+
+     9.2 对话上下文管理
+
+   - 基于对话 ID 的独立上下文存储
+   - 长期记忆与短期记忆的平衡
+   - 跨会话的知识共享机制
+   - 上下文压缩和检索优化
+
+     9.3 实时协作体验
+
+   - WebSocket 连接的稳定性保证
+   - 断线重连和消息同步机制
+   - 多设备同步的状态管理
+   - 冲突解决和版本控制
+
+     9.4 内容生态建设
+
+   - Agent 生成内容的质量控制
+   - 用户反馈和内容评价系统
+   - 知识库的自动构建和更新
+   - 版权和内容安全管理
 
 针对未来扩展的架构调整与技术栈补充：
 
@@ -319,3 +1036,326 @@ npx create-next-app@latest frontend
 环境变量: 创建 .env 文件 (后端) 和 .env.local (前端)，并从 .env.example 中复制内容并填写。
 Docker: 编写 backend/Dockerfile 和根目录的 docker-compose.yml 文件，以便本地开发环境的容器化运行 (FastAPI, PostgreSQL, Redis)。
 Pre-commit Hooks (可选但推荐): 使用 pre-commit 配合 black, flake8/ruff, isort, mypy 来保证代码质量和风格一致性。
+
+10. 技术栈集成配置
+
+    10.1 Supabase 集成配置
+
+    **环境变量配置**
+
+```env
+# Supabase配置
+NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
+SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
+
+# 数据库配置
+DATABASE_URL=postgresql://postgres:[password]@db.your-project.supabase.co:5432/postgres
+DIRECT_URL=postgresql://postgres:[password]@db.your-project.supabase.co:5432/postgres
+
+# AI配置
+OPENAI_API_KEY=your-openai-key
+LANGCHAIN_TRACING_V2=true
+LANGCHAIN_API_KEY=your-langchain-key
+```
+
+**前端集成 (Next.js)**
+
+```typescript
+// lib/supabase/client.ts
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import { Database } from "@/types/supabase";
+
+export const supabase = createClientComponentClient<Database>();
+
+// lib/supabase/server.ts
+import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
+import { cookies } from "next/headers";
+
+export const createServerSupabaseClient = () =>
+  createServerComponentClient({ cookies });
+```
+
+**后端集成 (FastAPI)**
+
+```python
+# app/core/supabase.py
+from supabase import create_client, Client
+from app.core.config import settings
+
+supabase: Client = create_client(
+    settings.SUPABASE_URL,
+    settings.SUPABASE_SERVICE_ROLE_KEY
+)
+
+# 实时订阅示例
+def setup_realtime_subscriptions():
+    def on_message_insert(payload):
+        # 处理新消息推送
+        pass
+
+    supabase.table('messages') \
+        .on('INSERT', on_message_insert) \
+        .subscribe()
+```
+
+**RLS 策略示例**
+
+```sql
+-- 对话消息的RLS策略
+CREATE POLICY "Users can view own conversation messages"
+ON messages FOR SELECT
+USING (
+  conversation_id IN (
+    SELECT id FROM conversations
+    WHERE auth.uid() = ANY(participants::uuid[])
+  )
+);
+```
+
+10.2 Creem.io 支付集成
+
+**SDK 安装和配置**
+
+```bash
+# Python后端
+pip install creem-python-sdk
+
+# Node.js前端 (如果需要)
+npm install @creem/checkout-js
+```
+
+**后端集成示例**
+
+```python
+# app/services/payment_service.py
+from creem import CreemClient
+from app.core.config import settings
+
+creem_client = CreemClient(
+    api_key=settings.CREEM_API_KEY,
+    environment="sandbox"  # 或 "production"
+)
+
+async def create_subscription(user_id: str, plan_id: str):
+    """创建订阅"""
+    try:
+        subscription = await creem_client.subscriptions.create({
+            "customer_id": user_id,
+            "plan_id": plan_id,
+            "trial_days": 14,
+            "success_url": f"{settings.FRONTEND_URL}/success",
+            "cancel_url": f"{settings.FRONTEND_URL}/cancel"
+        })
+        return subscription
+    except Exception as e:
+        logger.error(f"Failed to create subscription: {e}")
+        raise
+
+async def handle_webhook(payload: dict, signature: str):
+    """处理Creem.io Webhook"""
+    if not creem_client.webhooks.verify(payload, signature):
+        raise ValueError("Invalid webhook signature")
+
+    event_type = payload.get("type")
+    data = payload.get("data")
+
+    if event_type == "subscription.created":
+        await update_user_subscription(data["customer_id"], data)
+    elif event_type == "subscription.cancelled":
+        await cancel_user_subscription(data["customer_id"])
+```
+
+**前端支付流程**
+
+```typescript
+// components/payment/SubscriptionButton.tsx
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+
+export function SubscriptionButton({ planId }: { planId: string }) {
+  const [loading, setLoading] = useState(false);
+
+  const handleSubscribe = async () => {
+    setLoading(true);
+    try {
+      const response = await fetch("/api/v1/payments/create-subscription", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ planId }),
+      });
+
+      const { checkout_url } = await response.json();
+      window.location.href = checkout_url;
+    } catch (error) {
+      console.error("Subscription failed:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <Button onClick={handleSubscribe} disabled={loading}>
+      {loading ? "处理中..." : "升级套餐"}
+    </Button>
+  );
+}
+```
+
+10.3 优化的项目结构
+
+**前端结构 (适配 60-120px 窄边栏)**
+
+```
+frontend/
+├── src/
+│   ├── app/
+│   │   ├── (auth)/
+│   │   │   ├── login/page.tsx
+│   │   │   └── register/page.tsx
+│   │   ├── (main)/
+│   │   │   ├── layout.tsx              # 三栏布局 (窄边栏设计)
+│   │   │   ├── chat/
+│   │   │   │   ├── page.tsx            # 对话列表
+│   │   │   │   └── [id]/page.tsx       # 对话详情
+│   │   │   ├── contacts/
+│   │   │   │   ├── page.tsx            # 联系人/Agent列表
+│   │   │   │   ├── search/page.tsx     # Agent搜索
+│   │   │   │   └── [id]/page.tsx       # Agent详情
+│   │   │   ├── files/page.tsx          # 文件管理
+│   │   │   ├── timeline/page.tsx       # 朋友圈
+│   │   │   └── plugins/page.tsx        # 插件工具
+│   │   └── api/
+│   │       ├── auth/[...nextauth].ts   # NextAuth集成Supabase
+│   │       └── webhooks/
+│   │           └── creem.ts           # Creem.io webhook处理
+│   ├── components/
+│   │   ├── layout/
+│   │   │   ├── CompactSidebar.tsx     # 60-120px窄边栏
+│   │   │   ├── ExpandableNav.tsx      # 可展开导航
+│   │   │   ├── MiddlePanel.tsx        # 中间面板
+│   │   │   └── ContentArea.tsx        # 内容区域
+│   │   ├── chat/
+│   │   │   ├── RealtimeChat.tsx       # Supabase实时聊天
+│   │   │   ├── MessageStream.tsx      # AI流式响应
+│   │   │   └── TypingIndicator.tsx    # 输入状态
+│   │   ├── contacts/
+│   │   │   ├── AgentSearch.tsx        # 向量搜索UI
+│   │   │   ├── AgentRecommend.tsx     # AI推荐
+│   │   │   └── ContactManager.tsx     # 联系人管理
+│   │   └── payment/
+│   │       ├── SubscriptionCard.tsx   # 订阅卡片
+│   │       └── BillingHistory.tsx     # 账单历史
+│   ├── lib/
+│   │   ├── supabase/
+│   │   │   ├── client.ts              # Supabase客户端
+│   │   │   ├── server.ts              # 服务端客户端
+│   │   │   └── types.ts               # 数据库类型
+│   │   ├── payment/
+│   │   │   └── creem.ts               # Creem.io客户端
+│   │   └── ai/
+│   │       ├── embeddings.ts          # 向量嵌入
+│   │       └── streaming.ts           # 流式响应
+│   └── types/
+│       ├── supabase.ts                # 自动生成的类型
+│       ├── payment.ts                 # 支付相关类型
+│       └── ai.ts                      # AI相关类型
+```
+
+**后端结构 (Supabase + FastAPI)**
+
+```
+backend/
+├── app/
+│   ├── api/v1/
+│   │   ├── auth.py                    # Supabase Auth集成
+│   │   ├── agents.py                  # AI Agent管理
+│   │   ├── chat.py                    # 聊天API
+│   │   ├── payments.py                # Creem.io集成
+│   │   └── webhooks.py                # Webhook处理
+│   ├── core/
+│   │   ├── supabase.py                # Supabase配置
+│   │   ├── payment.py                 # Creem.io配置
+│   │   └── ai.py                      # AI服务配置
+│   ├── services/
+│   │   ├── agent_service.py           # Agent业务逻辑
+│   │   ├── chat_service.py            # 聊天服务
+│   │   ├── payment_service.py         # 支付服务
+│   │   └── embedding_service.py       # 向量嵌入服务
+│   ├── ai/
+│   │   ├── agents/                    # LangGraph智能体
+│   │   ├── tools/                     # LangChain工具
+│   │   └── memory/                    # 记忆管理
+│   └── workers/
+│       ├── embedding_worker.py        # 向量化任务
+│       └── notification_worker.py     # 通知任务
+├── supabase/
+│   ├── migrations/                    # 数据库迁移
+│   ├── functions/                     # Edge Functions
+│   └── seed.sql                       # 初始数据
+└── docker-compose.yml                 # 本地开发环境
+```
+
+10.4 开发工作流
+
+**本地开发环境启动**
+
+```bash
+# 1. 启动Supabase本地环境
+npx supabase start
+
+# 2. 运行数据库迁移
+npx supabase db reset
+
+# 3. 启动前端开发服务器
+cd frontend && npm run dev
+
+# 4. 启动后端API服务器
+cd backend && uvicorn app.main:app --reload
+
+# 5. 启动AI服务worker
+cd backend && arq app.workers.WorkerSettings
+```
+
+**部署流程**
+
+```bash
+# 1. 部署Supabase生产环境
+npx supabase link --project-ref your-project-ref
+npx supabase db push
+
+# 2. 部署前端到Vercel
+vercel --prod
+
+# 3. 部署后端API (可选择云平台)
+# Railway, Render, 或其他支持Python的平台
+```
+
+11. 性能优化策略
+
+    11.1 数据库优化
+
+- 使用 Supabase 的连接池和缓存
+- 针对高频查询创建物化视图
+- 使用 pgvector 的 HNSW 索引优化向量搜索
+- 实施数据分区策略（按时间分区消息表）
+
+  11.2 实时性能优化
+
+- 使用 Supabase Realtime 的频道订阅
+- 实施智能的订阅范围限制
+- 客户端状态管理优化（React Query + Zustand）
+
+  11.3 AI 响应优化
+
+- 流式响应降低首次响应时间
+- 智能缓存常见 AI 回复
+- 使用边缘函数处理简单 AI 任务
+- 实施 AI 响应的预取策略
+
+  11.4 成本控制
+
+- Supabase 使用量监控和告警
+- AI API 调用的智能限流
+- Creem.io 的费用追踪和优化
+- 实施用户套餐的使用量限制
