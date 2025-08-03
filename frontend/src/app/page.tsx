@@ -1,9 +1,10 @@
 "use client"
 
 import { useState } from "react"
-import { Sidebar } from "@/components/sidebar"
-import { MiddlePanel } from "@/components/middle-panel"
-import { MainContent } from "@/components/main-content"
+import { LegacySidebar } from "@/components/layout/LegacySidebar"
+import { LegacyMiddlePanel } from "@/components/layout/LegacyMiddlePanel"
+import { LegacyMainContent } from "@/components/layout/LegacyMainContent"
+import { ErrorBoundary } from "@/components/common/ErrorBoundary"
 import type { NavigationMode } from "@/types"
 
 export default function Home() {
@@ -11,15 +12,17 @@ export default function Home() {
   const [selectedItem, setSelectedItem] = useState<string | null>("agent-1")
 
   return (
-    <div className="flex h-screen bg-gray-50">
-      {/* Left Sidebar - Navigation */}
-      <Sidebar currentMode={currentMode} onModeChange={setCurrentMode} />
+    <ErrorBoundary>
+      <div className="flex h-screen bg-gray-50">
+        {/* Left Sidebar - Navigation */}
+        <LegacySidebar currentMode={currentMode} onModeChange={setCurrentMode} />
 
-      {/* Middle Panel - Context List */}
-      <MiddlePanel mode={currentMode} selectedItem={selectedItem} onItemSelect={setSelectedItem} />
+        {/* Middle Panel - Context List */}
+        <LegacyMiddlePanel mode={currentMode} selectedItem={selectedItem} onItemSelect={setSelectedItem} />
 
-      {/* Right Panel - Main Content */}
-      <MainContent mode={currentMode} selectedItem={selectedItem} onItemSelect={setSelectedItem} />
-    </div>
+        {/* Right Panel - Main Content */}
+        <LegacyMainContent mode={currentMode} selectedItem={selectedItem} onItemSelect={setSelectedItem} />
+      </div>
+    </ErrorBoundary>
   )
 }

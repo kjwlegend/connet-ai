@@ -4,7 +4,15 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { FileText, ImageIcon, Download, Share } from "lucide-react"
 import { cn } from "@/lib/utils"
-import type { FileItem } from "@/types"
+interface FileItem {
+  id: string
+  name: string
+  type: string
+  size: string
+  sharedBy: string
+  timestamp: string
+  category: string
+}
 
 const mockFiles: FileItem[] = [
   {

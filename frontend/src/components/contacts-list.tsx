@@ -6,7 +6,19 @@ import { Button } from "@/components/ui/button"
 import { MessageCircle, Plus, ChevronDown, ChevronRight } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { useState } from "react"
-import type { AIAgent } from "@/types"
+import type { Agent } from "@/types"
+
+interface AIAgent {
+  id: string
+  name: string
+  avatar?: string
+  specialty: string
+  description: string
+  status: 'online' | 'busy' | 'offline'
+  category: string
+  tags: string[]
+  note: string
+}
 
 const mockAgents: AIAgent[] = [
   {

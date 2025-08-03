@@ -1,0 +1,76 @@
+{
+  "navigation": {
+    "chat": "对话",
+    "contacts": "联系人",
+    "files": "文件",
+    "social": "朋友圈",
+    "plugins": "工具插件",
+    "settings": "设置"
+  },
+  "ui": {
+    "search": "搜索",
+    "save": "保存",
+    "cancel": "取消",
+    "delete": "删除",
+    "edit": "编辑",
+    "create": "创建",
+    "update": "更新",
+    "submit": "提交",
+    "back": "返回",
+    "next": "下一步",
+    "loading": "加载中...",
+    "error": "错误",
+    "success": "成功",
+    "warning": "警告",
+    "info": "信息",
+    "online": "在线",
+    "offline": "离线",
+    "user": "用户",
+    "username": "用户名"
+  },
+  "app": {
+    "name": "Connet.AI",
+    "tagline": "AI协作平台",
+    "description": "智能AI协作平台，支持多Agent协作，提供强大的AI工具和智能对话功能"
+  },
+  "chat": {
+    "inputPlaceholder": "输入消息...",
+    "sendMessage": "发送消息",
+    "newChat": "新建对话",
+    "chatHistory": "聊天记录"
+  },
+  "contacts": {
+    "title": "联系人",
+    "addContact": "添加联系人",
+    "editContact": "编辑联系人",
+    "deleteContact": "删除联系人",
+    "contactDetails": "联系人详情",
+    "name": "姓名",
+    "email": "邮箱",
+    "phone": "电话",
+    "company": "公司",
+    "role": "角色",
+    "tags": "标签",
+    "notes": "备注",
+    "capabilities": "能力",
+    "tools": "工具"
+  },
+  "theme": {
+    "light": "浅色主题",
+    "dark": "深色主题",
+    "system": "跟随系统",
+    "toggle": "切换主题"
+  },
+  "language": {
+    "toggle": "切换语言",
+    "english": "English",
+    "chinese": "中文"
+  },
+  "errors": {
+    "generic": "出现了问题",
+    "network": "网络错误",
+    "notFound": "未找到",
+    "unauthorized": "未授权",
+    "validation": "验证错误"
+  }
+}

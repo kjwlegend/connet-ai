@@ -1,12 +1,14 @@
-// src/store/types.ts
 import { AuthSlice } from './slices/authSlice'
-import { SettingsState, SettingsActions } from './slices/settingsSlice'
-// If you have other slices, import their types here. For example:
-// import { CartSlice } from './slices/cartSlice';
+import { UISlice } from './slices/uiSlice'
 
 /**
  * Represents the complete state of the application store.
- * It's a combination of all individual slice states and actions.
+ * Combines all individual slice states and actions.
  */
-export type StoreState = AuthSlice & SettingsState & SettingsActions
-// & CartSlice; // Add other slice types here if they exist
+export type StoreState = 
+  & AuthSlice 
+  & UISlice
+
+// Re-export commonly used types
+export type { User, UserPreferences } from './slices/authSlice'
+export type { Toast, Modal } from './slices/uiSlice'
