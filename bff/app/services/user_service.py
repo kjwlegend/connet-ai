@@ -8,13 +8,15 @@ from typing import List, Optional, Tuple
 
 from app.core.interfaces.repositories.user_repository import UserRepository
 from app.infrastructure.cache.cache_manager import CacheManager
+from app.infrastructure.cache.cache_keys import CacheKeys, CacheExpiration
 from app.schemas.user import User, UserUpdateRequest
+from app.services.base import BaseRepositoryService
 from app.utils.logging import get_logger
 
 logger = get_logger(__name__)
 
 
-class UserService:
+class UserService(BaseRepositoryService):
     """User service for business logic."""
     
     def __init__(
@@ -22,8 +24,7 @@ class UserService:
         user_repository: UserRepository,
         cache_manager: CacheManager,
     ):
-        self.user_repository = user_repository
-        self.cache_manager = cache_manager
+        super().__init__(user_repository, cache_manager, logger_name="UserService")
     
     async def get_user_by_id(self, user_id: str) -> Optional[User]:
         """Get user by ID."""

@@ -1,15 +1,15 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Sidebar } from "@/components/layout/Sidebar"
-import { MiddlePanel } from "@/components/layout/MiddlePanel"
-import { MainContent } from "@/components/layout/MainContent"
-import { ErrorBoundary } from "@/components/common/ErrorBoundary"
-import type { NavigationMode } from "@/types"
+import { useState } from "react";
+import { Sidebar } from "@/components/layout/Sidebar";
+import { MiddlePanel } from "@/components/layout/MiddlePanel";
+import { MainContent } from "@/components/layout/MainContent";
+import { ErrorBoundary } from "@/components/common/ErrorBoundary";
+import type { NavigationMode } from "@/types";
 
 export default function Home() {
-  const [currentMode, setCurrentMode] = useState<NavigationMode>("chat")
-  const [selectedItem, setSelectedItem] = useState<string | null>("agent-1")
+  const [currentMode, setCurrentMode] = useState<NavigationMode>("chat");
+  const [selectedItem, setSelectedItem] = useState<string | null>("agent-1");
 
   return (
     <ErrorBoundary>
@@ -18,11 +18,19 @@ export default function Home() {
         <Sidebar currentMode={currentMode} onModeChange={setCurrentMode} />
 
         {/* Middle Panel - Context List */}
-        <MiddlePanel mode={currentMode} selectedItem={selectedItem} onItemSelect={setSelectedItem} />
+        <MiddlePanel
+          mode={currentMode}
+          selectedItem={selectedItem}
+          onItemSelect={setSelectedItem}
+        />
 
         {/* Right Panel - Main Content */}
-        <MainContent mode={currentMode} selectedItem={selectedItem} onItemSelect={setSelectedItem} />
+        <MainContent
+          mode={currentMode}
+          selectedItem={selectedItem}
+          onItemSelect={setSelectedItem}
+        />
       </div>
     </ErrorBoundary>
-  )
+  );
 }

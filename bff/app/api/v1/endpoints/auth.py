@@ -7,7 +7,7 @@ This module contains authentication and authorization endpoints.
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import HTTPAuthorizationCredentials
 
-from app.api.dependencies import get_current_user, get_user_service, security
+from app.api.dependencies import get_current_user, get_user_service, get_supabase_auth_service, security
 from app.infrastructure.security.auth import JWTManager, get_jwt_manager
 from app.schemas.auth import (
     LoginRequest,
@@ -16,8 +16,10 @@ from app.schemas.auth import (
     RegisterRequest,
     TokenVerifyRequest,
     UserResponse,
+    PasswordResetRequest,
 )
 from app.services.auth_service import AuthService, get_auth_service
+from app.services.supabase_auth_service import SupabaseAuthService
 from app.services.user_service import UserService
 from app.utils.logging import get_logger
 
@@ -28,15 +30,21 @@ router = APIRouter()
 @router.post("/register", response_model=UserResponse)
 async def register(
     request: RegisterRequest,
-    auth_service: AuthService = Depends(get_auth_service),
+    supabase_auth_service: SupabaseAuthService = Depends(get_supabase_auth_service),
 ) -> UserResponse:
-    """Register a new user."""
+    """Register a new user using Supabase Auth."""
     try:
-        user = await auth_service.register_user(
+        user, auth_response = await supabase_auth_service.register_user(
             email=request.email,
             password=request.password,
             full_name=request.full_name,
             username=request.username,
+            invited_by_code=request.invited_by_code,
+            registration_source=request.registration_source,
+            registration_channel=request.registration_channel,
+            utm_source=request.utm_source,
+            utm_medium=request.utm_medium,
+            utm_campaign=request.utm_campaign,
         )
         
         logger.info(f"User registered successfully: {user.email}")
@@ -58,13 +66,13 @@ async def register(
 @router.post("/login", response_model=LoginResponse)
 async def login(
     request: LoginRequest,
-    auth_service: AuthService = Depends(get_auth_service),
+    supabase_auth_service: SupabaseAuthService = Depends(get_supabase_auth_service),
     jwt_manager: JWTManager = Depends(get_jwt_manager),
 ) -> LoginResponse:
-    """Authenticate user and return JWT tokens."""
+    """Authenticate user using Supabase Auth and return JWT tokens."""
     try:
-        # Authenticate user
-        user = await auth_service.authenticate_user(
+        # Authenticate user with Supabase
+        user, auth_response = await supabase_auth_service.login_user(
             email=request.email,
             password=request.password
         )
@@ -75,7 +83,8 @@ async def login(
                 detail="Invalid email or password"
             )
         
-        # Generate tokens
+        # We can either use Supabase session tokens or generate our own JWT
+        # For now, let's use our own JWT system for consistency
         access_token = jwt_manager.create_access_token(
             subject=user.id,
             scopes=user.permissions or []
@@ -232,3 +241,57 @@ async def get_current_user_info(
 ) -> UserResponse:
     """Get current user information."""
     return UserResponse.from_user(current_user)
+
+
+@router.post("/password-reset")
+async def request_password_reset(
+    request: PasswordResetRequest,
+    supabase_auth_service: SupabaseAuthService = Depends(get_supabase_auth_service),
+) -> dict:
+    """Request password reset email."""
+    try:
+        success = await supabase_auth_service.reset_password(
+            email=request.email,
+            redirect_to="http://localhost:3000/auth/reset-password"
+        )
+        
+        if success:
+            return {"message": "Password reset email sent successfully"}
+        else:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Failed to send password reset email"
+            )
+        
+    except Exception as e:
+        logger.error(f"Password reset failed: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Password reset failed"
+        )
+
+
+@router.post("/verify-email")
+async def verify_email(
+    token: str,
+    email: str,
+    supabase_auth_service: SupabaseAuthService = Depends(get_supabase_auth_service),
+) -> dict:
+    """Verify user email address."""
+    try:
+        success = await supabase_auth_service.verify_email(token, email)
+        
+        if success:
+            return {"message": "Email verified successfully"}
+        else:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Invalid verification token"
+            )
+        
+    except Exception as e:
+        logger.error(f"Email verification failed: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Email verification failed"
+        )

@@ -24,6 +24,7 @@ from app.infrastructure.security.permissions import (
 )
 from app.schemas.user import User
 from app.services.user_service import UserService
+from app.services.supabase_auth_service import SupabaseAuthService
 
 # Security scheme
 security = HTTPBearer(auto_error=False)
@@ -48,6 +49,7 @@ async def get_current_user(
     credentials: Optional[HTTPAuthorizationCredentials] = Depends(security),
     jwt_manager: JWTManager = Depends(get_jwt_manager),
     user_service: UserService = Depends(get_user_service),
+    supabase_auth_service: SupabaseAuthService = Depends(get_supabase_auth_service),
 ) -> User:
     """Get current authenticated user."""
     if not credentials:
@@ -58,39 +60,49 @@ async def get_current_user(
         )
     
     try:
-        # Verify JWT token
-        payload = jwt_manager.verify_token(credentials.credentials)
-        user_id = payload.get("sub")
-        
-        if not user_id:
-            raise HTTPException(
-                status_code=status.HTTP_401_UNAUTHORIZED,
-                detail="Invalid token: missing subject",
-            )
-        
-        # Check token type
-        if payload.get("type") != "access":
-            raise HTTPException(
-                status_code=status.HTTP_401_UNAUTHORIZED,
-                detail="Invalid token type",
-            )
-        
-        # Get user from database
-        user = await user_service.get_user_by_id(user_id)
-        if not user:
-            raise HTTPException(
-                status_code=status.HTTP_401_UNAUTHORIZED,
-                detail="User not found",
-            )
-        
-        # Check if user is active
-        if not user.is_active:
-            raise HTTPException(
-                status_code=status.HTTP_401_UNAUTHORIZED,
-                detail="User account is inactive",
-            )
-        
-        return user
+        # Try to verify as our own JWT token first
+        try:
+            payload = jwt_manager.verify_token(credentials.credentials)
+            user_id = payload.get("sub")
+            
+            if not user_id:
+                raise ValueError("Invalid token: missing subject")
+            
+            # Check token type
+            if payload.get("type") != "access":
+                raise ValueError("Invalid token type")
+            
+            # Get user from database
+            user = await user_service.get_user_by_id(user_id)
+            if not user:
+                raise ValueError("User not found")
+            
+            # Check if user is active
+            if not user.is_active:
+                raise HTTPException(
+                    status_code=status.HTTP_401_UNAUTHORIZED,
+                    detail="User account is inactive",
+                )
+            
+            return user
+            
+        except ValueError:
+            # If our JWT verification fails, try Supabase token
+            user = await supabase_auth_service.get_user_from_token(credentials.credentials)
+            if not user:
+                raise HTTPException(
+                    status_code=status.HTTP_401_UNAUTHORIZED,
+                    detail="Invalid token",
+                )
+            
+            # Check if user is active
+            if not user.is_active:
+                raise HTTPException(
+                    status_code=status.HTTP_401_UNAUTHORIZED,
+                    detail="User account is inactive",
+                )
+            
+            return user
         
     except HTTPException:
         raise
@@ -190,3 +202,10 @@ async def get_pagination_params(
 async def get_settings_dependency():
     """Get settings dependency."""
     return get_settings()
+
+
+async def get_supabase_auth_service(
+    user_repo: UserRepository = Depends(get_user_repository),
+) -> SupabaseAuthService:
+    """Get Supabase authentication service dependency."""
+    return SupabaseAuthService(user_repository=user_repo)

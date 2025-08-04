@@ -47,3 +47,18 @@ class UserRepository(BaseRepository):
     async def update_last_login(self, user_id: str) -> bool:
         """Update user's last login timestamp."""
         pass
+    
+    @abstractmethod
+    async def update_by_email(self, email: str, update_data: dict) -> bool:
+        """Update user by email address."""
+        pass
+    
+    @abstractmethod
+    async def get_by_external_id(self, external_id: str, auth_provider: str) -> Optional[object]:
+        """Get user by external ID and auth provider."""
+        pass
+    
+    @abstractmethod
+    async def get_by_invitation_code(self, invitation_code: str) -> Optional[object]:
+        """Get user by invitation code."""
+        pass

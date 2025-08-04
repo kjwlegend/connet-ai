@@ -113,73 +113,151 @@
    - 实时功能: Supabase Realtime (替代传统 WebSocket)
    - 身份认证: Supabase Auth (支持多种 OAuth 提供商)
 
-   **支付与商业化**
+**技术架构**
 
-   - 起步阶段: Creem.io (AI 公司专用的金融 OS)
-   - 扩展阶段: Stripe (成熟后迁移)
-   - 税务合规: Creem.io 全球税务处理
-   - 订阅管理: Creem.io 内置订阅系统
+```
+graph TB
+    subgraph "前端层 (Next.js 14)"
+        A1["Next.js App Router<br/>TypeScript 5+"]
+        A2["Supabase Auth<br/>实时订阅"]
+        A3["shadcn/ui<br/>Tailwind CSS"]
+        A4["Zustand<br/>状态管理"]
+    end
 
-   **基础设施与部署**
+    subgraph "API层 (FastAPI)"
+        B1["FastAPI<br/>Python 3.11+"]
+        B2["Supabase SDK<br/>SQLModel ORM"]
+        B3["LangChain<br/>LangGraph"]
+        B4["ARQ<br/>任务队列"]
+    end
 
-   - 云平台: Vercel (前端) + Supabase (后端服务)
-   - 容器化: Docker (开发环境) + Serverless (生产环境)
-   - CI/CD: GitHub Actions + Vercel 自动部署
-   - 监控: Supabase Analytics + Vercel Analytics
-   - 文件存储: Supabase Storage
+    subgraph "数据层"
+        C1["Supabase PostgreSQL<br/>pgvector向量搜索"]
+        C2["Supabase Storage<br/>文件存储"]
+        C3["Supabase Realtime<br/>实时同步"]
+        C4["Redis<br/>高频缓存"]
+    end
 
-     4.2 Supabase 集成优势
+    subgraph "支付层"
+        D1["Creem.io<br/>起步阶段"]
+        D2["Stripe<br/>扩展阶段"]
+        D3["全球税务合规<br/>MoR服务"]
+    end
 
-   **开发效率提升**
+    subgraph "AI层"
+        E1["OpenAI GPT<br/>LLM服务"]
+        E2["Embedding API<br/>向量化"]
+        E3["LangChain Tools<br/>插件生态"]
+    end
 
-   - 🚀 即时 API 生成: 基于数据库表自动生成 RESTful API
-   - 🔐 内置身份认证: 支持邮箱、OAuth (Google, GitHub 等)
-   - ⚡ 实时数据同步: 无需手动配置 WebSocket
-   - 📁 文件存储: 内置对象存储，支持 CDN 加速
-   - 🔍 全文搜索: PostgreSQL 内置搜索功能
+    subgraph "部署层"
+        F1["Vercel<br/>前端部署"]
+        F2["Railway/Render<br/>后端部署"]
+        F3["Supabase Cloud<br/>数据库服务"]
+    end
 
-   **AI 功能增强**
+    A1 --> B1
+    A2 --> C1
+    A3 --> A1
+    A4 --> A1
 
-   - 🧠 向量搜索: pgvector 扩展，支持 AI 语义搜索
-   - 📊 边缘函数: 支持在边缘运行 AI 推理
-   - 🔄 实时 AI 响应: 结合 Realtime 实现流式 AI 对话
-   - 💾 智能缓存: AI 响应结果的自动缓存
+    B1 --> C1
+    B2 --> C1
+    B3 --> E1
+    B4 --> C4
 
-   **成本控制**
+    B1 --> D1
+    D1 -.-> D2
 
-   - 💰 按需付费: 免费额度 + 使用量计费
-   - 🌍 全球部署: 多区域部署，降低延迟
-   - 📈 弹性扩展: 自动扩容，无需运维
+    E2 --> C1
+    E3 --> B3
 
-     4.3 Creem.io 支付系统选择
+    A1 --> F1
+    B1 --> F2
+    C1 --> F3
 
-   **为什么选择 Creem.io 作为起步方案**
+    classDef frontend fill:#e3f2fd
+    classDef api fill:#f3e5f5
+    classDef data fill:#e8f5e8
+    classDef payment fill:#fff3e0
+    classDef ai fill:#fce4ec
+    classDef deploy fill:#f1f8e9
 
-   根据 [Creem.io](https://www.creem.io/) 的特性，这是专为 AI 初创公司设计的金融 OS：
+    class A1,A2,A3,A4 frontend
+    class B1,B2,B3,B4 api
+    class C1,C2,C3,C4 data
+    class D1,D2,D3 payment
+    class E1,E2,E3 ai
+    class F1,F2,F3 deploy
+```
 
-   **核心优势**
+**支付与商业化**
 
-   - 🏢 全球商户代理(MoR): 自动处理全球税务合规
-   - 💳 即时支付集成: 支持 100+国家的支付方式
-   - 🔒 内置风险控制: AI 驱动的欺诈检测
-   - 📊 实时分析: AI 驱动的业务洞察
-   - 🤝 专属支持: 为小团队提供专业指导
+- 起步阶段: Creem.io (AI 公司专用的金融 OS)
+- 扩展阶段: Stripe (成熟后迁移)
+- 税务合规: Creem.io 全球税务处理
+- 订阅管理: Creem.io 内置订阅系统
 
-   **适合 AI 初创的特性**
+**基础设施与部署**
 
-   - 快速启动: 几分钟内完成支付集成
-   - 全球运营: 从第一天就支持国际化
-   - 成本优化: 相比传统方案节省 50%费用
-   - 合规简化: 无需处理复杂的税务申报
+- 云平台: Vercel (前端) + Supabase (后端服务)
+- 容器化: Docker (开发环境) + Serverless (生产环境)
+- CI/CD: GitHub Actions + Vercel 自动部署
+- 监控: Supabase Analytics + Vercel Analytics
+- 文件存储: Supabase Storage
 
-   **后续 Stripe 迁移策略**
+  4.2 Supabase 集成优势
 
-   - 🎯 迁移时机: 月收入达到$50k+或用户规模达到 10k+
-   - 🔄 渐进式迁移: 新用户走 Stripe，老用户保持 Creem
-   - 📋 迁移计划:
-     - 第一阶段: 双系统并行运行
-     - 第二阶段: 数据迁移和用户沟通
-     - 第三阶段: 完全切换到 Stripe
+**开发效率提升**
+
+- 🚀 即时 API 生成: 基于数据库表自动生成 RESTful API
+- 🔐 内置身份认证: 支持邮箱、OAuth (Google, GitHub 等)
+- ⚡ 实时数据同步: 无需手动配置 WebSocket
+- 📁 文件存储: 内置对象存储，支持 CDN 加速
+- 🔍 全文搜索: PostgreSQL 内置搜索功能
+
+**AI 功能增强**
+
+- 🧠 向量搜索: pgvector 扩展，支持 AI 语义搜索
+- 📊 边缘函数: 支持在边缘运行 AI 推理
+- 🔄 实时 AI 响应: 结合 Realtime 实现流式 AI 对话
+- 💾 智能缓存: AI 响应结果的自动缓存
+
+**成本控制**
+
+- 💰 按需付费: 免费额度 + 使用量计费
+- 🌍 全球部署: 多区域部署，降低延迟
+- 📈 弹性扩展: 自动扩容，无需运维
+
+  4.3 Creem.io 支付系统选择
+
+**为什么选择 Creem.io 作为起步方案**
+
+根据 [Creem.io](https://www.creem.io/) 的特性，这是专为 AI 初创公司设计的金融 OS：
+
+**核心优势**
+
+- 🏢 全球商户代理(MoR): 自动处理全球税务合规
+- 💳 即时支付集成: 支持 100+国家的支付方式
+- 🔒 内置风险控制: AI 驱动的欺诈检测
+- 📊 实时分析: AI 驱动的业务洞察
+- 🤝 专属支持: 为小团队提供专业指导
+
+**适合 AI 初创的特性**
+
+- 快速启动: 几分钟内完成支付集成
+- 全球运营: 从第一天就支持国际化
+- 成本优化: 相比传统方案节省 50%费用
+- 合规简化: 无需处理复杂的税务申报
+
+**后续 Stripe 迁移策略**
+
+- 🎯 迁移时机: 月收入达到$50k+或用户规模达到 10k+
+- 🔄 渐进式迁移: 新用户走 Stripe，老用户保持 Creem
+- 📋 迁移计划:
+  - 第一阶段: 双系统并行运行
+  - 第二阶段: 数据迁移和用户沟通
+  - 第三阶段: 完全切换到 Stripe
 
 5. 数据库设计 (Supabase 优化版)
 

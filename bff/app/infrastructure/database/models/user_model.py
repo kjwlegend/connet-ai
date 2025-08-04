@@ -44,9 +44,20 @@ class UserModel(SQLModel, table=True):
     )
     
     # Authentication
-    password_hash: str = Field(
+    password_hash: Optional[str] = Field(
+        default=None,
         max_length=255,
-        description="Hashed password"
+        description="Hashed password (optional for OAuth users)"
+    )
+    auth_provider: str = Field(
+        default="local",
+        max_length=50,
+        description="Authentication provider: local, supabase, google, github, etc."
+    )
+    external_id: Optional[str] = Field(
+        default=None,
+        max_length=100,
+        description="External provider user ID"
     )
     
     # Status
@@ -56,7 +67,8 @@ class UserModel(SQLModel, table=True):
     )
     
     # Invitation system
-    invitation_code: str = Field(
+    invitation_code: Optional[str] = Field(
+        default=None,
         unique=True,
         index=True,
         max_length=20,

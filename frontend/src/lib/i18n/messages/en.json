@@ -72,5 +72,56 @@
     "notFound": "Not found",
     "unauthorized": "Unauthorized",
     "validation": "Validation error"
+  },
+  "auth": {
+    "login": {
+      "title": "Welcome Back",
+      "subtitle": "Sign in to your account to continue",
+      "emailLabel": "Email",
+      "emailPlaceholder": "Enter your email address",
+      "passwordLabel": "Password",
+      "passwordPlaceholder": "Enter your password",
+      "rememberMe": "Remember me",
+      "forgotPassword": "Forgot password?",
+      "loginButton": "Sign In",
+      "noAccount": "Don't have an account?",
+      "signUp": "Sign Up",
+      "loginSuccess": "Login successful",
+      "loginError": "Login failed"
+    },
+    "register": {
+      "title": "Create Account",
+      "subtitle": "Join our AI collaboration platform",
+      "nameLabel": "Full Name",
+      "namePlaceholder": "Enter your full name",
+      "usernameLabel": "Username (Optional)",
+      "usernamePlaceholder": "Enter a username",
+      "emailLabel": "Email",
+      "emailPlaceholder": "Enter your email address",
+      "passwordLabel": "Password",
+      "passwordPlaceholder": "Enter your password",
+      "confirmPasswordLabel": "Confirm Password",
+      "confirmPasswordPlaceholder": "Confirm your password",
+      "inviteCodeLabel": "Invitation Code (Optional)",
+      "inviteCodePlaceholder": "Enter invitation code (e.g., ABC123)",
+      "agreeTerms": "I agree to the Terms of Service and Privacy Policy",
+      "registerButton": "Create Account",
+      "hasAccount": "Already have an account?",
+      "signIn": "Sign In",
+      "registerSuccess": "Account created successfully",
+      "registerError": "Registration failed"
+    },
+    "validation": {
+      "emailRequired": "Email is required",
+      "emailInvalid": "Please enter a valid email address",
+      "passwordRequired": "Password is required",
+      "passwordMinLength": "Password must be at least 8 characters",
+      "passwordsNotMatch": "Passwords do not match",
+      "nameRequired": "Full name is required",
+      "usernameLength": "Username must be between 3-50 characters",
+      "usernameInvalid": "Username can only contain letters, numbers, dots, hyphens and underscores",
+      "inviteCodeInvalid": "Invitation code must be 3 letters followed by 3 numbers (e.g., ABC123)",
+      "termsRequired": "You must agree to the terms and conditions"
+    }
   }
 }

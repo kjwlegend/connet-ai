@@ -114,14 +114,36 @@ class UserRepositoryImpl(UserRepository):
     async def create(self, user_data: Any) -> User:
         """Create a new user."""
         try:
-            # Convert to model
-            model = UserModel(
-                email=user_data.email,
-                full_name=user_data.full_name,
-                username=user_data.username,
-                password_hash=user_data.password,
-                is_active=getattr(user_data, 'is_active', True),
-            )
+            # Convert to model with support for external auth providers
+            model_data = {
+                "email": user_data.email,
+                "full_name": user_data.full_name,
+                "username": user_data.username,
+                "is_active": getattr(user_data, 'is_active', True),
+                "auth_provider": getattr(user_data, 'auth_provider', 'local'),
+                "external_id": getattr(user_data, 'external_id', None),
+                "invitation_code": getattr(user_data, 'invitation_code', None),
+                "invited_by_code": getattr(user_data, 'invited_by_code', None),
+                "invited_by_user_id": getattr(user_data, 'invited_by_user_id', None),
+                "registration_source": getattr(user_data, 'registration_source', None),
+                "registration_channel": getattr(user_data, 'registration_channel', None),
+                "utm_source": getattr(user_data, 'utm_source', None),
+                "utm_medium": getattr(user_data, 'utm_medium', None),
+                "utm_campaign": getattr(user_data, 'utm_campaign', None),
+                "metadata": getattr(user_data, 'metadata', None),
+            }
+            
+            # Set ID if provided (for external auth providers)
+            if hasattr(user_data, 'id') and user_data.id:
+                model_data["id"] = user_data.id
+            
+            # Handle password vs password_hash
+            if hasattr(user_data, 'password_hash') and user_data.password_hash:
+                model_data["password_hash"] = user_data.password_hash
+            elif hasattr(user_data, 'password') and user_data.password:
+                model_data["password_hash"] = user_data.password
+            
+            model = UserModel(**model_data)
             
             self.session.add(model)
             await self.session.commit()
@@ -294,6 +316,63 @@ class UserRepositoryImpl(UserRepository):
         
         return True
     
+    async def update_by_email(self, email: str, update_data: dict) -> bool:
+        """Update user by email address."""
+        try:
+            stmt = select(UserModel).where(UserModel.email == email)
+            result = await self.session.execute(stmt)
+            model = result.scalar_one_or_none()
+            
+            if not model:
+                return False
+            
+            # Apply updates
+            for field, value in update_data.items():
+                if hasattr(model, field):
+                    setattr(model, field, value)
+            
+            # Update timestamp
+            model.updated_at = datetime.utcnow()
+            
+            await self.session.commit()
+            
+            logger.info(f"User updated by email successfully: {email}")
+            return True
+            
+        except Exception as e:
+            await self.session.rollback()
+            logger.error(f"Failed to update user by email {email}: {e}")
+            raise
+    
+    async def get_by_external_id(self, external_id: str, auth_provider: str) -> Optional[User]:
+        """Get user by external ID and auth provider."""
+        try:
+            stmt = select(UserModel).where(
+                UserModel.external_id == external_id,
+                UserModel.auth_provider == auth_provider
+            )
+            result = await self.session.execute(stmt)
+            model = result.scalar_one_or_none()
+            
+            return self._model_to_entity(model) if model else None
+            
+        except Exception as e:
+            logger.error(f"Failed to get user by external ID {external_id}: {e}")
+            raise
+    
+    async def get_by_invitation_code(self, invitation_code: str) -> Optional[User]:
+        """Get user by invitation code."""
+        try:
+            stmt = select(UserModel).where(UserModel.invitation_code == invitation_code)
+            result = await self.session.execute(stmt)
+            model = result.scalar_one_or_none()
+            
+            return self._model_to_entity(model) if model else None
+            
+        except Exception as e:
+            logger.error(f"Failed to get user by invitation code {invitation_code}: {e}")
+            raise
+    
     def _model_to_entity(self, model: UserModel) -> User:
         """Convert database model to domain entity."""
         return User(
@@ -302,10 +381,21 @@ class UserRepositoryImpl(UserRepository):
             full_name=model.full_name,
             username=model.username,
             password_hash=model.password_hash,
+            auth_provider=model.auth_provider,
+            external_id=model.external_id,
             is_active=model.is_active,
+            invitation_code=model.invitation_code,
+            invited_by_code=model.invited_by_code,
+            invited_by_user_id=model.invited_by_user_id,
+            registration_source=model.registration_source,
+            registration_channel=model.registration_channel,
+            utm_source=model.utm_source,
+            utm_medium=model.utm_medium,
+            utm_campaign=model.utm_campaign,
             created_at=model.created_at,
             updated_at=model.updated_at,
             last_login_at=model.last_login_at,
             permissions=model.permissions or [],
             roles=model.roles or [],
+            metadata=model.metadata,
         )

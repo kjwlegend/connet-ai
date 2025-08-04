@@ -23,12 +23,30 @@ class UserBase(BaseSchema):
 
 class UserCreate(UserBase):
     """Schema for creating a user."""
-    password: str = Field(..., min_length=8, description="User password")
+    id: Optional[UUID] = Field(None, description="User ID (for external auth providers)")
+    password: Optional[str] = Field(None, min_length=8, description="User password (optional for OAuth)")
+    password_hash: Optional[str] = Field(None, description="Pre-hashed password")
+    auth_provider: str = Field("local", description="Authentication provider")
+    external_id: Optional[str] = Field(None, description="External provider user ID")
+    
+    # Invitation system
+    invitation_code: Optional[str] = Field(None, description="User's unique invitation code")
+    invited_by_code: Optional[str] = Field(None, description="Invitation code used during registration")
+    invited_by_user_id: Optional[UUID] = Field(None, description="ID of the user who invited this user")
+    
+    # Registration tracking
+    registration_source: Optional[str] = Field(None, description="Registration source: web, mobile, api, admin")
+    registration_channel: Optional[str] = Field(None, description="Registration channel: organic, invite, social, campaign")
+    utm_source: Optional[str] = Field(None, description="UTM source parameter")
+    utm_medium: Optional[str] = Field(None, description="UTM medium parameter")
+    utm_campaign: Optional[str] = Field(None, description="UTM campaign parameter")
+    
+    metadata: Optional[dict] = Field(None, description="Additional user metadata")
     
     @validator('password')
     def validate_password(cls, v):
         """Validate password strength."""
-        if len(v) < 8:
+        if v and len(v) < 8:
             raise ValueError('Password must be at least 8 characters long')
         return v
 
@@ -42,6 +60,7 @@ class UserUpdate(BaseSchema):
 
 class UserResponse(UUIDMixin, UserBase, TimestampMixin):
     """Schema for user responses."""
+    invitation_code: Optional[str] = Field(None, description="User's unique invitation code")
     last_login_at: Optional[datetime] = Field(None, description="Last login timestamp")
     permissions: Optional[List[str]] = Field(None, description="User permissions")
     roles: Optional[List[str]] = Field(None, description="User roles")
@@ -55,6 +74,7 @@ class UserResponse(UUIDMixin, UserBase, TimestampMixin):
             full_name=user.full_name,
             username=user.username,
             is_active=user.is_active,
+            invitation_code=getattr(user, 'invitation_code', None),
             created_at=user.created_at,
             updated_at=user.updated_at,
             last_login_at=getattr(user, 'last_login_at', None),
@@ -72,7 +92,23 @@ class UserUpdateRequest(BaseSchema):
 # User entity (simplified for now)
 class User(UUIDMixin, UserBase, TimestampMixin):
     """User entity."""
-    password_hash: str = Field(..., description="Hashed password")
+    password_hash: Optional[str] = Field(None, description="Hashed password (optional for OAuth)")
+    auth_provider: str = Field("local", description="Authentication provider")
+    external_id: Optional[str] = Field(None, description="External provider user ID")
+    
+    # Invitation system
+    invitation_code: Optional[str] = Field(None, description="User's unique invitation code")
+    invited_by_code: Optional[str] = Field(None, description="Invitation code used during registration")
+    invited_by_user_id: Optional[UUID] = Field(None, description="ID of the user who invited this user")
+    
+    # Registration tracking
+    registration_source: Optional[str] = Field(None, description="Registration source")
+    registration_channel: Optional[str] = Field(None, description="Registration channel")
+    utm_source: Optional[str] = Field(None, description="UTM source parameter")
+    utm_medium: Optional[str] = Field(None, description="UTM medium parameter")
+    utm_campaign: Optional[str] = Field(None, description="UTM campaign parameter")
+    
     last_login_at: Optional[datetime] = Field(None, description="Last login timestamp")
     permissions: Optional[List[str]] = Field(None, description="User permissions")
     roles: Optional[List[str]] = Field(None, description="User roles")
+    metadata: Optional[dict] = Field(None, description="Additional user metadata")

@@ -4,6 +4,11 @@ export class StorageUtil {
     
     try {
       localStorage.setItem(key, JSON.stringify(value))
+      
+      // Also set as cookie for middleware access
+      if (key === 'auth-token') {
+        document.cookie = `auth-token=${value}; path=/; max-age=${7 * 24 * 60 * 60}; SameSite=Lax`
+      }
     } catch (error) {
       console.error('Failed to save to localStorage:', error)
     }
@@ -26,6 +31,11 @@ export class StorageUtil {
     
     try {
       localStorage.removeItem(key)
+      
+      // Also remove cookie for middleware access
+      if (key === 'auth-token') {
+        document.cookie = 'auth-token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT'
+      }
     } catch (error) {
       console.error('Failed to remove from localStorage:', error)
     }

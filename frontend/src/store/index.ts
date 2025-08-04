@@ -5,6 +5,7 @@ import { env } from '@/lib/config/env'
 
 import createAuthSlice from './slices/authSlice'
 import createUISlice from './slices/uiSlice'
+import createChatSlice from './slices/chatSlice'
 import { StoreState } from './types'
 
 // Create store without persistence for now to avoid hydration issues
@@ -14,6 +15,7 @@ const useAppStore = create<StoreState>()(
       (...a) => ({
         ...createAuthSlice(...a),
         ...createUISlice(...a),
+        ...createChatSlice(...a),
       }),
       'AppStore'
     ),
@@ -63,12 +65,28 @@ if (typeof window !== 'undefined') {
   useAppStore.getState().initializeAuth()
 }
 
-// TODO: Add chat selectors when chat slice is implemented
-// export const useChat = () => useAppStore((state) => ({
-//   conversations: state.conversations,
-//   currentConversation: state.currentConversation,
-//   messages: state.messages,
-//   isTyping: state.isTyping,
-//   sendMessage: state.sendMessage,
-//   setCurrentConversation: state.setCurrentConversation,
-// }))
+export const useChat = () => {
+  const state = useAppStore((state) => ({
+    conversations: state.conversations,
+    activeConversationId: state.activeConversationId,
+    messages: state.messages,
+    isLoading: state.isLoading,
+    isSending: state.isSending,
+    error: state.error,
+    draft: state.draft,
+    mentionSuggestions: state.mentionSuggestions,
+    showMentionSuggestions: state.showMentionSuggestions,
+    setActiveConversation: state.setActiveConversation,
+    addConversation: state.addConversation,
+    loadConversations: state.loadConversations,
+    sendMessage: state.sendMessage,
+    addMessage: state.addMessage,
+    loadMessages: state.loadMessages,
+    setDraft: state.setDraft,
+    clearDraft: state.clearDraft,
+    setError: state.setError,
+    clearError: state.clearError,
+  }))
+  
+  return state
+}

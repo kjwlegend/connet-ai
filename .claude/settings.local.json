@@ -8,7 +8,10 @@
       "Bash(npm run dev:*)",
       "Bash(rm:*)",
       "WebFetch(domain:next-intl.dev)",
-      "Bash(pnpm add:*)"
+      "Bash(pnpm add:*)",
+      "Bash(pnpm lint:*)",
+      "Bash(pnpm:*)",
+      "Bash(pip install:*)"
     ],
     "deny": []
   }

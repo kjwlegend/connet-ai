@@ -72,5 +72,56 @@
     "notFound": "未找到",
     "unauthorized": "未授权",
     "validation": "验证错误"
+  },
+  "auth": {
+    "login": {
+      "title": "欢迎回来",
+      "subtitle": "登录您的账户以继续",
+      "emailLabel": "电子邮箱",
+      "emailPlaceholder": "请输入您的邮箱地址",
+      "passwordLabel": "密码",
+      "passwordPlaceholder": "请输入您的密码",
+      "rememberMe": "记住我",
+      "forgotPassword": "忘记密码？",
+      "loginButton": "登录",
+      "noAccount": "还没有账户？",
+      "signUp": "注册",
+      "loginSuccess": "登录成功",
+      "loginError": "登录失败"
+    },
+    "register": {
+      "title": "创建账户",
+      "subtitle": "加入我们的 AI 协作平台",
+      "nameLabel": "姓名",
+      "namePlaceholder": "请输入您的姓名",
+      "usernameLabel": "用户名（可选）",
+      "usernamePlaceholder": "请输入用户名",
+      "emailLabel": "电子邮箱",
+      "emailPlaceholder": "请输入您的邮箱地址",
+      "passwordLabel": "密码",
+      "passwordPlaceholder": "请输入您的密码",
+      "confirmPasswordLabel": "确认密码",
+      "confirmPasswordPlaceholder": "请再次输入密码",
+      "inviteCodeLabel": "邀请码（可选）",
+      "inviteCodePlaceholder": "请输入邀请码（如：ABC123）",
+      "agreeTerms": "我同意服务条款和隐私政策",
+      "registerButton": "创建账户",
+      "hasAccount": "已有账户？",
+      "signIn": "登录",
+      "registerSuccess": "账户创建成功",
+      "registerError": "注册失败"
+    },
+    "validation": {
+      "emailRequired": "邮箱地址是必填项",
+      "emailInvalid": "请输入有效的邮箱地址",
+      "passwordRequired": "密码是必填项",
+      "passwordMinLength": "密码至少需要8个字符",
+      "passwordsNotMatch": "两次输入的密码不一致",
+      "nameRequired": "姓名是必填项",
+      "usernameLength": "用户名长度需要在3-50字符之间",
+      "usernameInvalid": "用户名只能包含字母、数字、点号、连字符和下划线",
+      "inviteCodeInvalid": "邀请码格式为3个字母+3个数字（如：ABC123）",
+      "termsRequired": "您必须同意条款和条件"
+    }
   }
 }

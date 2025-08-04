@@ -3,6 +3,7 @@ import { Inter, JetBrains_Mono } from 'next/font/google'
 import './globals.css'
 import { ThemeProvider } from 'next-themes'
 import { I18nProvider } from '@/lib/i18n/I18nProvider'
+import { AuthProvider } from '@/components/auth/AuthProvider'
 import { generateMetadata } from '@/lib/seo/metadata'
 import { generateJSONLD } from '@/lib/seo/metadata'
 import Script from 'next/script'
@@ -56,16 +57,19 @@ export default function RootLayout({
         }}
       >
         <ThemeProvider
-          attribute="data-theme"
-          defaultTheme="light"
+          attribute="class"
+          defaultTheme="system"
           enableSystem
-          themes={['light', 'dark']}
+          themes={['light', 'dark', 'system']}
           storageKey="connet-theme"
+          disableTransitionOnChange={false}
         >
           <I18nProvider>
-            <div className="min-h-screen bg-background text-foreground transition-colors">
-              {children}
-            </div>
+            <AuthProvider>
+              <div className="min-h-screen bg-background text-foreground transition-colors">
+                {children}
+              </div>
+            </AuthProvider>
           </I18nProvider>
         </ThemeProvider>
         
@@ -75,8 +79,13 @@ export default function RootLayout({
             (function() {
               const savedTheme = localStorage.getItem('connet-theme');
               const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-              const theme = savedTheme || (prefersDark ? 'dark' : 'light');
-              document.documentElement.setAttribute('data-theme', theme);
+              let theme = savedTheme || 'system';
+              
+              if (theme === 'system') {
+                theme = prefersDark ? 'dark' : 'light';
+              }
+              
+              document.documentElement.classList.toggle('dark', theme === 'dark');
             })();
           `}
         </Script>

@@ -1,98 +1,142 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useRef } from "react"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { ScrollArea } from "@/components/ui/scroll-area"
-import { Send, Paperclip, Smile, MoreVertical } from "lucide-react"
-
-interface Message {
-  id: string
-  sender: string
-  content: string
-  timestamp: string
-  isUser: boolean
-}
-
-const mockMessages: Message[] = [
-  {
-    id: "1",
-    sender: "AI 编程助手",
-    content: "你好！我是你的AI编程助手，可以帮你解决各种编程问题。有什么我可以帮助你的吗？",
-    timestamp: "10:30",
-    isUser: false,
-  },
-  {
-    id: "2",
-    sender: "用户",
-    content: "我想优化一下React组件的性能，有什么建议吗？",
-    timestamp: "10:32",
-    isUser: true,
-  },
-  {
-    id: "3",
-    sender: "AI 编程助手",
-    content:
-      "当然可以！React性能优化有几个关键点：\n\n1. 使用React.memo包装组件避免不必要的重渲染\n2. 使用useMemo和useCallback缓存计算结果和函数\n3. 合理使用useState和useEffect\n4. 避免在render中创建新对象\n\n你想了解哪个方面的详细实现？",
-    timestamp: "10:33",
-    isUser: false,
-  },
-]
+import { Send, Paperclip, Smile, MoreVertical, Users, AlertCircle } from "lucide-react"
+import { useChat } from "@/store"
+import { useTranslations } from "@/lib/i18n/client"
+import { formatDistanceToNow } from "date-fns"
+import { zhCN, enUS } from "date-fns/locale"
+import { useLocale } from "@/lib/i18n/client"
 
 interface ChatInterfaceProps {
-  selectedItem: string
+  selectedItem?: string
 }
 
 export function ChatInterface({ selectedItem }: ChatInterfaceProps) {
-  const [message, setMessage] = useState("")
-  const [messages, setMessages] = useState(mockMessages)
+  const t = useTranslations()
+  const locale = useLocale()
+  const scrollAreaRef = useRef<HTMLDivElement>(null)
+  
+  const {
+    activeConversationId,
+    conversations,
+    messages,
+    draft,
+    isSending,
+    isLoading,
+    error,
+    setDraft,
+    sendMessage,
+    loadMessages,
+    clearError,
+  } = useChat()
 
-  const handleSendMessage = () => {
-    if (!message.trim()) return
+  // Get current conversation
+  const currentConversation = conversations.find(conv => conv.id === activeConversationId)
+  const currentMessages = activeConversationId ? messages[activeConversationId] || [] : []
 
-    const newMessage: Message = {
-      id: Date.now().toString(),
-      sender: "用户",
-      content: message,
-      timestamp: new Date().toLocaleTimeString("zh-CN", {
-        hour: "2-digit",
-        minute: "2-digit",
-      }),
-      isUser: true,
+  // Load messages when conversation changes
+  useEffect(() => {
+    if (activeConversationId && !messages[activeConversationId]) {
+      loadMessages(activeConversationId)
     }
+  }, [activeConversationId, messages, loadMessages])
 
-    setMessages([...messages, newMessage])
-    setMessage("")
-
-    // 模拟AI回复
-    setTimeout(() => {
-      const aiReply: Message = {
-        id: (Date.now() + 1).toString(),
-        sender: "AI 编程助手",
-        content: "我理解你的问题。让我为你提供一个详细的解决方案...",
-        timestamp: new Date().toLocaleTimeString("zh-CN", {
-          hour: "2-digit",
-          minute: "2-digit",
-        }),
-        isUser: false,
+  // Auto-scroll to bottom when new messages arrive
+  useEffect(() => {
+    if (scrollAreaRef.current) {
+      const scrollElement = scrollAreaRef.current.querySelector('[data-radix-scroll-area-viewport]')
+      if (scrollElement) {
+        scrollElement.scrollTop = scrollElement.scrollHeight
       }
-      setMessages((prev) => [...prev, aiReply])
-    }, 1000)
+    }
+  }, [currentMessages])
+
+  const handleSendMessage = async () => {
+    if (!draft.trim() || !activeConversationId || isSending) return
+
+    try {
+      await sendMessage(activeConversationId, draft)
+      setDraft('')
+    } catch (error) {
+      console.error('Failed to send message:', error)
+    }
+  }
+
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault()
+      handleSendMessage()
+    }
+  }
+
+  const formatMessageTime = (timestamp: string) => {
+    const date = new Date(timestamp)
+    const dateLocale = locale === 'zh' ? zhCN : enUS
+    
+    return formatDistanceToNow(date, {
+      addSuffix: true,
+      locale: dateLocale
+    })
+  }
+
+  const getAvatarFallback = (name: string) => {
+    return name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2)
+  }
+
+  // Show empty state if no conversation is selected
+  if (!activeConversationId || !currentConversation) {
+    return (
+      <div className="flex flex-col items-center justify-center h-full text-muted-foreground">
+        <Users className="h-16 w-16 mb-4 opacity-50" />
+        <h3 className="text-lg font-medium mb-2">Welcome to Connet.AI</h3>
+        <p className="text-sm text-center max-w-md">
+          Select a conversation from the sidebar to start chatting with AI agents, 
+          or create a new conversation to begin collaborating.
+        </p>
+      </div>
+    )
   }
 
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col h-full bg-background">
       {/* Chat Header */}
-      <div className="flex items-center justify-between p-4 border-b border-gray-200">
+      <div className="flex items-center justify-between p-4 border-b border-border bg-card">
         <div className="flex items-center space-x-3">
-          <Avatar className="h-10 w-10">
-            <AvatarImage src="/placeholder.svg?height=40&width=40" />
-            <AvatarFallback>AI</AvatarFallback>
-          </Avatar>
-          <div>
-            <h2 className="font-semibold text-gray-900">AI 编程助手</h2>
-            <p className="text-sm text-green-600">在线</p>
+          {/* Show multiple avatars for group conversations */}
+          <div className="relative">
+            {currentConversation.participants.slice(0, 2).map((participant, index) => (
+              <Avatar 
+                key={participant.id} 
+                className={`h-10 w-10 border-2 border-background ${
+                  index > 0 ? 'absolute -right-2 -top-1' : ''
+                }`}
+              >
+                <AvatarImage src={participant.avatar} />
+                <AvatarFallback className="text-xs">
+                  {getAvatarFallback(participant.name)}
+                </AvatarFallback>
+              </Avatar>
+            ))}
+          </div>
+          <div className="flex-1 min-w-0">
+            <h2 className="font-semibold text-foreground truncate">
+              {currentConversation.title}
+            </h2>
+            <div className="flex items-center space-x-2 text-sm text-muted-foreground">
+              <span className="flex items-center space-x-1">
+                <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                <span>
+                  {currentConversation.participants.filter(p => p.status === 'online').length} online
+                </span>
+              </span>
+              <span>•</span>
+              <span>{currentConversation.participants.length} participants</span>
+            </div>
           </div>
         </div>
         <Button variant="ghost" size="sm">
@@ -100,53 +144,128 @@ export function ChatInterface({ selectedItem }: ChatInterfaceProps) {
         </Button>
       </div>
 
+      {/* Error Display */}
+      {error && (
+        <div className="mx-4 mt-4 p-3 bg-destructive/10 border border-destructive/20 rounded-lg flex items-center space-x-2">
+          <AlertCircle className="h-4 w-4 text-destructive" />
+          <span className="text-sm text-destructive">{error}</span>
+          <Button variant="ghost" size="sm" onClick={clearError} className="ml-auto">
+            ✕
+          </Button>
+        </div>
+      )}
+
       {/* Messages Area */}
-      <ScrollArea className="flex-1 p-4">
-        <div className="space-y-4">
-          {messages.map((msg) => (
-            <div key={msg.id} className={`flex ${msg.isUser ? "justify-end" : "justify-start"}`}>
-              <div
-                className={`flex items-start space-x-2 max-w-[70%] ${
-                  msg.isUser ? "flex-row-reverse space-x-reverse" : ""
-                }`}
-              >
-                {!msg.isUser && (
+      <ScrollArea className="flex-1 px-4" ref={scrollAreaRef}>
+        {isLoading ? (
+          <div className="flex items-center justify-center h-32">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+          </div>
+        ) : (
+          <div className="space-y-4 py-4">
+            {currentMessages.map((message) => {
+              const participant = currentConversation.participants.find(p => p.id === message.senderId)
+              const isUser = message.senderType === 'user'
+              
+              return (
+                <div key={message.id} className={`flex ${isUser ? "justify-end" : "justify-start"}`}>
+                  <div
+                    className={`flex items-start space-x-3 max-w-[70%] ${
+                      isUser ? "flex-row-reverse space-x-reverse" : ""
+                    }`}
+                  >
+                    {!isUser && (
+                      <Avatar className="h-8 w-8 mt-1">
+                        <AvatarImage src={participant?.avatar} />
+                        <AvatarFallback className="text-xs">
+                          {getAvatarFallback(message.senderName)}
+                        </AvatarFallback>
+                      </Avatar>
+                    )}
+                    <div className="flex flex-col space-y-1">
+                      {!isUser && (
+                        <div className="text-xs text-muted-foreground px-1">
+                          {message.senderName}
+                        </div>
+                      )}
+                      <div
+                        className={`rounded-lg px-4 py-2 ${
+                          isUser 
+                            ? "bg-primary text-primary-foreground" 
+                            : "bg-muted text-muted-foreground"
+                        }`}
+                      >
+                        <p className="text-sm whitespace-pre-wrap leading-relaxed">
+                          {message.content}
+                        </p>
+                      </div>
+                      <div className={`text-xs text-muted-foreground px-1 ${
+                        isUser ? "text-right" : "text-left"
+                      }`}>
+                        {formatMessageTime(message.timestamp)}
+                        {message.metadata?.mentions && message.metadata.mentions.length > 0 && (
+                          <span className="ml-2 text-primary">
+                            @{message.metadata.mentions.length}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )
+            })}
+            
+            {/* Typing indicator */}
+            {isSending && (
+              <div className="flex justify-start">
+                <div className="flex items-center space-x-3">
                   <Avatar className="h-8 w-8">
-                    <AvatarImage src="/placeholder.svg?height=32&width=32" />
-                    <AvatarFallback>AI</AvatarFallback>
+                    <AvatarFallback className="text-xs">AI</AvatarFallback>
                   </Avatar>
-                )}
-                <div
-                  className={`rounded-lg p-3 ${msg.isUser ? "bg-blue-500 text-white" : "bg-gray-100 text-gray-900"}`}
-                >
-                  <p className="text-sm whitespace-pre-wrap">{msg.content}</p>
-                  <p className={`text-xs mt-1 ${msg.isUser ? "text-blue-100" : "text-gray-500"}`}>{msg.timestamp}</p>
+                  <div className="bg-muted rounded-lg px-4 py-2">
+                    <div className="flex space-x-1">
+                      <div className="w-2 h-2 bg-muted-foreground/50 rounded-full animate-pulse"></div>
+                      <div className="w-2 h-2 bg-muted-foreground/50 rounded-full animate-pulse" style={{ animationDelay: '0.2s' }}></div>
+                      <div className="w-2 h-2 bg-muted-foreground/50 rounded-full animate-pulse" style={{ animationDelay: '0.4s' }}></div>
+                    </div>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
-        </div>
+            )}
+          </div>
+        )}
       </ScrollArea>
 
       {/* Input Area */}
-      <div className="p-4 border-t border-gray-200">
-        <div className="flex items-center space-x-2">
-          <Button variant="ghost" size="sm">
-            <Paperclip className="h-5 w-5" />
+      <div className="p-4 border-t border-border bg-card">
+        <div className="flex items-end space-x-2">
+          <Button variant="ghost" size="sm" className="mb-2">
+            <Paperclip className="h-4 w-4" />
           </Button>
-          <Button variant="ghost" size="sm">
-            <Smile className="h-5 w-5" />
+          <Button variant="ghost" size="sm" className="mb-2">
+            <Smile className="h-4 w-4" />
           </Button>
-          <Input
-            placeholder="输入消息..."
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
-            onKeyPress={(e) => e.key === "Enter" && handleSendMessage()}
-            className="flex-1"
-          />
-          <Button onClick={handleSendMessage} disabled={!message.trim()}>
+          <div className="flex-1">
+            <Input
+              placeholder={t('chat.inputPlaceholder') || "Type a message..."}
+              value={draft}
+              onChange={(e) => setDraft(e.target.value)}
+              onKeyPress={handleKeyPress}
+              className="min-h-[40px] resize-none"
+              disabled={isSending}
+            />
+          </div>
+          <Button 
+            onClick={handleSendMessage} 
+            disabled={!draft.trim() || isSending}
+            size="sm"
+            className="mb-2"
+          >
             <Send className="h-4 w-4" />
           </Button>
+        </div>
+        <div className="text-xs text-muted-foreground mt-1 px-2">
+          Press Enter to send, Shift+Enter for new line
         </div>
       </div>
     </div>

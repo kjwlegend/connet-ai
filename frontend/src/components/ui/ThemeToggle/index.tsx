@@ -3,6 +3,7 @@
 import { Button } from "@/components/ui/button"
 import { Moon, Sun, Monitor } from "lucide-react"
 import { useTheme } from "next-themes"
+import { useEffect, useState } from "react"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -23,6 +24,11 @@ export function ThemeToggle({
   size = "icon" 
 }: ThemeToggleProps) {
   const { theme, setTheme } = useTheme()
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
   const getThemeIcon = (theme: string) => {
     switch (theme) {
@@ -44,6 +50,22 @@ export function ThemeToggle({
       default:
         return '跟随系统'
     }
+  }
+
+  // 在水合完成前显示默认图标
+  if (!mounted) {
+    return (
+      <Button 
+        variant={variant} 
+        size={size} 
+        className={cn("transition-colors", className)}
+        aria-label="切换主题"
+        disabled
+      >
+        <Monitor className="h-4 w-4" />
+        <span className="sr-only">切换主题</span>
+      </Button>
+    )
   }
 
   return (
@@ -98,9 +120,30 @@ export function ThemeToggle({
 // 简单的主题切换按钮（只在浅色和深色之间切换）
 export function SimpleThemeToggle({ className }: { className?: string }) {
   const { theme, setTheme } = useTheme()
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
   const toggleTheme = () => {
     setTheme(theme === 'dark' ? 'light' : 'dark')
+  }
+
+  // 在水合完成前显示默认图标
+  if (!mounted) {
+    return (
+      <Button
+        variant="ghost"
+        size="icon"
+        className={cn("transition-colors", className)}
+        aria-label="切换主题"
+        disabled
+      >
+        <Monitor className="h-4 w-4" />
+        <span className="sr-only">切换主题</span>
+      </Button>
+    )
   }
 
   return (

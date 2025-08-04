@@ -38,6 +38,18 @@ class RegisterRequest(BaseSchema):
     password: str = Field(..., min_length=8, description="User password")
     full_name: str = Field(..., min_length=2, max_length=100, description="Full name")
     username: Optional[str] = Field(None, min_length=3, max_length=50, description="Username")
+    
+    # Invitation system
+    invited_by_code: Optional[str] = Field(None, max_length=20, description="Invitation code used for registration")
+    
+    # Registration tracking
+    registration_source: Optional[str] = Field(None, max_length=50, description="Registration source: web, mobile, api")
+    registration_channel: Optional[str] = Field(None, max_length=50, description="Registration channel: organic, invite, social, campaign")
+    
+    # UTM parameters for marketing tracking
+    utm_source: Optional[str] = Field(None, max_length=100, description="UTM source parameter")
+    utm_medium: Optional[str] = Field(None, max_length=100, description="UTM medium parameter")
+    utm_campaign: Optional[str] = Field(None, max_length=100, description="UTM campaign parameter")
 
 
 class TokenVerifyRequest(BaseSchema):
