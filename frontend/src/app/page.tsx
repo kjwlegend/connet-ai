@@ -1,9 +1,9 @@
 "use client"
 
 import { useState } from "react"
-import { LegacySidebar } from "@/components/layout/LegacySidebar"
-import { LegacyMiddlePanel } from "@/components/layout/LegacyMiddlePanel"
-import { LegacyMainContent } from "@/components/layout/LegacyMainContent"
+import { Sidebar } from "@/components/layout/Sidebar"
+import { MiddlePanel } from "@/components/layout/MiddlePanel"
+import { MainContent } from "@/components/layout/MainContent"
 import { ErrorBoundary } from "@/components/common/ErrorBoundary"
 import type { NavigationMode } from "@/types"
 
@@ -13,15 +13,15 @@ export default function Home() {
 
   return (
     <ErrorBoundary>
-      <div className="flex h-screen bg-gray-50">
+      <div className="flex h-screen bg-background">
         {/* Left Sidebar - Navigation */}
-        <LegacySidebar currentMode={currentMode} onModeChange={setCurrentMode} />
+        <Sidebar currentMode={currentMode} onModeChange={setCurrentMode} />
 
         {/* Middle Panel - Context List */}
-        <LegacyMiddlePanel mode={currentMode} selectedItem={selectedItem} onItemSelect={setSelectedItem} />
+        <MiddlePanel mode={currentMode} selectedItem={selectedItem} onItemSelect={setSelectedItem} />
 
         {/* Right Panel - Main Content */}
-        <LegacyMainContent mode={currentMode} selectedItem={selectedItem} onItemSelect={setSelectedItem} />
+        <MainContent mode={currentMode} selectedItem={selectedItem} onItemSelect={setSelectedItem} />
       </div>
     </ErrorBoundary>
   )

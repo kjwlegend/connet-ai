@@ -117,7 +117,7 @@ export function FilesList({ selectedItem, onItemSelect }: FilesListProps) {
               onClick={() => onItemSelect(file.id)}
             >
               <div className="flex items-start space-x-3">
-                <div className="flex-shrink-0">
+                <div className="shrink-0">
                   <div className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center">
                     <FileIcon className="h-5 w-5 text-gray-600" />
                   </div>

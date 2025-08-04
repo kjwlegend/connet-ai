@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button"
 import { Moon, Sun, Monitor } from "lucide-react"
-import { useTheme } from "@/lib/design-system/theme-system"
+import { useTheme } from "next-themes"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -22,7 +22,7 @@ export function ThemeToggle({
   variant = "ghost", 
   size = "icon" 
 }: ThemeToggleProps) {
-  const { currentTheme, changeTheme, availableThemes } = useTheme()
+  const { theme, setTheme } = useTheme()
 
   const getThemeIcon = (theme: string) => {
     switch (theme) {
@@ -55,31 +55,37 @@ export function ThemeToggle({
           className={cn("transition-colors", className)}
           aria-label="切换主题"
         >
-          {getThemeIcon(currentTheme)}
+          {getThemeIcon(theme || 'system')}
           <span className="sr-only">切换主题</span>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-40">
-        {availableThemes.map((theme) => (
-          <DropdownMenuItem
-            key={theme.name}
-            onClick={() => changeTheme(theme.name)}
-            className={cn(
-              "flex items-center gap-2 cursor-pointer",
-              currentTheme === theme.name && "bg-accent"
-            )}
-          >
-            {getThemeIcon(theme.name)}
-            <span>{getThemeLabel(theme.name)}</span>
-          </DropdownMenuItem>
-        ))}
         <DropdownMenuItem
-          onClick={() => {
-            // 切换到系统主题
-            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-            changeTheme(prefersDark ? 'dark' : 'light');
-          }}
-          className="flex items-center gap-2 cursor-pointer"
+          onClick={() => setTheme('light')}
+          className={cn(
+            "flex items-center gap-2 cursor-pointer",
+            theme === 'light' && "bg-accent"
+          )}
+        >
+          {getThemeIcon('light')}
+          <span>{getThemeLabel('light')}</span>
+        </DropdownMenuItem>
+        <DropdownMenuItem
+          onClick={() => setTheme('dark')}
+          className={cn(
+            "flex items-center gap-2 cursor-pointer",
+            theme === 'dark' && "bg-accent"
+          )}
+        >
+          {getThemeIcon('dark')}
+          <span>{getThemeLabel('dark')}</span>
+        </DropdownMenuItem>
+        <DropdownMenuItem
+          onClick={() => setTheme('system')}
+          className={cn(
+            "flex items-center gap-2 cursor-pointer",
+            theme === 'system' && "bg-accent"
+          )}
         >
           <Monitor className="h-4 w-4" />
           <span>跟随系统</span>
@@ -91,7 +97,11 @@ export function ThemeToggle({
 
 // 简单的主题切换按钮（只在浅色和深色之间切换）
 export function SimpleThemeToggle({ className }: { className?: string }) {
-  const { currentTheme, toggleTheme } = useTheme()
+  const { theme, setTheme } = useTheme()
+
+  const toggleTheme = () => {
+    setTheme(theme === 'dark' ? 'light' : 'dark')
+  }
 
   return (
     <Button
@@ -101,7 +111,7 @@ export function SimpleThemeToggle({ className }: { className?: string }) {
       className={cn("transition-colors", className)}
       aria-label="切换主题"
     >
-      {currentTheme === 'dark' ? (
+      {theme === 'dark' ? (
         <Sun className="h-4 w-4" />
       ) : (
         <Moon className="h-4 w-4" />

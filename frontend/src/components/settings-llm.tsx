@@ -59,7 +59,7 @@ export function SettingsLLM() {
   return (
     <div className="p-6 space-y-6">
       {/* Marketing Section */}
-      <Card className="bg-gradient-to-r from-blue-50 to-purple-50 border-blue-200">
+      <Card className="bg-linear-to-r from-blue-50 to-purple-50 border-blue-200">
         <CardContent className="p-6">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
@@ -71,7 +71,7 @@ export function SettingsLLM() {
                 <p className="text-sm text-gray-600 mt-1">开通会员享受无限制 AI 对话，无需配置任何密钥</p>
               </div>
             </div>
-            <Button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700">
+            <Button className="bg-linear-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700">
               <Sparkles className="h-4 w-4 mr-2" />
               开通会员
             </Button>

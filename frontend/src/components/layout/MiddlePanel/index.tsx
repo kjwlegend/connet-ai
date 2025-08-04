@@ -1,99 +1,78 @@
-import { useUI } from '@/store'
+"use client"
 
-export function MiddlePanel() {
-  const { currentNavigation } = useUI()
+import { Input } from "@/components/ui/input"
+import { ScrollArea } from "@/components/ui/scroll-area"
+import { Search } from "lucide-react"
+import type { NavigationMode } from "@/types"
+import { ConversationList } from "@/components/features/chat/components/ConversationList"
+import { ContactList } from "@/components/features/contacts/components/ContactList"
+import { useState } from "react"
+import { useTheme } from "next-themes"
+import { cn } from "@/lib/utils"
+
+import { FilesManagement } from "@/components/features/files/components/FilesManagement"
+import { SocialSidebar } from "@/components/features/timeline/components/SocialSidebar"
+import { PluginsConfigured } from "@/components/features/plugins/components/PluginsConfigured"
+
+interface MiddlePanelProps {
+  mode: NavigationMode
+  selectedItem: string | null
+  onItemSelect: (id: string) => void
+}
+
+export function MiddlePanel({ mode, selectedItem, onItemSelect }: MiddlePanelProps) {
+  const [fileCategory, setFileCategory] = useState("files")
+  const [socialCategory, setSocialCategory] = useState("my-circle")
+  const { theme } = useTheme()
 
   const renderContent = () => {
-    switch (currentNavigation) {
-      case 'chat':
-        return <ChatList />
-      case 'contacts':
-        return <ContactsList />
-      case 'files':
-        return <FilesList />
-      case 'timeline':
-        return <TimelineList />
-      case 'plugins':
-        return <PluginsList />
-      case 'settings':
-        return <SettingsList />
+    switch (mode) {
+      case "chat":
+        return <ConversationList selectedItem={selectedItem} onItemSelect={onItemSelect} />
+      case "contacts":
+        return <ContactList selectedItem={selectedItem} onItemSelect={onItemSelect} />
+      case "files":
+        return <FilesManagement selectedCategory={fileCategory} onCategorySelect={setFileCategory} />
+      case "social":
+        return <SocialSidebar selectedCategory={socialCategory} onCategorySelect={setSocialCategory} />
+      case "plugins":
+        return <PluginsConfigured selectedPlugin={selectedItem} onPluginSelect={onItemSelect} />
+      case "settings":
+        return <div className={cn(
+          "p-4 text-center",
+          theme === 'dark' ? "text-gray-400" : "text-gray-500"
+        )}>选择设置选项</div>
       default:
-        return <div>未知导航</div>
+        return <div className={cn(
+          "p-4",
+          theme === 'dark' ? "text-gray-400" : "text-gray-500"
+        )}>选择一个功能开始使用</div>
     }
   }
 
   return (
-    <div className="h-full flex flex-col">
-      {/* Header */}
-      <div className="flex-shrink-0 h-16 border-b border px-4 flex items-center">
-        <h2 className="text-lg font-semibold capitalize">
-          {getNavigationTitle(currentNavigation)}
-        </h2>
+    <div className={cn(
+      "w-64 border-r flex flex-col",
+      theme === 'dark' 
+        ? "bg-card border-border" 
+        : "bg-white border-gray-200"
+    )}>
+      {/* Search Bar */}
+      <div className={cn(
+        "p-3 border-b",
+        theme === 'dark' ? "border-border" : "border-gray-200"
+      )}>
+        <div className="relative">
+          <Search className={cn(
+            "absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4",
+            theme === 'dark' ? "text-gray-500" : "text-gray-400"
+          )} />
+          <Input placeholder="搜索..." className="pl-10" />
+        </div>
       </div>
 
-      {/* Content */}
-      <div className="flex-1 overflow-hidden">{renderContent()}</div>
-    </div>
-  )
-}
-
-function getNavigationTitle(nav: string): string {
-  const titles: Record<string, string> = {
-    chat: '对话',
-    contacts: '联系人',
-    files: '文件',
-    timeline: '时间线',
-    plugins: '插件',
-    settings: '设置',
-  }
-  return titles[nav] || nav
-}
-
-// Placeholder components - these will be implemented later
-function ChatList() {
-  return (
-    <div className="p-4">
-      <div className="text-sm text-muted-foreground">对话列表</div>
-    </div>
-  )
-}
-
-function ContactsList() {
-  return (
-    <div className="p-4">
-      <div className="text-sm text-muted-foreground">联系人列表</div>
-    </div>
-  )
-}
-
-function FilesList() {
-  return (
-    <div className="p-4">
-      <div className="text-sm text-muted-foreground">文件列表</div>
-    </div>
-  )
-}
-
-function TimelineList() {
-  return (
-    <div className="p-4">
-      <div className="text-sm text-muted-foreground">时间线列表</div>
-    </div>
-  )
-}
-
-function PluginsList() {
-  return (
-    <div className="p-4">
-      <div className="text-sm text-muted-foreground">插件列表</div>
-    </div>
-  )
-}
-
-function SettingsList() {
-  return (
-    <div className="p-4">
-      <div className="text-sm text-muted-foreground">设置选项</div>
+      {/* Content List */}
+      <ScrollArea className="flex-1">{renderContent()}</ScrollArea>
     </div>
   )
 }

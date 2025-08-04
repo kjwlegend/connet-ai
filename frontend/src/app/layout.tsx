@@ -63,7 +63,7 @@ export default function RootLayout({
           storageKey="connet-theme"
         >
           <I18nProvider>
-            <div className="min-h-screen bg-[--theme-background-primary] text-[--theme-text-primary] transition-colors">
+            <div className="min-h-screen bg-background text-foreground transition-colors">
               {children}
             </div>
           </I18nProvider>

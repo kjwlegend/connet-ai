@@ -20,7 +20,7 @@ export function MainLayout({ children, className }: MainLayoutProps) {
 
       {/* Middle Panel */}
       <div
-        className="flex-shrink-0 border-r border"
+        className="shrink-0 border-r border"
         style={{ width: middlePanelWidth }}
       >
         <MiddlePanel />

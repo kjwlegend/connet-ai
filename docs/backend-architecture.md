@@ -1,5 +1,25 @@
 # Backend Architecture Design - Connet.AI
 
+## 服务架构概览
+
+Connet.AI 后端采用**双服务架构**设计：
+
+### 1. BFF Service (Backend for Frontend)
+- **目录**: `bff/` 
+- **职责**: 为前端应用提供专门的API服务
+- **技术栈**: FastAPI + Supabase + Redis + LangChain
+- **优先级**: **高** - 支撑前端核心功能
+
+### 2. Backend-Web Service (管理后台)
+- **目录**: `backend-web/`
+- **职责**: 管理后台、数据分析、系统配置
+- **技术栈**: React/Next.js + 独立API
+- **优先级**: **低** - 后期实现
+
+**当前开发重点**: 专注于 **BFF Service** 的架构建设
+
+---
+
 ## 架构设计原则
 
 ### 1. 可扩展性 (Scalability)
@@ -66,10 +86,12 @@ Backend Architecture (FastAPI + Supabase)
     └── Health Checks (服务健康检查)
 ```
 
-## 详细目录结构设计
+## BFF Service 详细架构设计
+
+### 目录结构 (bff/)
 
 ```
-backend-web/
+bff/
 ├── app/                              # 应用核心代码
 │   ├── __init__.py
 │   ├── main.py                       # FastAPI应用入口

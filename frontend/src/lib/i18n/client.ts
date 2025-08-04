@@ -37,6 +37,8 @@ export const useI18nStore = create<I18nStore>()(
         try {
           const messages = await loadMessages(locale)
           set({ locale, messages, isLoading: false })
+          // 强制页面重新渲染以应用新语言
+          window.dispatchEvent(new Event('languageChanged'))
         } catch (error) {
           console.error('Failed to set locale:', error)
           set({ isLoading: false })

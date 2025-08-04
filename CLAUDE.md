@@ -17,9 +17,18 @@ pnpm start        # Start production server
 pnpm lint         # Run ESLint
 ```
 
+### Backend (BFF Service)
+```bash
+cd bff
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+pip install -r requirements.txt
+python -m uvicorn app.main:app --reload  # Start development server (localhost:8000)
+```
+
 ### Testing
 - Frontend uses Jest and React Testing Library (setup needs to be verified)
-- Backend uses Pytest (backend not yet implemented)
+- Backend uses Pytest (BFF service implementation in progress)
 
 ## Architecture Overview
 
@@ -30,7 +39,7 @@ pnpm lint         # Run ESLint
 - **Authentication**: NextAuth.js (planned integration with FastAPI backend)
 - **Internationalization**: next-international (English/Chinese support)
 - **Theme System**: next-themes with class-based dark mode
-- **Backend** (planned): Local FastAPI + Supabase integration, LangChain/LangGraph for AI
+- **Backend**: FastAPI BFF service (in development) + Supabase integration, LangChain/LangGraph for AI
 
 ### Frontend Architecture
 
@@ -112,23 +121,41 @@ app/
    - Don't overwrite existing .env files without confirmation
 
 3. **Project Structure Notes**:
-   - Currently only `frontend/` directory exists
-   - Future: Will add `bff/` (Backend for Frontend) and `backend-web/` directories
+   - `frontend/` directory contains Next.js application  
+   - `bff/` directory contains FastAPI Backend for Frontend service (in development)
+   - Future: Will add `backend-web/` directory for admin panel
    - Current route structure is placeholder and will be completely refactored
 
-## Future Implementation Notes
+## Backend Development Status
 
-- **Backend**: Local FastAPI + Supabase integration, vector database (pgvector), LangChain/LangGraph
-- **Authentication**: Integration between NextAuth.js and FastAPI backend
+### ✅ Completed (BFF Service)
+- **Core Architecture**: FastAPI application with DDD structure
+- **Database Models**: 12 comprehensive SQLModel classes supporting human-AI hybrid community:
+  - User system (User, UserInvitation, UserRegistrationSource)
+  - AI agent system (Agent, AgentKnowledgeBase)  
+  - Conversation system (Conversation, ConversationParticipant, ConversationTopic, Message)
+  - File system (File, FilePermission)
+  - Social system (Contact, TimelinePost, TimelineComment, TimelineLike)
+- **Infrastructure**: Database connection, caching (Redis), security (JWT), external service integration
+- **API Framework**: Basic FastAPI setup with authentication and user management endpoints
+
+### 🚧 In Progress
+- **Database Migrations**: Alembic setup and initial schema deployment
+- **Supabase Integration**: Project setup with pgvector for semantic search
+
+### 📋 Future Implementation
+- **Authentication**: Complete NextAuth.js and FastAPI backend integration
 - **Real-time**: Supabase Realtime for chat and presence
-- **Payments**: Planned integration with Creem.io (initial) then Stripe (scale)
 - **AI Integration**: LangGraph for multi-agent orchestration
 - **Plugin System**: Dynamic loading of AI tools and external integrations
+- **Payments**: Integration with Creem.io (initial) then Stripe (scale)
 
 ## Important References
 
 - **Design System**: See `Design-system.md` for comprehensive UI/UX guidelines, color schemes, component specifications
 - **Product Requirements**: See `README.md` for detailed product requirements, architecture plans, and technical specifications
+- **Backend Progress**: See `docs/bff-progress-tracker.md` for detailed BFF service development status
+- **Database Schema**: See `bff/database_schema_design.md` for comprehensive schema documentation
 - **Coding Preferences**: See `.cursor/rules/` for development guidelines and tech stack details
 
 ## File Structure Conventions

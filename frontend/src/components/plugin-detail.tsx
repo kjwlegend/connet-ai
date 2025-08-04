@@ -18,7 +18,7 @@ export function PluginDetail({ selectedItem }: PluginDetailProps) {
       <Card>
         <CardHeader>
           <div className="flex items-start space-x-4">
-            <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center text-3xl text-white">
+            <div className="w-16 h-16 bg-linear-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center text-3xl text-white">
               🔧
             </div>
             <div className="flex-1">

@@ -136,7 +136,7 @@ export function FilesListCompact({ selectedItem, onItemSelect }: FilesListCompac
               onClick={() => onItemSelect(file.id)}
             >
               <div className="flex items-center space-x-3">
-                <FileIcon className="h-4 w-4 text-gray-500 flex-shrink-0" />
+                <FileIcon className="h-4 w-4 text-gray-500 shrink-0" />
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center space-x-2">
                     <h3 className="font-medium text-sm text-gray-900 truncate">{file.name}</h3>
