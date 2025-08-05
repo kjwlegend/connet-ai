@@ -59,7 +59,10 @@ export function ConversationList({ selectedItem, onItemSelect }: ConversationLis
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-32">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+        <div className="flex flex-col items-center space-y-3">
+          <div className="animate-spin rounded-full h-8 w-8 border-2 border-primary/20 border-t-primary"></div>
+          <p className="text-sm text-muted-foreground">Loading conversations...</p>
+        </div>
       </div>
     )
   }
@@ -82,13 +85,15 @@ export function ConversationList({ selectedItem, onItemSelect }: ConversationLis
 
   if (conversations.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center h-64 px-4">
-        <MessageCircle className="h-12 w-12 text-muted-foreground mb-4" />
-        <h3 className="font-medium text-foreground mb-2">No conversations yet</h3>
-        <p className="text-sm text-muted-foreground text-center mb-4">
-          Start a new conversation with an AI agent to begin collaborating.
+      <div className="flex flex-col items-center justify-center h-64 px-6">
+        <div className="rounded-full bg-muted/30 p-4 mb-4">
+          <MessageCircle className="h-8 w-8 text-muted-foreground/60" />
+        </div>
+        <h3 className="font-semibold text-foreground mb-2 text-base">No conversations yet</h3>
+        <p className="text-sm text-muted-foreground/80 text-center mb-6 leading-relaxed max-w-xs">
+          Start a new conversation with an AI agent to begin collaborating on your projects.
         </p>
-        <Button size="sm" className="flex items-center space-x-2">
+        <Button size="sm" className="flex items-center space-x-2 rounded-lg shadow-sm hover:shadow-md transition-all duration-200">
           <Plus className="h-4 w-4" />
           <span>New Conversation</span>
         </Button>
@@ -97,28 +102,32 @@ export function ConversationList({ selectedItem, onItemSelect }: ConversationLis
   }
 
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col h-full bg-background">
       {/* Header */}
-      <div className="p-4 border-b border-border">
-        <div className="flex items-center justify-between mb-3">
-          <h2 className="font-semibold text-foreground">Conversations</h2>
-          <Button size="sm" variant="ghost" className="h-8 w-8 p-0">
+      <div className="px-6 py-5 border-b border-border/60 bg-background/80 backdrop-blur-sm">
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-lg font-semibold text-foreground tracking-tight">Conversations</h2>
+          <Button 
+            size="sm" 
+            variant="ghost" 
+            className="h-9 w-9 p-0 rounded-lg hover:bg-accent/50 transition-all duration-200 hover:scale-105 active:scale-95"
+          >
             <Plus className="h-4 w-4" />
           </Button>
         </div>
         
         {/* Search */}
         <div className="relative">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground/70" />
           <Input
             placeholder="Search conversations..."
-            className="pl-9 h-8"
+            className="pl-9 h-10 bg-muted/30 border-border/40 rounded-lg focus:bg-background focus:border-ring/20 transition-all duration-200 placeholder:text-muted-foreground/60"
           />
         </div>
       </div>
 
       {/* Conversation List */}
-      <div className="flex-1 overflow-y-auto divide-y divide-border">
+      <div className="flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-border/40 scrollbar-track-transparent">
         {conversations.map((conversation) => {
           const isActive = activeConversationId === conversation.id || selectedItem === conversation.id
           const isGroup = isGroupConversation(conversation.participants.length)
@@ -130,8 +139,10 @@ export function ConversationList({ selectedItem, onItemSelect }: ConversationLis
             <div
               key={conversation.id}
               className={cn(
-                "p-4 hover:bg-muted/50 cursor-pointer transition-colors border-r-2 border-transparent",
-                isActive && "bg-muted border-r-primary"
+                "px-6 py-4 cursor-pointer transition-all duration-200 ease-out border-r-2 border-transparent relative group",
+                "hover:bg-accent/30 hover:border-r-primary/40 hover:shadow-sm",
+                isActive && "bg-accent/50 border-r-primary shadow-sm",
+                "first:pt-6 last:pb-6"
               )}
               onClick={() => handleConversationSelect(conversation.id)}
             >
@@ -173,7 +184,7 @@ export function ConversationList({ selectedItem, onItemSelect }: ConversationLis
                   
                   {/* Unread count badge */}
                   {conversation.unreadCount > 0 && (
-                    <div className="absolute -top-1 -right-1 min-w-[1.25rem] h-5 bg-destructive text-destructive-foreground text-xs rounded-full flex items-center justify-center px-1">
+                    <div className="absolute -top-1 -right-1 min-w-[1.25rem] h-5 bg-primary text-primary-foreground text-xs rounded-full flex items-center justify-center px-1.5 font-medium shadow-lg border border-background">
                       {conversation.unreadCount > 99 ? "99+" : conversation.unreadCount}
                     </div>
                   )}
@@ -181,42 +192,42 @@ export function ConversationList({ selectedItem, onItemSelect }: ConversationLis
 
                 {/* Content */}
                 <div className="flex-1 min-w-0">
-                  <div className="flex items-center justify-between mb-1">
-                    <div className="flex items-center space-x-2">
-                      <h3 className="font-medium text-foreground truncate">
+                  <div className="flex items-center justify-between mb-2">
+                    <div className="flex items-center space-x-2 flex-1 min-w-0">
+                      <h3 className="font-medium text-foreground truncate text-base leading-tight">
                         {conversation.title}
                       </h3>
                       {isGroup && (
-                        <Badge variant="secondary" className="text-xs px-1.5 py-0.5">
+                        <Badge variant="secondary" className="text-xs px-2 py-0.5 rounded-md bg-muted/50 text-muted-foreground border-0">
                           <Users className="h-3 w-3 mr-1" />
                           {conversation.participants.length}
                         </Badge>
                       )}
                     </div>
-                    <span className="text-xs text-muted-foreground flex-shrink-0">
+                    <span className="text-xs text-muted-foreground/80 flex-shrink-0 font-medium group-hover:text-muted-foreground transition-colors">
                       {lastMessageTime}
                     </span>
                   </div>
                   
                   {/* Last message */}
-                  <p className="text-sm text-muted-foreground truncate">
+                  <p className="text-sm text-muted-foreground/90 truncate leading-relaxed">
                     {conversation.lastMessage ? (
                       <>
                         {conversation.lastMessage.senderType !== 'user' && (
-                          <span className="font-medium">
+                          <span className="font-medium text-muted-foreground">
                             {conversation.lastMessage.senderName}: 
                           </span>
                         )}
                         <span className="ml-1">{conversation.lastMessage.content}</span>
                       </>
                     ) : (
-                      <span className="italic">No messages yet</span>
+                      <span className="italic text-muted-foreground/60">No messages yet</span>
                     )}
                   </p>
                   
                   {/* Participants (for groups) */}
                   {isGroup && (
-                    <p className="text-xs text-muted-foreground mt-1 truncate">
+                    <p className="text-xs text-muted-foreground/70 mt-2 truncate">
                       {conversation.participants
                         .filter(p => p.type === 'agent')
                         .map(p => p.name)

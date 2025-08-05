@@ -3,14 +3,15 @@
 import { useEffect, useRef } from "react"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
 import { ScrollArea } from "@/components/ui/scroll-area"
-import { Send, Paperclip, Smile, MoreVertical, Users, AlertCircle } from "lucide-react"
+import { MoreVertical, Users, AlertCircle } from "lucide-react"
 import { useChat } from "@/store"
 import { useTranslations } from "@/lib/i18n/client"
 import { formatDistanceToNow } from "date-fns"
 import { zhCN, enUS } from "date-fns/locale"
 import { useLocale } from "@/lib/i18n/client"
+import { MessageBubble } from "@/components/features/chat/components/MessageBubble"
+import { ChatInput } from "@/components/features/chat/components/ChatInput"
 
 interface ChatInterfaceProps {
   selectedItem?: string
@@ -67,11 +68,9 @@ export function ChatInterface({ selectedItem }: ChatInterfaceProps) {
     }
   }
 
-  const handleKeyPress = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault()
-      handleSendMessage()
-    }
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    // Additional keyboard shortcuts can be added here
+    // The basic Enter/Shift+Enter handling is done in ChatInput
   }
 
   const formatMessageTime = (timestamp: string) => {
@@ -162,72 +161,30 @@ export function ChatInterface({ selectedItem }: ChatInterfaceProps) {
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
           </div>
         ) : (
-          <div className="space-y-4 py-4">
-            {currentMessages.map((message) => {
-              const participant = currentConversation.participants.find(p => p.id === message.senderId)
-              const isUser = message.senderType === 'user'
-              
-              return (
-                <div key={message.id} className={`flex ${isUser ? "justify-end" : "justify-start"}`}>
-                  <div
-                    className={`flex items-start space-x-3 max-w-[70%] ${
-                      isUser ? "flex-row-reverse space-x-reverse" : ""
-                    }`}
-                  >
-                    {!isUser && (
-                      <Avatar className="h-8 w-8 mt-1">
-                        <AvatarImage src={participant?.avatar} />
-                        <AvatarFallback className="text-xs">
-                          {getAvatarFallback(message.senderName)}
-                        </AvatarFallback>
-                      </Avatar>
-                    )}
-                    <div className="flex flex-col space-y-1">
-                      {!isUser && (
-                        <div className="text-xs text-muted-foreground px-1">
-                          {message.senderName}
-                        </div>
-                      )}
-                      <div
-                        className={`rounded-lg px-4 py-2 ${
-                          isUser 
-                            ? "bg-primary text-primary-foreground" 
-                            : "bg-muted text-muted-foreground"
-                        }`}
-                      >
-                        <p className="text-sm whitespace-pre-wrap leading-relaxed">
-                          {message.content}
-                        </p>
-                      </div>
-                      <div className={`text-xs text-muted-foreground px-1 ${
-                        isUser ? "text-right" : "text-left"
-                      }`}>
-                        {formatMessageTime(message.timestamp)}
-                        {message.metadata?.mentions && message.metadata.mentions.length > 0 && (
-                          <span className="ml-2 text-primary">
-                            @{message.metadata.mentions.length}
-                          </span>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              )
-            })}
+          <div className="py-6">
+            {currentMessages.map((message) => (
+              <MessageBubble
+                key={message.id}
+                message={message}
+                isUser={message.senderType === 'user'}
+                showAvatar={true}
+                showTimestamp={true}
+              />
+            ))}
             
             {/* Typing indicator */}
             {isSending && (
-              <div className="flex justify-start">
-                <div className="flex items-center space-x-3">
-                  <Avatar className="h-8 w-8">
-                    <AvatarFallback className="text-xs">AI</AvatarFallback>
-                  </Avatar>
-                  <div className="bg-muted rounded-lg px-4 py-2">
-                    <div className="flex space-x-1">
-                      <div className="w-2 h-2 bg-muted-foreground/50 rounded-full animate-pulse"></div>
-                      <div className="w-2 h-2 bg-muted-foreground/50 rounded-full animate-pulse" style={{ animationDelay: '0.2s' }}></div>
-                      <div className="w-2 h-2 bg-muted-foreground/50 rounded-full animate-pulse" style={{ animationDelay: '0.4s' }}></div>
-                    </div>
+              <div className="flex items-start gap-3 mb-6">
+                <Avatar className="h-9 w-9 border-2 border-background shadow-sm">
+                  <AvatarFallback className="text-xs font-medium bg-accent/50 text-accent-foreground">
+                    AI
+                  </AvatarFallback>
+                </Avatar>
+                <div className="bg-card border border-border/50 rounded-2xl rounded-bl-md px-4 py-3 shadow-sm">
+                  <div className="flex space-x-1">
+                    <div className="w-2 h-2 bg-muted-foreground/50 rounded-full animate-pulse"></div>
+                    <div className="w-2 h-2 bg-muted-foreground/50 rounded-full animate-pulse" style={{ animationDelay: '0.2s' }}></div>
+                    <div className="w-2 h-2 bg-muted-foreground/50 rounded-full animate-pulse" style={{ animationDelay: '0.4s' }}></div>
                   </div>
                 </div>
               </div>
@@ -236,38 +193,16 @@ export function ChatInterface({ selectedItem }: ChatInterfaceProps) {
         )}
       </ScrollArea>
 
-      {/* Input Area */}
-      <div className="p-4 border-t border-border bg-card">
-        <div className="flex items-end space-x-2">
-          <Button variant="ghost" size="sm" className="mb-2">
-            <Paperclip className="h-4 w-4" />
-          </Button>
-          <Button variant="ghost" size="sm" className="mb-2">
-            <Smile className="h-4 w-4" />
-          </Button>
-          <div className="flex-1">
-            <Input
-              placeholder={t('chat.inputPlaceholder') || "Type a message..."}
-              value={draft}
-              onChange={(e) => setDraft(e.target.value)}
-              onKeyPress={handleKeyPress}
-              className="min-h-[40px] resize-none"
-              disabled={isSending}
-            />
-          </div>
-          <Button 
-            onClick={handleSendMessage} 
-            disabled={!draft.trim() || isSending}
-            size="sm"
-            className="mb-2"
-          >
-            <Send className="h-4 w-4" />
-          </Button>
-        </div>
-        <div className="text-xs text-muted-foreground mt-1 px-2">
-          Press Enter to send, Shift+Enter for new line
-        </div>
-      </div>
+      {/* Enhanced Input Area */}
+      <ChatInput
+        value={draft}
+        onChange={setDraft}
+        onSend={handleSendMessage}
+        onKeyDown={handleKeyDown}
+        disabled={false}
+        isSending={isSending}
+        placeholder={t('chat.inputPlaceholder')}
+      />
     </div>
   )
 }
