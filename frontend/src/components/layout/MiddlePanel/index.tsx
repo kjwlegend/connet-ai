@@ -13,6 +13,7 @@ import { cn } from "@/lib/utils"
 import { FilesManagement } from "@/components/features/files/components/FilesManagement"
 import { SocialSidebar } from "@/components/features/timeline/components/SocialSidebar"
 import { PluginsConfigured } from "@/components/features/plugins/components/PluginsConfigured"
+import { SettingsSidebar } from "@/components/features/settings/components/SettingsSidebar"
 
 interface MiddlePanelProps {
   mode: NavigationMode
@@ -23,6 +24,7 @@ interface MiddlePanelProps {
 export function MiddlePanel({ mode, selectedItem, onItemSelect }: MiddlePanelProps) {
   const [fileCategory, setFileCategory] = useState("files")
   const [socialCategory, setSocialCategory] = useState("my-circle")
+  const [searchQuery, setSearchQuery] = useState("")
   const { theme } = useTheme()
 
   const renderContent = () => {
@@ -30,7 +32,7 @@ export function MiddlePanel({ mode, selectedItem, onItemSelect }: MiddlePanelPro
       case "chat":
         return <ConversationList selectedItem={selectedItem} onItemSelect={onItemSelect} />
       case "contacts":
-        return <ContactList selectedItem={selectedItem} onItemSelect={onItemSelect} />
+        return <ContactList selectedItem={selectedItem} onItemSelect={onItemSelect} searchQuery={searchQuery} />
       case "files":
         return <FilesManagement selectedCategory={fileCategory} onCategorySelect={setFileCategory} />
       case "social":
@@ -38,15 +40,23 @@ export function MiddlePanel({ mode, selectedItem, onItemSelect }: MiddlePanelPro
       case "plugins":
         return <PluginsConfigured selectedPlugin={selectedItem} onPluginSelect={onItemSelect} />
       case "settings":
-        return <div className={cn(
-          "p-4 text-center",
-          theme === 'dark' ? "text-gray-400" : "text-gray-500"
-        )}>选择设置选项</div>
+        return <SettingsSidebar selectedCategory={selectedItem || undefined} onCategorySelect={onItemSelect} />
       default:
         return <div className={cn(
           "p-4",
           theme === 'dark' ? "text-gray-400" : "text-gray-500"
         )}>选择一个功能开始使用</div>
+    }
+  }
+
+  const getSearchPlaceholder = () => {
+    switch (mode) {
+      case "chat": return "搜索对话..."
+      case "contacts": return "搜索联系人..."
+      case "files": return "搜索文件..."
+      case "social": return "搜索动态..."
+      case "plugins": return "搜索插件..."
+      default: return "搜索..."
     }
   }
 
@@ -67,7 +77,12 @@ export function MiddlePanel({ mode, selectedItem, onItemSelect }: MiddlePanelPro
             "absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4",
             theme === 'dark' ? "text-gray-500" : "text-gray-400"
           )} />
-          <Input placeholder="搜索..." className="pl-10" />
+          <Input 
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder={getSearchPlaceholder()} 
+            className="pl-10" 
+          />
         </div>
       </div>
 

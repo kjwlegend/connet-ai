@@ -1,13 +1,19 @@
-"use client"
+'use client'
 
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Settings, Key, Globe, Database } from "lucide-react"
-import { useState } from "react"
-import type { Plugin } from "../PluginCard"
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Textarea } from '@/components/ui/textarea'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
+import { Settings, Key, Globe, Database } from 'lucide-react'
+import { useState } from 'react'
+import type { Plugin } from '@/types/plugin'
 
 interface PluginConfigFormProps {
   plugin: Plugin
@@ -15,7 +21,11 @@ interface PluginConfigFormProps {
   onTest?: () => void
 }
 
-export function PluginConfigForm({ plugin, onSave, onTest }: PluginConfigFormProps) {
+export function PluginConfigForm({
+  plugin,
+  onSave,
+  onTest,
+}: PluginConfigFormProps) {
   const [configValues, setConfigValues] = useState<Record<string, any>>({})
 
   const handleConfigChange = (key: string, value: any) => {
@@ -27,10 +37,10 @@ export function PluginConfigForm({ plugin, onSave, onTest }: PluginConfigFormPro
   }
 
   const renderConfigField = (field: any) => {
-    const value = configValues[field.key] || ""
+    const value = configValues[field.key] || ''
 
     switch (field.type) {
-      case "password":
+      case 'password':
         return (
           <Input
             type="password"
@@ -39,7 +49,7 @@ export function PluginConfigForm({ plugin, onSave, onTest }: PluginConfigFormPro
             placeholder={`请输入${field.label}`}
           />
         )
-      case "url":
+      case 'url':
         return (
           <Input
             type="url"
@@ -48,7 +58,7 @@ export function PluginConfigForm({ plugin, onSave, onTest }: PluginConfigFormPro
             placeholder={`请输入${field.label}`}
           />
         )
-      case "number":
+      case 'number':
         return (
           <Input
             type="number"
@@ -60,9 +70,12 @@ export function PluginConfigForm({ plugin, onSave, onTest }: PluginConfigFormPro
             placeholder={`请输入${field.label}`}
           />
         )
-      case "select":
+      case 'select':
         return (
-          <Select value={value} onValueChange={(val) => handleConfigChange(field.key, val)}>
+          <Select
+            value={value}
+            onValueChange={(val) => handleConfigChange(field.key, val)}
+          >
             <SelectTrigger>
               <SelectValue placeholder={`选择${field.label}`} />
             </SelectTrigger>
@@ -75,7 +88,7 @@ export function PluginConfigForm({ plugin, onSave, onTest }: PluginConfigFormPro
             </SelectContent>
           </Select>
         )
-      case "checkbox":
+      case 'checkbox':
         return (
           <div className="flex items-center space-x-2">
             <input
@@ -87,7 +100,7 @@ export function PluginConfigForm({ plugin, onSave, onTest }: PluginConfigFormPro
             <span className="text-sm">启用{field.label}</span>
           </div>
         )
-      case "textarea":
+      case 'textarea':
         return (
           <Textarea
             value={value}
@@ -108,15 +121,17 @@ export function PluginConfigForm({ plugin, onSave, onTest }: PluginConfigFormPro
   }
 
   const getFieldIcon = (field: any) => {
-    if (field.type === "password") return <Key className="h-3 w-3 text-gray-400" />
-    if (field.type === "url") return <Globe className="h-3 w-3 text-gray-400" />
-    if (field.key.includes("db")) return <Database className="h-3 w-3 text-gray-400" />
+    if (field.type === 'password')
+      return <Key className="h-3 w-3 text-gray-400" />
+    if (field.type === 'url') return <Globe className="h-3 w-3 text-gray-400" />
+    if (field.key.includes('db'))
+      return <Database className="h-3 w-3 text-gray-400" />
     return null
   }
 
   return (
     <div className="space-y-4">
-      {plugin.configFields.map((field) => (
+      {plugin.configFields?.map((field) => (
         <div key={field.key} className="space-y-2">
           <Label htmlFor={field.key} className="flex items-center space-x-2">
             <span>{field.label}</span>
@@ -133,7 +148,11 @@ export function PluginConfigForm({ plugin, onSave, onTest }: PluginConfigFormPro
           保存配置
         </Button>
         {onTest && (
-          <Button variant="outline" className="flex-1 bg-transparent" onClick={onTest}>
+          <Button
+            variant="outline"
+            className="flex-1 bg-transparent"
+            onClick={onTest}
+          >
             测试连接
           </Button>
         )}

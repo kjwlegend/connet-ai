@@ -1,7 +1,7 @@
-"use client"
+'use client'
 
-import * as React from "react"
-import { cn } from "@/lib/utils/cn"
+import * as React from 'react'
+import { cn } from '@/lib/utils/cn'
 
 interface ContextMenuProps {
   children: React.ReactNode
@@ -17,7 +17,11 @@ interface ContextMenuItemProps {
   destructive?: boolean
 }
 
-export function ContextMenu({ children, trigger, onOpenChange }: ContextMenuProps) {
+export function ContextMenu({
+  children,
+  trigger,
+  onOpenChange,
+}: ContextMenuProps) {
   const [isOpen, setIsOpen] = React.useState(false)
   const [position, setPosition] = React.useState({ x: 0, y: 0 })
   const menuRef = React.useRef<HTMLDivElement>(null)
@@ -25,7 +29,7 @@ export function ContextMenu({ children, trigger, onOpenChange }: ContextMenuProp
   const handleContextMenu = (e: React.MouseEvent) => {
     e.preventDefault()
     e.stopPropagation()
-    
+
     const rect = e.currentTarget.getBoundingClientRect()
     setPosition({ x: e.clientX, y: e.clientY })
     setIsOpen(true)
@@ -63,14 +67,12 @@ export function ContextMenu({ children, trigger, onOpenChange }: ContextMenuProp
 
   return (
     <>
-      <div onContextMenu={handleContextMenu}>
-        {trigger}
-      </div>
-      
+      <div onContextMenu={handleContextMenu}>{trigger}</div>
+
       {isOpen && (
         <div
           ref={menuRef}
-          className="fixed z-50 min-w-[8rem] overflow-hidden rounded-md border bg-popover p-1 text-popover-foreground shadow-lg backdrop-blur-sm animate-in fade-in-0 zoom-in-95"
+          className="fixed z-50 min-w-[8rem] overflow-hidden rounded-md border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-1 text-gray-900 dark:text-gray-100 shadow-lg animate-in fade-in-0 zoom-in-95"
           style={{
             left: position.x,
             top: position.y,
@@ -83,12 +85,12 @@ export function ContextMenu({ children, trigger, onOpenChange }: ContextMenuProp
   )
 }
 
-export function ContextMenuItem({ 
-  children, 
-  onClick, 
-  className, 
+export function ContextMenuItem({
+  children,
+  onClick,
+  className,
   disabled = false,
-  destructive = false 
+  destructive = false,
 }: ContextMenuItemProps) {
   const handleClick = () => {
     if (disabled) return
@@ -98,13 +100,12 @@ export function ContextMenuItem({
   return (
     <div
       className={cn(
-        "relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors",
-        disabled 
-          ? "pointer-events-none opacity-50" 
+        'relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors',
+        disabled
+          ? 'pointer-events-none opacity-50'
           : destructive
-          ? "text-red-600 focus:bg-red-50 focus:text-red-900 dark:text-red-400 dark:focus:bg-red-900/50 dark:focus:text-red-50"
-          : "focus:bg-accent focus:text-accent-foreground",
-        "hover:bg-accent hover:text-accent-foreground",
+          ? 'text-red-600 hover:bg-red-50 hover:text-red-900 dark:text-red-400 dark:hover:bg-red-900/20 dark:hover:text-red-300'
+          : 'hover:bg-gray-100 hover:text-gray-900 dark:hover:bg-gray-700 dark:hover:text-gray-100',
         className
       )}
       onClick={handleClick}
@@ -115,5 +116,5 @@ export function ContextMenuItem({
 }
 
 export function ContextMenuSeparator() {
-  return <div className="-mx-1 my-1 h-px bg-muted" />
+  return <div className="-mx-1 my-1 h-px bg-gray-200 dark:bg-gray-700" />
 }

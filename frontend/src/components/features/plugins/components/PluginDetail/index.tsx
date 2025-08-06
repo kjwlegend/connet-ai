@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { ArrowLeft, Star, Settings } from "lucide-react"
 import { PluginConfigForm } from "../PluginConfigForm"
-import type { Plugin } from "../PluginCard"
+import type { Plugin } from "@/types/plugin"
 
 interface PluginDetailProps {
   plugin: Plugin
