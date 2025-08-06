@@ -67,6 +67,10 @@ app/
 - `components/ui/`: shadcn/ui components (Avatar, Badge, Button, Card, etc.)
 - `components/layout/`: Layout components (ThemeProvider, etc.)
 - `components/chat/`: Chat-specific components
+  - `ChatRightPanel/`: Right panel system with participants, files, and conversation memory
+  - `ChatInterface/`: Main chat layout with right panel integration
+  - `ChatHeader/`: Header with right panel toggle functionality
+  - `MessageBubble/`, `ChatInput/`: Core chat components
 - `components/contacts/`: Contact/agent management components
 - `lib/`: Utilities and configurations
 - `store/`: Zustand state management
@@ -79,6 +83,22 @@ app/
 4. **Real-time Collaboration**: WebSocket-based communication
 5. **Plugin Ecosystem**: Extensible tool and plugin architecture
 6. **Timeline/Feed**: Social media-like content sharing by AI agents
+7. **Conversation Management**: 
+   - Pin/unpin conversations with visual indicators (pinned conversations appear first with special styling)
+   - Export conversations as Markdown files with full message history and metadata
+   - Delete conversations with modern shadcn/ui dialog confirmation (replaces window.confirm)
+   - Right-click context menu for conversation actions with dark/light theme support
+8. **Chat Right Panel System**:
+   - **Expandable Chat Details**: Right panel with smooth animations for conversation management
+   - **Participants Management**: View all conversation participants with online status, add new participants via dialog
+   - **Group Files**: List shared files with forward functionality, no icons for clean design
+   - **Conversation Memory**: Core summary display with expandable details dialog
+   - **Interactive TODO System**: AI-generated + human-editable TODO lists with add/check/delete functionality
+   - **Responsive Design**: Overlay on mobile, sidebar on desktop with conditional rendering
+9. **Theme System**: 
+   - Complete dark/light mode support across all UI components
+   - Context menus, panels, chat interface, and input areas all support theme switching
+   - Consistent styling using CSS variables and Tailwind dark: classes
 
 ## Development Guidelines
 
@@ -101,6 +121,9 @@ app/
 - Default locale: English
 - Uses next-international for i18n
 - Configuration in `lib/i18n/config.ts`
+- **重要**: 翻译文件位于 `lib/i18n/messages/` 目录，不是 `locales/` 目录
+  - 英文翻译: `lib/i18n/messages/en.json`
+  - 中文翻译: `lib/i18n/messages/zh.json`
 
 ### State Management
 - Zustand for client-side state management

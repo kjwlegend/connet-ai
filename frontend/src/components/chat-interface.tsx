@@ -82,16 +82,16 @@ export function ChatInterface({ selectedItem }: ChatInterfaceProps) {
   }
 
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col h-full bg-background">
       {/* Chat Header */}
-      <div className="flex items-center justify-between p-4 border-b border-gray-200">
+      <div className="flex items-center justify-between p-4 border-b border-border">
         <div className="flex items-center space-x-3">
           <Avatar className="h-10 w-10">
             <AvatarImage src="/placeholder.svg?height=40&width=40" />
             <AvatarFallback>AI</AvatarFallback>
           </Avatar>
           <div>
-            <h2 className="font-semibold text-gray-900">AI 编程助手</h2>
+            <h2 className="font-semibold text-foreground">AI 编程助手</h2>
             <p className="text-sm text-green-600">在线</p>
           </div>
         </div>
@@ -117,10 +117,18 @@ export function ChatInterface({ selectedItem }: ChatInterfaceProps) {
                   </Avatar>
                 )}
                 <div
-                  className={`rounded-lg p-3 ${msg.isUser ? "bg-blue-500 text-white" : "bg-gray-100 text-gray-900"}`}
+                  className={`rounded-lg p-3 ${
+                    msg.isUser 
+                      ? "bg-primary text-primary-foreground" 
+                      : "bg-muted text-foreground"
+                  }`}
                 >
                   <p className="text-sm whitespace-pre-wrap">{msg.content}</p>
-                  <p className={`text-xs mt-1 ${msg.isUser ? "text-blue-100" : "text-gray-500"}`}>{msg.timestamp}</p>
+                  <p className={`text-xs mt-1 ${
+                    msg.isUser 
+                      ? "text-primary-foreground/70" 
+                      : "text-muted-foreground"
+                  }`}>{msg.timestamp}</p>
                 </div>
               </div>
             </div>
@@ -129,7 +137,7 @@ export function ChatInterface({ selectedItem }: ChatInterfaceProps) {
       </ScrollArea>
 
       {/* Input Area */}
-      <div className="p-4 border-t border-gray-200">
+      <div className="p-4 border-t border-border bg-background">
         <div className="flex items-center space-x-2">
           <Button variant="ghost" size="sm">
             <Paperclip className="h-5 w-5" />

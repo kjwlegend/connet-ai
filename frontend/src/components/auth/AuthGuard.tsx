@@ -36,7 +36,7 @@ export function AuthGuard({
         console.log('AuthGuard: Redirecting to login:', redirectUrl);
         router.push(redirectUrl);
       } else if (!requireAuth && isAuthenticated) {
-        const targetUrl = authenticatedRedirectTo || "/dashboard";
+        const targetUrl = authenticatedRedirectTo || "/";
         console.log('AuthGuard: User authenticated on auth page, redirecting to:', targetUrl);
         try {
           // Try Next.js router first

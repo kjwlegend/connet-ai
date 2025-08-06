@@ -26,7 +26,11 @@
 Frontend Architecture (Next.js 15.3.2 + App Router)
 │
 ├── 🎨 Presentation Layer (UI Components)
-│   ├── Layout Components (三栏布局系统)
+│   ├── Layout Components (应用级布局系统)
+│   │   ├── AppLayout (主布局：Sidebar + 内容区域)
+│   │   ├── Sidebar (左侧导航栏)
+│   │   ├── MiddlePanel (中间列表面板)
+│   │   └── MainContent (右侧主内容区域)
 │   ├── Feature Components (功能特定组件)
 │   ├── Common Components (通用组件)
 │   └── UI Components (shadcn/ui 基础组件)
@@ -56,39 +60,114 @@ Frontend Architecture (Next.js 15.3.2 + App Router)
     └── Development Tools (开发工具)
 ```
 
+## 新路由架构设计
+
+### 1. 路由结构设计原则
+- **功能模块化**: 每个功能模块有独立的路由空间
+- **布局复用**: 通过 layout.tsx 实现布局的高效复用
+- **层次清晰**: 路由层次与用户操作流程一致
+- **扩展性强**: 易于添加新功能模块和子页面
+
+### 2. 三层布局架构
+```typescript
+interface LayoutArchitecture {
+  // 根布局层（全局）
+  RootLayout: {
+    responsibility: "全局样式、主题、认证、国际化"
+    location: "app/layout.tsx"
+    components: ["ThemeProvider", "I18nProvider", "AuthProvider"]
+  }
+  
+  // 应用布局层（功能模块共享）
+  AppLayout: {
+    responsibility: "左侧导航栏 + 内容区域结构"
+    location: "components/layout/AppLayout"
+    components: ["Sidebar", "ContentArea"]
+  }
+  
+  // 功能布局层（模块特定）
+  FeatureLayout: {
+    responsibility: "中间面板 + 主内容区域"
+    location: "app/[feature]/layout.tsx"
+    components: ["MiddlePanel", "MainContent"]
+  }
+}
+```
+
+### 3. 导航流程优化
+```typescript
+interface NavigationFlow {
+  // 路由导航流程
+  flow: [
+    "Sidebar 点击导航项",
+    "Next.js Router Push",
+    "URL 更新到对应模块",
+    "AppLayout 检测路径变化",
+    "更新当前导航状态",
+    "渲染对应功能布局"
+  ]
+  
+  // 状态同步机制
+  stateSync: {
+    urlToState: "URL 变化 → 导航状态更新"
+    stateToUrl: "导航状态变化 → URL 同步"
+    persistence: "页面刷新后状态恢复"
+  }
+}
+```
+
 ## 详细目录结构设计
 
 ```
 frontend/
 ├── src/
 │   ├── app/                          # Next.js App Router
+│   │   ├── layout.tsx                # 根布局（包含全局布局结构）
+│   │   ├── page.tsx                  # 主页（重定向到 /chat）
 │   │   ├── (auth)/                   # 认证相关路由组
 │   │   │   ├── login/
 │   │   │   │   ├── page.tsx
 │   │   │   │   ├── loading.tsx
 │   │   │   │   └── error.tsx
 │   │   │   ├── register/
+│   │   │   │   └── page.tsx
+│   │   │   ├── forgot-password/
+│   │   │   │   └── page.tsx
 │   │   │   └── layout.tsx            # 认证布局
-│   │   ├── (main)/                   # 主应用路由组
-│   │   │   ├── chat/
-│   │   │   │   ├── page.tsx          # 对话列表页
-│   │   │   │   ├── [conversationId]/
-│   │   │   │   │   ├── page.tsx      # 对话详情页
-│   │   │   │   │   ├── loading.tsx
-│   │   │   │   │   └── error.tsx
-│   │   │   │   └── components/       # 页面特定组件
-│   │   │   │       ├── ChatHeader.tsx
-│   │   │   │       ├── MessageList.tsx
-│   │   │   │       └── ChatInput.tsx
-│   │   │   ├── contacts/
-│   │   │   │   ├── page.tsx
-│   │   │   │   ├── search/page.tsx
-│   │   │   │   ├── [agentId]/page.tsx
-│   │   │   │   └── components/
-│   │   │   ├── files/
-│   │   │   ├── timeline/
-│   │   │   ├── plugins/
-│   │   │   └── layout.tsx            # 主应用三栏布局
+│   │   ├── chat/                     # 聊天功能模块
+│   │   │   ├── layout.tsx            # Chat 布局（AppLayout + MiddlePanel + MainContent）
+│   │   │   ├── page.tsx              # Chat 首页（会话列表）
+│   │   │   └── [chatId]/
+│   │   │       └── page.tsx          # 具体聊天页面
+│   │   ├── contacts/                 # 联系人管理模块
+│   │   │   ├── layout.tsx            # Contacts 布局
+│   │   │   ├── page.tsx              # 联系人列表
+│   │   │   └── [contactId]/
+│   │   │       └── page.tsx          # 联系人详情
+│   │   ├── files/                    # 文件管理模块
+│   │   │   ├── layout.tsx            # Files 布局
+│   │   │   ├── page.tsx              # 文件列表
+│   │   │   └── [fileId]/
+│   │   │       └── page.tsx          # 文件详情
+│   │   ├── social/                   # 社交时间线模块
+│   │   │   ├── layout.tsx            # Social 布局
+│   │   │   ├── page.tsx              # 社交首页
+│   │   │   └── [postId]/
+│   │   │       └── page.tsx          # 帖子详情
+│   │   ├── plugins/                  # 插件管理模块
+│   │   │   ├── layout.tsx            # Plugins 布局
+│   │   │   ├── page.tsx              # 插件市场
+│   │   │   └── [pluginId]/
+│   │   │       └── page.tsx          # 插件详情
+│   │   └── settings/                 # 设置管理模块
+│   │       ├── layout.tsx            # Settings 布局
+│   │       ├── page.tsx              # 设置首页
+│   │       ├── profile/
+│   │       │   └── page.tsx          # 个人资料设置
+│   │       ├── privacy/
+│   │       │   └── page.tsx          # 隐私设置
+│   │       └── llm/
+│   │           └── page.tsx          # LLM 设置
 │   │   ├── api/                      # Next.js API Routes
 │   │   │   ├── auth/
 │   │   │   │   └── [...nextauth]/route.ts
@@ -102,24 +181,24 @@ frontend/
 │   │
 │   ├── components/                   # 组件库
 │   │   ├── layout/                   # 布局组件
-│   │   │   ├── MainLayout/
+│   │   │   ├── AppLayout/            # 应用主布局（Sidebar + 内容区域）
 │   │   │   │   ├── index.tsx
-│   │   │   │   ├── MainLayout.tsx
-│   │   │   │   ├── MainLayout.module.css
-│   │   │   │   └── MainLayout.test.tsx
-│   │   │   ├── Sidebar/
+│   │   │   │   └── AppLayout.types.ts
+│   │   │   ├── Sidebar/              # 左侧导航栏
 │   │   │   │   ├── index.tsx
-│   │   │   │   ├── Sidebar.tsx
 │   │   │   │   ├── SidebarNav.tsx
 │   │   │   │   ├── SidebarUser.tsx
 │   │   │   │   └── Sidebar.types.ts
-│   │   │   ├── MiddlePanel/
+│   │   │   ├── MiddlePanel/           # 中间面板（列表区域）
 │   │   │   │   ├── index.tsx
-│   │   │   │   ├── MiddlePanel.tsx
 │   │   │   │   ├── PanelHeader.tsx
 │   │   │   │   ├── PanelContent.tsx
 │   │   │   │   └── MiddlePanel.types.ts
-│   │   │   ├── ContentArea/
+│   │   │   ├── MainContent/          # 主内容区域
+│   │   │   │   ├── index.tsx
+│   │   │   │   ├── ContentHeader.tsx
+│   │   │   │   ├── ContentBody.tsx
+│   │   │   │   └── MainContent.types.ts
 │   │   │   ├── ThemeProvider/
 │   │   │   └── I18nProvider/
 │   │   │

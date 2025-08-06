@@ -75,7 +75,6 @@ export function generateMetadata(config: Partial<SEOConfig> = {}): Metadata {
     other: {
       'application-name': mergedConfig.siteName,
       'apple-mobile-web-app-title': mergedConfig.siteName,
-      'apple-mobile-web-app-capable': 'yes',
       'apple-mobile-web-app-status-bar-style': 'default',
       'format-detection': 'telephone=no',
       'mobile-web-app-capable': 'yes',

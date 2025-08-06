@@ -41,12 +41,15 @@ export function MiddlePanel({ mode, selectedItem, onItemSelect }: MiddlePanelPro
   }
 
   return (
-    <div className="w-64 bg-white border-r border-gray-200 flex flex-col">
+    <div className="w-64 bg-background border-r border-border flex flex-col">
       {/* Search Bar */}
-      <div className="p-3 border-b border-gray-200">
+      <div className="p-3 border-b border-border">
         <div className="relative">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-          <Input placeholder="搜索..." className="pl-10" />
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
+          <Input 
+            placeholder="搜索..." 
+            className="pl-10 bg-background" 
+          />
         </div>
       </div>
 

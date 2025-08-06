@@ -35,14 +35,18 @@ export default function RootLayout({
           id="jsonld"
           type="application/ld+json"
           dangerouslySetInnerHTML={{
-            __html: generateJSONLD()
+            __html: generateJSONLD(),
           }}
         />
-        
+
         {/* 预连接外部资源 */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        
+        <link
+          rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossOrigin="anonymous"
+        />
+
         {/* PWA相关 */}
         <link rel="manifest" href="/manifest.json" />
         <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
@@ -67,12 +71,12 @@ export default function RootLayout({
           <I18nProvider>
             <AuthProvider>
               <div className="min-h-screen bg-background text-foreground transition-colors">
-                {children}
+                <div className="flex h-screen bg-background">{children}</div>
               </div>
             </AuthProvider>
           </I18nProvider>
         </ThemeProvider>
-        
+
         {/* 主题初始化脚本 */}
         <Script id="theme-init" strategy="beforeInteractive">
           {`

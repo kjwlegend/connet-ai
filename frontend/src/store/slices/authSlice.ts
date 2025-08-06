@@ -82,6 +82,12 @@ const createAuthSlice: StateCreator<StoreState, [], [], AuthSlice> = (set, get) 
         StorageUtil.setItem(STORAGE_KEYS.REFRESH_TOKEN, refreshToken)
       }
       
+      // Also store token in cookie for middleware access
+      document.cookie = `auth_token=${token}; path=/; max-age=${60 * 60 * 24 * 7}; secure; samesite=strict`
+      if (refreshToken) {
+        document.cookie = `auth_refresh_token=${refreshToken}; path=/; max-age=${60 * 60 * 24 * 30}; secure; samesite=strict`
+      }
+      
       set({
         user: userData,
         token,
@@ -108,6 +114,10 @@ const createAuthSlice: StateCreator<StoreState, [], [], AuthSlice> = (set, get) 
         // Always clean up local state
         StorageUtil.removeItem(STORAGE_KEYS.AUTH_TOKEN)
         StorageUtil.removeItem(STORAGE_KEYS.REFRESH_TOKEN)
+        
+        // Clear cookies as well
+        document.cookie = 'auth_token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT'
+        document.cookie = 'auth_refresh_token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT'
         
         set({
           user: null,
@@ -155,6 +165,12 @@ const createAuthSlice: StateCreator<StoreState, [], [], AuthSlice> = (set, get) 
     const refreshToken = StorageUtil.getItem<string>(STORAGE_KEYS.REFRESH_TOKEN)
     
     if (token) {
+      // Set cookies to sync with middleware
+      document.cookie = `auth_token=${token}; path=/; max-age=${60 * 60 * 24 * 7}; secure; samesite=strict`
+      if (refreshToken) {
+        document.cookie = `auth_refresh_token=${refreshToken}; path=/; max-age=${60 * 60 * 24 * 30}; secure; samesite=strict`
+      }
+      
       set({
         token,
         refreshToken,

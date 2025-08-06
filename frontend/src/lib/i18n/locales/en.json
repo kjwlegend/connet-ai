@@ -5,7 +5,25 @@
         "learnMore": "Learn More"
     },
     "chat": {
-        "inputPlaceholder": "Type your message..."
+        "inputPlaceholder": "Type your message...",
+        "conversations": "Conversations",
+        "newConversation": "New Conversation",
+        "searchPlaceholder": "Search conversations...",
+        "filters": {
+            "contacts": "Contacts",
+            "unread": "Unread",
+            "groups": "Groups"
+        },
+        "emptyStates": {
+            "noConversations": "No conversations yet",
+            "noContacts": "No contact conversations",
+            "noUnread": "No unread messages",
+            "noGroups": "No group conversations",
+            "noSearchResults": "No conversations found matching \"{query}\"",
+            "noMessages": "No messages yet",
+            "emptyTitle": "No conversations yet",
+            "emptyDescription": "Start a new conversation with an AI agent to begin collaborating on your projects."
+        }
     },
     "auth": {
         "login": {

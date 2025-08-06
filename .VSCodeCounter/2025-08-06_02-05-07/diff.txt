@@ -1,0 +1,455 @@
+Date : 2025-08-06 02:05:07
+Directory : d:\codes\xiaoguang-next-gen\frontend
+Total : 274 files,  17613 codes, 23 comments, 849 blanks, all 18485 lines
+
+Languages
++--------------------+------------+------------+------------+------------+------------+
+| language           | files      | code       | comment    | blank      | total      |
++--------------------+------------+------------+------------+------------+------------+
+| TypeScript JSX     |        106 |      9,530 |        259 |        906 |     10,695 |
+| JSON               |          8 |      6,315 |          0 |          2 |      6,317 |
+| YAML               |          2 |      5,347 |         -6 |      1,264 |      6,605 |
+| TypeScript         |         52 |      4,955 |        336 |        747 |      6,038 |
+| SCSS               |          1 |        159 |         15 |         25 |        199 |
+| CSS                |          1 |        157 |         11 |         22 |        190 |
+| JavaScript         |          4 |         63 |          7 |         13 |         83 |
+| JSON with Comments |          2 |         49 |          0 |          1 |         50 |
+| XML                |          5 |          5 |          0 |          0 |          5 |
+| Docker             |          1 |        -22 |        -10 |        -10 |        -42 |
+| Markdown           |          8 |        -36 |          0 |        -97 |       -133 |
+| pip requirements   |          1 |        -36 |        -13 |        -12 |        -61 |
+| Makefile           |          1 |        -67 |         -9 |        -19 |        -95 |
+| Ini                |          1 |        -86 |          0 |        -23 |       -109 |
+| toml               |          1 |       -155 |          0 |        -24 |       -179 |
+| Python             |         80 |     -8,565 |       -567 |     -1,946 |    -11,078 |
++--------------------+------------+------------+------------+------------+------------+
+
+Directories
++------------------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| path                                                                                                             | files      | code       | comment    | blank      | total      |
++------------------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| .                                                                                                                |        274 |     17,613 |         23 |        849 |     18,485 |
+| . (Files)                                                                                                        |         12 |     11,362 |          7 |      1,307 |     12,676 |
+| ..                                                                                                               |         89 |     -9,966 |       -605 |     -2,361 |    -12,932 |
+| ..\bff                                                                                                           |         89 |     -9,966 |       -605 |     -2,361 |    -12,932 |
+| ..\bff (Files)                                                                                                   |         11 |     -1,735 |        -64 |       -458 |     -2,257 |
+| ..\bff\alembic                                                                                                   |          3 |       -261 |        -40 |        -88 |       -389 |
+| ..\bff\app                                                                                                       |         69 |     -7,153 |       -457 |     -1,618 |     -9,228 |
+| ..\bff\app (Files)                                                                                               |          2 |       -128 |        -15 |        -37 |       -180 |
+| ..\bff\app\api                                                                                                   |          9 |       -935 |        -79 |       -221 |     -1,235 |
+| ..\bff\app\api (Files)                                                                                           |          3 |       -331 |        -36 |        -96 |       -463 |
+| ..\bff\app\api\v1                                                                                                |          6 |       -604 |        -43 |       -125 |       -772 |
+| ..\bff\app\api\v1 (Files)                                                                                        |          2 |        -15 |         -9 |         -6 |        -30 |
+| ..\bff\app\api\v1\endpoints                                                                                      |          4 |       -589 |        -34 |       -119 |       -742 |
+| ..\bff\app\config                                                                                                |          2 |       -121 |        -14 |        -33 |       -168 |
+| ..\bff\app\core                                                                                                  |          5 |        -96 |          0 |        -26 |       -122 |
+| ..\bff\app\core (Files)                                                                                          |          1 |         -1 |          0 |          0 |         -1 |
+| ..\bff\app\core\interfaces                                                                                       |          4 |        -95 |          0 |        -26 |       -121 |
+| ..\bff\app\core\interfaces (Files)                                                                               |          1 |         -1 |          0 |          0 |         -1 |
+| ..\bff\app\core\interfaces\repositories                                                                          |          3 |        -94 |          0 |        -26 |       -120 |
+| ..\bff\app\infrastructure                                                                                        |         36 |     -3,906 |       -189 |       -752 |     -4,847 |
+| ..\bff\app\infrastructure (Files)                                                                                |          1 |         -1 |          0 |          0 |         -1 |
+| ..\bff\app\infrastructure\database                                                                               |         24 |     -3,092 |       -159 |       -524 |     -3,775 |
+| ..\bff\app\infrastructure\database (Files)                                                                       |          2 |        -75 |         -4 |        -30 |       -109 |
+| ..\bff\app\infrastructure\database\models                                                                        |         16 |     -1,689 |       -122 |       -228 |     -2,039 |
+| ..\bff\app\infrastructure\database\repositories                                                                  |          6 |     -1,328 |        -33 |       -266 |     -1,627 |
+| ..\bff\app\infrastructure\external                                                                               |          6 |       -622 |        -20 |       -172 |       -814 |
+| ..\bff\app\infrastructure\external (Files)                                                                       |          1 |         -1 |          0 |          0 |         -1 |
+| ..\bff\app\infrastructure\external\supabase                                                                      |          5 |       -621 |        -20 |       -172 |       -813 |
+| ..\bff\app\infrastructure\messaging                                                                              |          2 |        -68 |         -2 |        -21 |        -91 |
+| ..\bff\app\infrastructure\security                                                                               |          3 |       -123 |         -8 |        -35 |       -166 |
+| ..\bff\app\schemas                                                                                               |          5 |       -250 |         -8 |        -92 |       -350 |
+| ..\bff\app\services                                                                                              |          5 |       -719 |        -64 |       -191 |       -974 |
+| ..\bff\app\utils                                                                                                 |          5 |       -998 |        -88 |       -266 |     -1,352 |
+| ..\bff\scripts                                                                                                   |          6 |       -817 |        -44 |       -197 |     -1,058 |
+| .cursor                                                                                                          |          5 |        922 |          0 |        208 |      1,130 |
+| .cursor (Files)                                                                                                  |          1 |         22 |          0 |          0 |         22 |
+| .cursor\rules                                                                                                    |          4 |        900 |          0 |        208 |      1,108 |
+| .cursor\rules (Files)                                                                                            |          2 |        107 |          0 |         19 |        126 |
+| .cursor\rules\taskmaster                                                                                         |          2 |        793 |          0 |        189 |        982 |
+| public                                                                                                           |          6 |         75 |          0 |          0 |         75 |
+| src                                                                                                              |        161 |     15,169 |        621 |      1,689 |     17,479 |
+| src (Files)                                                                                                      |          1 |         43 |         14 |         11 |         68 |
+| src\app                                                                                                          |         31 |      1,382 |         63 |        188 |      1,633 |
+| src\app (Files)                                                                                                  |          5 |        330 |         19 |         45 |        394 |
+| src\app\(auth)                                                                                                   |          4 |        727 |         16 |         75 |        818 |
+| src\app\(auth) (Files)                                                                                           |          1 |         11 |          0 |          0 |         11 |
+| src\app\(auth)\forgot-password                                                                                   |          1 |        165 |          0 |         21 |        186 |
+| src\app\(auth)\login                                                                                             |          1 |        209 |          7 |         24 |        240 |
+| src\app\(auth)\register                                                                                          |          1 |        342 |          9 |         30 |        381 |
+| src\app\api                                                                                                      |          1 |          3 |         16 |          5 |         24 |
+| src\app\api\auth                                                                                                 |          1 |          3 |         16 |          5 |         24 |
+| src\app\chat                                                                                                     |          3 |         49 |          2 |         10 |         61 |
+| src\app\chat (Files)                                                                                             |          2 |         33 |          2 |          7 |         42 |
+| src\app\chat\[chatId]                                                                                            |          1 |         16 |          0 |          3 |         19 |
+| src\app\contacts                                                                                                 |          3 |         49 |          2 |         10 |         61 |
+| src\app\contacts (Files)                                                                                         |          2 |         33 |          2 |          7 |         42 |
+| src\app\contacts\[contactId]                                                                                     |          1 |         16 |          0 |          3 |         19 |
+| src\app\files                                                                                                    |          3 |         49 |          2 |         10 |         61 |
+| src\app\files (Files)                                                                                            |          2 |         33 |          2 |          7 |         42 |
+| src\app\files\[fileId]                                                                                           |          1 |         16 |          0 |          3 |         19 |
+| src\app\plugins                                                                                                  |          3 |         49 |          2 |         10 |         61 |
+| src\app\plugins (Files)                                                                                          |          2 |         33 |          2 |          7 |         42 |
+| src\app\plugins\[pluginId]                                                                                       |          1 |         16 |          0 |          3 |         19 |
+| src\app\settings                                                                                                 |          5 |         66 |          2 |         13 |         81 |
+| src\app\settings (Files)                                                                                         |          2 |         33 |          2 |          7 |         42 |
+| src\app\settings\llm                                                                                             |          1 |         11 |          0 |          2 |         13 |
+| src\app\settings\privacy                                                                                         |          1 |         11 |          0 |          2 |         13 |
+| src\app\settings\profile                                                                                         |          1 |         11 |          0 |          2 |         13 |
+| src\app\simple                                                                                                   |          1 |         11 |          0 |          0 |         11 |
+| src\app\social                                                                                                   |          3 |         49 |          2 |         10 |         61 |
+| src\app\social (Files)                                                                                           |          2 |         33 |          2 |          7 |         42 |
+| src\app\social\[postId]                                                                                          |          1 |         16 |          0 |          3 |         19 |
+| src\components                                                                                                   |         77 |      8,407 |        221 |        739 |      9,367 |
+| src\components (Files)                                                                                           |         26 |      3,447 |         59 |        232 |      3,738 |
+| src\components\auth                                                                                              |          3 |        216 |         26 |         31 |        273 |
+| src\components\common                                                                                            |          2 |         74 |          0 |         12 |         86 |
+| src\components\common\ErrorBoundary                                                                              |          1 |         47 |          0 |          8 |         55 |
+| src\components\common\LoadingSpinner                                                                             |          1 |         27 |          0 |          4 |         31 |
+| src\components\features                                                                                          |         18 |      2,559 |         90 |        219 |      2,868 |
+| src\components\features\chat                                                                                     |          5 |      1,086 |         69 |        118 |      1,273 |
+| src\components\features\chat\components                                                                          |          5 |      1,086 |         69 |        118 |      1,273 |
+| src\components\features\chat\components\ChatHeader                                                               |          1 |         56 |          1 |          6 |         63 |
+| src\components\features\chat\components\ChatInput                                                                |          1 |        313 |         21 |         38 |        372 |
+| src\components\features\chat\components\ChatInterface                                                            |          1 |        142 |         11 |         20 |        173 |
+| src\components\features\chat\components\ConversationList                                                         |          1 |        339 |         22 |         35 |        396 |
+| src\components\features\chat\components\MessageBubble                                                            |          1 |        236 |         14 |         19 |        269 |
+| src\components\features\contacts                                                                                 |          2 |        339 |          8 |         26 |        373 |
+| src\components\features\contacts\components                                                                      |          2 |        339 |          8 |         26 |        373 |
+| src\components\features\contacts\components\ContactDetailEditable                                                |          1 |        147 |          5 |         13 |        165 |
+| src\components\features\contacts\components\ContactList                                                          |          1 |        192 |          3 |         13 |        208 |
+| src\components\features\files                                                                                    |          2 |        191 |          0 |         12 |        203 |
+| src\components\features\files\components                                                                         |          2 |        191 |          0 |         12 |        203 |
+| src\components\features\files\components\FilesManagement                                                         |          1 |         37 |          0 |          5 |         42 |
+| src\components\features\files\components\FilesTable                                                              |          1 |        154 |          0 |          7 |        161 |
+| src\components\features\plugins                                                                                  |          6 |        550 |          5 |         39 |        594 |
+| src\components\features\plugins\components                                                                       |          5 |        425 |          5 |         38 |        468 |
+| src\components\features\plugins\components\PluginCard                                                            |          1 |         61 |          0 |          5 |         66 |
+| src\components\features\plugins\components\PluginConfigForm                                                      |          1 |        134 |          0 |         11 |        145 |
+| src\components\features\plugins\components\PluginDetail                                                          |          1 |         88 |          3 |          7 |         98 |
+| src\components\features\plugins\components\PluginsConfigured                                                     |          1 |         76 |          0 |          6 |         82 |
+| src\components\features\plugins\components\PluginsMarketplace                                                    |          1 |         66 |          2 |          9 |         77 |
+| src\components\features\plugins\data                                                                             |          1 |        125 |          0 |          1 |        126 |
+| src\components\features\settings                                                                                 |          1 |        183 |          4 |          9 |        196 |
+| src\components\features\settings\components                                                                      |          1 |        183 |          4 |          9 |        196 |
+| src\components\features\settings\components\SettingsLLM                                                          |          1 |        183 |          4 |          9 |        196 |
+| src\components\features\timeline                                                                                 |          2 |        210 |          4 |         15 |        229 |
+| src\components\features\timeline\components                                                                      |          2 |        210 |          4 |         15 |        229 |
+| src\components\features\timeline\components\SocialContent                                                        |          1 |        169 |          4 |         10 |        183 |
+| src\components\features\timeline\components\SocialSidebar                                                        |          1 |         41 |          0 |          5 |         46 |
+| src\components\layout                                                                                            |          7 |        407 |         41 |         52 |        500 |
+| src\components\layout (Files)                                                                                    |          1 |          7 |          0 |          3 |         10 |
+| src\components\layout\AppLayout                                                                                  |          1 |         34 |          4 |          9 |         47 |
+| src\components\layout\ContentArea                                                                                |          1 |         16 |          0 |          3 |         19 |
+| src\components\layout\MainContent                                                                                |          1 |         70 |         27 |          9 |        106 |
+| src\components\layout\MainLayout                                                                                 |          1 |         28 |          3 |          7 |         38 |
+| src\components\layout\MiddlePanel                                                                                |          1 |         70 |          2 |          8 |         80 |
+| src\components\layout\Sidebar                                                                                    |          1 |        182 |          5 |         13 |        200 |
+| src\components\ui                                                                                                |         21 |      1,704 |          5 |        193 |      1,902 |
+| src\components\ui (Files)                                                                                        |         19 |      1,462 |          0 |        170 |      1,632 |
+| src\components\ui\LanguageToggle                                                                                 |          1 |         93 |          2 |         10 |        105 |
+| src\components\ui\ThemeToggle                                                                                    |          1 |        149 |          3 |         13 |        165 |
+| src\hooks                                                                                                        |          7 |        607 |         51 |        105 |        763 |
+| src\lib                                                                                                          |         31 |      2,232 |        124 |        292 |      2,648 |
+| src\lib (Files)                                                                                                  |          1 |          5 |          0 |          2 |          7 |
+| src\lib\api                                                                                                      |          5 |        420 |         43 |         82 |        545 |
+| src\lib\config                                                                                                   |          3 |        132 |         19 |         28 |        179 |
+| src\lib\design-system                                                                                            |          5 |        391 |         19 |         45 |        455 |
+| src\lib\design-system (Files)                                                                                    |          1 |        183 |         15 |         31 |        229 |
+| src\lib\design-system\tokens                                                                                     |          4 |        208 |          4 |         14 |        226 |
+| src\lib\i18n                                                                                                     |          8 |        616 |          9 |         24 |        649 |
+| src\lib\i18n (Files)                                                                                             |          4 |        148 |          9 |         24 |        181 |
+| src\lib\i18n\locales                                                                                             |          2 |        158 |          0 |          0 |        158 |
+| src\lib\i18n\messages                                                                                            |          2 |        310 |          0 |          0 |        310 |
+| src\lib\seo                                                                                                      |          3 |        255 |         12 |         24 |        291 |
+| src\lib\utils                                                                                                    |          6 |        413 |         22 |         87 |        522 |
+| src\services                                                                                                     |          3 |        525 |         32 |         87 |        644 |
+| src\store                                                                                                        |          8 |      1,475 |         86 |        203 |      1,764 |
+| src\store (Files)                                                                                                |          2 |        253 |         12 |         33 |        298 |
+| src\store\middleware                                                                                             |          3 |         59 |          0 |         12 |         71 |
+| src\store\slices                                                                                                 |          3 |      1,163 |         74 |        158 |      1,395 |
+| src\styles                                                                                                       |          1 |        159 |         15 |         25 |        199 |
+| src\types                                                                                                        |          2 |        339 |         15 |         39 |        393 |
+| types                                                                                                            |          1 |         51 |          0 |          6 |         57 |
++------------------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+
+Files
++------------------------------------------------------------------------------------------------------------------+--------------------+------------+------------+------------+------------+
+| filename                                                                                                         | language           | code       | comment    | blank      | total      |
++------------------------------------------------------------------------------------------------------------------+--------------------+------------+------------+------------+------------+
+| d:\codes\xiaoguang-next-gen\bff\AUTH_SETUP.md                                                                    | Markdown           |       -209 |          0 |        -73 |       -282 |
+| d:\codes\xiaoguang-next-gen\bff\Dockerfile                                                                       | Docker             |        -22 |        -10 |        -10 |        -42 |
+| d:\codes\xiaoguang-next-gen\bff\Makefile                                                                         | Makefile           |        -67 |         -9 |        -19 |        -95 |
+| d:\codes\xiaoguang-next-gen\bff\README.md                                                                        | Markdown           |       -183 |          0 |        -61 |       -244 |
+| d:\codes\xiaoguang-next-gen\bff\alembic.ini                                                                      | Ini                |        -86 |          0 |        -23 |       -109 |
+| d:\codes\xiaoguang-next-gen\bff\alembic\env.py                                                                   | Python             |        -89 |        -13 |        -28 |       -130 |
+| d:\codes\xiaoguang-next-gen\bff\alembic\env_backup.py                                                            | Python             |        -83 |        -14 |        -32 |       -129 |
+| d:\codes\xiaoguang-next-gen\bff\alembic\env_simple.py                                                            | Python             |        -89 |        -13 |        -28 |       -130 |
+| d:\codes\xiaoguang-next-gen\bff\app\__init__.py                                                                  | Python             |         -9 |          0 |         -4 |        -13 |
+| d:\codes\xiaoguang-next-gen\bff\app\api\__init__.py                                                              | Python             |         -1 |          0 |          0 |         -1 |
+| d:\codes\xiaoguang-next-gen\bff\app\api\dependencies.py                                                          | Python             |       -159 |         -7 |        -45 |       -211 |
+| d:\codes\xiaoguang-next-gen\bff\app\api\middleware.py                                                            | Python             |       -171 |        -29 |        -51 |       -251 |
+| d:\codes\xiaoguang-next-gen\bff\app\api\v1\__init__.py                                                           | Python             |         -1 |          0 |          0 |         -1 |
+| d:\codes\xiaoguang-next-gen\bff\app\api\v1\endpoints\__init__.py                                                 | Python             |         -1 |          0 |          0 |         -1 |
+| d:\codes\xiaoguang-next-gen\bff\app\api\v1\endpoints\auth.py                                                     | Python             |       -241 |        -10 |        -46 |       -297 |
+| d:\codes\xiaoguang-next-gen\bff\app\api\v1\endpoints\health.py                                                   | Python             |       -143 |        -19 |        -30 |       -192 |
+| d:\codes\xiaoguang-next-gen\bff\app\api\v1\endpoints\users.py                                                    | Python             |       -204 |         -5 |        -43 |       -252 |
+| d:\codes\xiaoguang-next-gen\bff\app\api\v1\router.py                                                             | Python             |        -14 |         -9 |         -6 |        -29 |
+| d:\codes\xiaoguang-next-gen\bff\app\config\__init__.py                                                           | Python             |         -3 |          0 |         -2 |         -5 |
+| d:\codes\xiaoguang-next-gen\bff\app\config\settings.py                                                           | Python             |       -118 |        -14 |        -31 |       -163 |
+| d:\codes\xiaoguang-next-gen\bff\app\core\__init__.py                                                             | Python             |         -1 |          0 |          0 |         -1 |
+| d:\codes\xiaoguang-next-gen\bff\app\core\interfaces\__init__.py                                                  | Python             |         -1 |          0 |          0 |         -1 |
+| d:\codes\xiaoguang-next-gen\bff\app\core\interfaces\repositories\__init__.py                                     | Python             |         -1 |          0 |          0 |         -1 |
+| d:\codes\xiaoguang-next-gen\bff\app\core\interfaces\repositories\base_repository.py                              | Python             |        -43 |          0 |        -12 |        -55 |
+| d:\codes\xiaoguang-next-gen\bff\app\core\interfaces\repositories\user_repository.py                              | Python             |        -50 |          0 |        -14 |        -64 |
+| d:\codes\xiaoguang-next-gen\bff\app\infrastructure\__init__.py                                                   | Python             |         -1 |          0 |          0 |         -1 |
+| d:\codes\xiaoguang-next-gen\bff\app\infrastructure\database\__init__.py                                          | Python             |         -1 |          0 |          0 |         -1 |
+| d:\codes\xiaoguang-next-gen\bff\app\infrastructure\database\connection.py                                        | Python             |        -74 |         -4 |        -30 |       -108 |
+| d:\codes\xiaoguang-next-gen\bff\app\infrastructure\database\models\__init__.py                                   | Python             |        -33 |         -5 |         -6 |        -44 |
+| d:\codes\xiaoguang-next-gen\bff\app\infrastructure\database\models\agent_knowledge_base_model.py                 | Python             |        -93 |         -7 |        -14 |       -114 |
+| d:\codes\xiaoguang-next-gen\bff\app\infrastructure\database\models\agent_model.py                                | Python             |       -170 |        -12 |        -19 |       -201 |
+| d:\codes\xiaoguang-next-gen\bff\app\infrastructure\database\models\contact_model.py                              | Python             |        -91 |         -6 |        -13 |       -110 |
+| d:\codes\xiaoguang-next-gen\bff\app\infrastructure\database\models\conversation_model.py                         | Python             |        -98 |         -6 |        -13 |       -117 |
+| d:\codes\xiaoguang-next-gen\bff\app\infrastructure\database\models\conversation_participant_model.py             | Python             |        -77 |         -4 |        -11 |        -92 |
+| d:\codes\xiaoguang-next-gen\bff\app\infrastructure\database\models\conversation_topic_model.py                   | Python             |       -125 |         -9 |        -16 |       -150 |
+| d:\codes\xiaoguang-next-gen\bff\app\infrastructure\database\models\file_model.py                                 | Python             |       -140 |         -9 |        -16 |       -165 |
+| d:\codes\xiaoguang-next-gen\bff\app\infrastructure\database\models\file_permission_model.py                      | Python             |        -55 |         -3 |        -10 |        -68 |
+| d:\codes\xiaoguang-next-gen\bff\app\infrastructure\database\models\message_model.py                              | Python             |       -116 |        -10 |        -17 |       -143 |
+| d:\codes\xiaoguang-next-gen\bff\app\infrastructure\database\models\timeline_comment_model.py                     | Python             |       -101 |         -9 |        -16 |       -126 |
+| d:\codes\xiaoguang-next-gen\bff\app\infrastructure\database\models\timeline_like_model.py                        | Python             |        -50 |         -4 |        -11 |        -65 |
+| d:\codes\xiaoguang-next-gen\bff\app\infrastructure\database\models\timeline_post_model.py                        | Python             |       -180 |        -12 |        -19 |       -211 |
+| d:\codes\xiaoguang-next-gen\bff\app\infrastructure\database\models\user_invitation_model.py                      | Python             |        -81 |         -7 |        -14 |       -102 |
+| d:\codes\xiaoguang-next-gen\bff\app\infrastructure\database\models\user_model.py                                 | Python             |       -168 |        -12 |        -19 |       -199 |
+| d:\codes\xiaoguang-next-gen\bff\app\infrastructure\database\models\user_registration_source_model.py             | Python             |       -111 |         -7 |        -14 |       -132 |
+| d:\codes\xiaoguang-next-gen\bff\app\infrastructure\database\repositories\__init__.py                             | Python             |         -1 |          0 |          0 |         -1 |
+| d:\codes\xiaoguang-next-gen\bff\app\infrastructure\database\repositories\agent_repository_impl.py                | Python             |       -191 |         -6 |        -32 |       -229 |
+| d:\codes\xiaoguang-next-gen\bff\app\infrastructure\database\repositories\base_repository.py                      | Python             |       -261 |         -3 |        -52 |       -316 |
+| d:\codes\xiaoguang-next-gen\bff\app\infrastructure\database\repositories\conversation_repository_impl.py         | Python             |       -285 |         -7 |        -45 |       -337 |
+| d:\codes\xiaoguang-next-gen\bff\app\infrastructure\database\repositories\message_repository_impl.py              | Python             |       -288 |         -2 |        -53 |       -343 |
+| d:\codes\xiaoguang-next-gen\bff\app\infrastructure\database\repositories\user_repository_impl.py                 | Python             |       -302 |        -15 |        -84 |       -401 |
+| d:\codes\xiaoguang-next-gen\bff\app\infrastructure\external\__init__.py                                          | Python             |         -1 |          0 |          0 |         -1 |
+| d:\codes\xiaoguang-next-gen\bff\app\infrastructure\external\supabase\__init__.py                                 | Python             |         -1 |          0 |          0 |         -1 |
+| d:\codes\xiaoguang-next-gen\bff\app\infrastructure\external\supabase\auth.py                                     | Python             |       -126 |         -1 |        -32 |       -159 |
+| d:\codes\xiaoguang-next-gen\bff\app\infrastructure\external\supabase\client.py                                   | Python             |        -32 |         -2 |        -15 |        -49 |
+| d:\codes\xiaoguang-next-gen\bff\app\infrastructure\external\supabase\realtime.py                                 | Python             |       -248 |        -10 |        -68 |       -326 |
+| d:\codes\xiaoguang-next-gen\bff\app\infrastructure\external\supabase\storage.py                                  | Python             |       -214 |         -7 |        -57 |       -278 |
+| d:\codes\xiaoguang-next-gen\bff\app\infrastructure\messaging\__init__.py                                         | Python             |         -1 |          0 |          0 |         -1 |
+| d:\codes\xiaoguang-next-gen\bff\app\infrastructure\messaging\event_bus.py                                        | Python             |        -67 |         -2 |        -21 |        -90 |
+| d:\codes\xiaoguang-next-gen\bff\app\infrastructure\security\__init__.py                                          | Python             |         -1 |          0 |          0 |         -1 |
+| d:\codes\xiaoguang-next-gen\bff\app\infrastructure\security\auth.py                                              | Python             |        -73 |         -1 |        -19 |        -93 |
+| d:\codes\xiaoguang-next-gen\bff\app\infrastructure\security\permissions.py                                       | Python             |        -49 |         -7 |        -16 |        -72 |
+| d:\codes\xiaoguang-next-gen\bff\app\main.py                                                                      | Python             |       -119 |        -15 |        -33 |       -167 |
+| d:\codes\xiaoguang-next-gen\bff\app\schemas\__init__.py                                                          | Python             |         -1 |          0 |          0 |         -1 |
+| d:\codes\xiaoguang-next-gen\bff\app\schemas\auth.py                                                              | Python             |        -53 |         -3 |        -25 |        -81 |
+| d:\codes\xiaoguang-next-gen\bff\app\schemas\base.py                                                              | Python             |        -64 |          0 |        -23 |        -87 |
+| d:\codes\xiaoguang-next-gen\bff\app\schemas\responses.py                                                         | Python             |        -47 |          0 |        -20 |        -67 |
+| d:\codes\xiaoguang-next-gen\bff\app\schemas\user.py                                                              | Python             |        -85 |         -5 |        -24 |       -114 |
+| d:\codes\xiaoguang-next-gen\bff\app\services\__init__.py                                                         | Python             |         -1 |          0 |          0 |         -1 |
+| d:\codes\xiaoguang-next-gen\bff\app\services\auth_service.py                                                     | Python             |       -112 |        -16 |        -34 |       -162 |
+| d:\codes\xiaoguang-next-gen\bff\app\services\base.py                                                             | Python             |       -199 |         -9 |        -52 |       -260 |
+| d:\codes\xiaoguang-next-gen\bff\app\services\supabase_auth_service.py                                            | Python             |       -278 |        -27 |        -69 |       -374 |
+| d:\codes\xiaoguang-next-gen\bff\app\services\user_service.py                                                     | Python             |       -129 |        -12 |        -36 |       -177 |
+| d:\codes\xiaoguang-next-gen\bff\app\utils\__init__.py                                                            | Python             |         -1 |          0 |          0 |         -1 |
+| d:\codes\xiaoguang-next-gen\bff\app\utils\constants.py                                                           | Python             |       -330 |        -66 |        -97 |       -493 |
+| d:\codes\xiaoguang-next-gen\bff\app\utils\datetime.py                                                            | Python             |       -224 |         -5 |        -54 |       -283 |
+| d:\codes\xiaoguang-next-gen\bff\app\utils\helpers.py                                                             | Python             |       -355 |        -10 |        -87 |       -452 |
+| d:\codes\xiaoguang-next-gen\bff\app\utils\logging.py                                                             | Python             |        -88 |         -7 |        -28 |       -123 |
+| d:\codes\xiaoguang-next-gen\bff\create_manual_migration.py                                                       | Python             |       -302 |        -20 |        -30 |       -352 |
+| d:\codes\xiaoguang-next-gen\bff\database_schema_design.md                                                        | Markdown           |       -567 |          0 |       -185 |       -752 |
+| d:\codes\xiaoguang-next-gen\bff\docker-compose.yml                                                               | YAML               |        -76 |         -6 |         -8 |        -90 |
+| d:\codes\xiaoguang-next-gen\bff\generate_migration.py                                                            | Python             |        -32 |         -6 |        -13 |        -51 |
+| d:\codes\xiaoguang-next-gen\bff\pyproject.toml                                                                   | toml               |       -155 |          0 |        -24 |       -179 |
+| d:\codes\xiaoguang-next-gen\bff\requirements.txt                                                                 | pip requirements   |        -36 |        -13 |        -12 |        -61 |
+| d:\codes\xiaoguang-next-gen\bff\scripts\__init__.py                                                              | Python             |         -1 |          0 |          0 |         -1 |
+| d:\codes\xiaoguang-next-gen\bff\scripts\create_env.py                                                            | Python             |        -45 |         -3 |        -16 |        -64 |
+| d:\codes\xiaoguang-next-gen\bff\scripts\init_database.py                                                         | Python             |       -145 |        -19 |        -40 |       -204 |
+| d:\codes\xiaoguang-next-gen\bff\scripts\seed_data.py                                                             | Python             |       -481 |        -12 |        -86 |       -579 |
+| d:\codes\xiaoguang-next-gen\bff\scripts\setup_auth.py                                                            | Python             |       -117 |         -9 |        -45 |       -171 |
+| d:\codes\xiaoguang-next-gen\bff\scripts\start_dev.py                                                             | Python             |        -28 |         -1 |        -10 |        -39 |
+| d:\codes\xiaoguang-next-gen\frontend\.cursor\mcp.json                                                            | JSON with Comments |         22 |          0 |          0 |         22 |
+| d:\codes\xiaoguang-next-gen\frontend\.cursor\rules\cursor_rules.mdc                                              | Markdown           |         45 |          0 |          8 |         53 |
+| d:\codes\xiaoguang-next-gen\frontend\.cursor\rules\self_improve.mdc                                              | Markdown           |         62 |          0 |         11 |         73 |
+| d:\codes\xiaoguang-next-gen\frontend\.cursor\rules\taskmaster\dev_workflow.mdc                                   | Markdown           |        336 |          0 |         88 |        424 |
+| d:\codes\xiaoguang-next-gen\frontend\.cursor\rules\taskmaster\taskmaster.mdc                                     | Markdown           |        457 |          0 |        101 |        558 |
+| d:\codes\xiaoguang-next-gen\frontend\README.md                                                                   | Markdown           |         23 |          0 |         14 |         37 |
+| d:\codes\xiaoguang-next-gen\frontend\components.json                                                             | JSON               |         21 |          0 |          0 |         21 |
+| d:\codes\xiaoguang-next-gen\frontend\eslint.config.mjs                                                           | JavaScript         |         12 |          0 |          5 |         17 |
+| d:\codes\xiaoguang-next-gen\frontend\jest.config.js                                                              | JavaScript         |         23 |          4 |          3 |         30 |
+| d:\codes\xiaoguang-next-gen\frontend\jest.setup.js                                                               | JavaScript         |         24 |          3 |          3 |         30 |
+| d:\codes\xiaoguang-next-gen\frontend\next.config.ts                                                              | TypeScript         |         11 |          0 |          3 |         14 |
+| d:\codes\xiaoguang-next-gen\frontend\package-lock.json                                                           | JSON               |      5,698 |          0 |          1 |      5,699 |
+| d:\codes\xiaoguang-next-gen\frontend\package.json                                                                | JSON               |         58 |          0 |          1 |         59 |
+| d:\codes\xiaoguang-next-gen\frontend\pnpm-lock.yaml                                                              | YAML               |      5,423 |          0 |      1,272 |      6,695 |
+| d:\codes\xiaoguang-next-gen\frontend\postcss.config.mjs                                                          | JavaScript         |          4 |          0 |          2 |          6 |
+| d:\codes\xiaoguang-next-gen\frontend\public\file.svg                                                             | XML                |          1 |          0 |          0 |          1 |
+| d:\codes\xiaoguang-next-gen\frontend\public\globe.svg                                                            | XML                |          1 |          0 |          0 |          1 |
+| d:\codes\xiaoguang-next-gen\frontend\public\manifest.json                                                        | JSON               |         70 |          0 |          0 |         70 |
+| d:\codes\xiaoguang-next-gen\frontend\public\next.svg                                                             | XML                |          1 |          0 |          0 |          1 |
+| d:\codes\xiaoguang-next-gen\frontend\public\vercel.svg                                                           | XML                |          1 |          0 |          0 |          1 |
+| d:\codes\xiaoguang-next-gen\frontend\public\window.svg                                                           | XML                |          1 |          0 |          0 |          1 |
+| d:\codes\xiaoguang-next-gen\frontend\src\app\(auth)\forgot-password\page.tsx                                     | TypeScript JSX     |        165 |          0 |         21 |        186 |
+| d:\codes\xiaoguang-next-gen\frontend\src\app\(auth)\layout.tsx                                                   | TypeScript JSX     |         11 |          0 |          0 |         11 |
+| d:\codes\xiaoguang-next-gen\frontend\src\app\(auth)\login\page.tsx                                               | TypeScript JSX     |        209 |          7 |         24 |        240 |
+| d:\codes\xiaoguang-next-gen\frontend\src\app\(auth)\register\page.tsx                                            | TypeScript JSX     |        342 |          9 |         30 |        381 |
+| d:\codes\xiaoguang-next-gen\frontend\src\app\api\auth\[...nextauth].ts                                           | TypeScript         |          3 |         16 |          5 |         24 |
+| d:\codes\xiaoguang-next-gen\frontend\src\app\chat\[chatId]\page.tsx                                              | TypeScript JSX     |         16 |          0 |          3 |         19 |
+| d:\codes\xiaoguang-next-gen\frontend\src\app\chat\layout.tsx                                                     | TypeScript JSX     |         22 |          2 |          5 |         29 |
+| d:\codes\xiaoguang-next-gen\frontend\src\app\chat\page.tsx                                                       | TypeScript JSX     |         11 |          0 |          2 |         13 |
+| d:\codes\xiaoguang-next-gen\frontend\src\app\contacts\[contactId]\page.tsx                                       | TypeScript JSX     |         16 |          0 |          3 |         19 |
+| d:\codes\xiaoguang-next-gen\frontend\src\app\contacts\layout.tsx                                                 | TypeScript JSX     |         22 |          2 |          5 |         29 |
+| d:\codes\xiaoguang-next-gen\frontend\src\app\contacts\page.tsx                                                   | TypeScript JSX     |         11 |          0 |          2 |         13 |
+| d:\codes\xiaoguang-next-gen\frontend\src\app\files\[fileId]\page.tsx                                             | TypeScript JSX     |         16 |          0 |          3 |         19 |
+| d:\codes\xiaoguang-next-gen\frontend\src\app\files\layout.tsx                                                    | TypeScript JSX     |         22 |          2 |          5 |         29 |
+| d:\codes\xiaoguang-next-gen\frontend\src\app\files\page.tsx                                                      | TypeScript JSX     |         11 |          0 |          2 |         13 |
+| d:\codes\xiaoguang-next-gen\frontend\src\app\globals.css                                                         | CSS                |        157 |         11 |         22 |        190 |
+| d:\codes\xiaoguang-next-gen\frontend\src\app\layout.tsx                                                          | TypeScript JSX     |         90 |          4 |          8 |        102 |
+| d:\codes\xiaoguang-next-gen\frontend\src\app\page-backup.tsx                                                     | TypeScript JSX     |         28 |          3 |          6 |         37 |
+| d:\codes\xiaoguang-next-gen\frontend\src\app\page-simple.tsx                                                     | TypeScript JSX     |         40 |          0 |          4 |         44 |
+| d:\codes\xiaoguang-next-gen\frontend\src\app\page.tsx                                                            | TypeScript JSX     |         15 |          1 |          5 |         21 |
+| d:\codes\xiaoguang-next-gen\frontend\src\app\plugins\[pluginId]\page.tsx                                         | TypeScript JSX     |         16 |          0 |          3 |         19 |
+| d:\codes\xiaoguang-next-gen\frontend\src\app\plugins\layout.tsx                                                  | TypeScript JSX     |         22 |          2 |          5 |         29 |
+| d:\codes\xiaoguang-next-gen\frontend\src\app\plugins\page.tsx                                                    | TypeScript JSX     |         11 |          0 |          2 |         13 |
+| d:\codes\xiaoguang-next-gen\frontend\src\app\settings\layout.tsx                                                 | TypeScript JSX     |         22 |          2 |          5 |         29 |
+| d:\codes\xiaoguang-next-gen\frontend\src\app\settings\llm\page.tsx                                               | TypeScript JSX     |         11 |          0 |          2 |         13 |
+| d:\codes\xiaoguang-next-gen\frontend\src\app\settings\page.tsx                                                   | TypeScript JSX     |         11 |          0 |          2 |         13 |
+| d:\codes\xiaoguang-next-gen\frontend\src\app\settings\privacy\page.tsx                                           | TypeScript JSX     |         11 |          0 |          2 |         13 |
+| d:\codes\xiaoguang-next-gen\frontend\src\app\settings\profile\page.tsx                                           | TypeScript JSX     |         11 |          0 |          2 |         13 |
+| d:\codes\xiaoguang-next-gen\frontend\src\app\simple\page.tsx                                                     | TypeScript JSX     |         11 |          0 |          0 |         11 |
+| d:\codes\xiaoguang-next-gen\frontend\src\app\social\[postId]\page.tsx                                            | TypeScript JSX     |         16 |          0 |          3 |         19 |
+| d:\codes\xiaoguang-next-gen\frontend\src\app\social\layout.tsx                                                   | TypeScript JSX     |         22 |          2 |          5 |         29 |
+| d:\codes\xiaoguang-next-gen\frontend\src\app\social\page.tsx                                                     | TypeScript JSX     |         11 |          0 |          2 |         13 |
+| d:\codes\xiaoguang-next-gen\frontend\src\components\auth\AuthGuard.tsx                                           | TypeScript JSX     |         92 |         10 |         15 |        117 |
+| d:\codes\xiaoguang-next-gen\frontend\src\components\auth\AuthLayout.tsx                                          | TypeScript JSX     |         92 |         13 |         10 |        115 |
+| d:\codes\xiaoguang-next-gen\frontend\src\components\auth\AuthProvider.tsx                                        | TypeScript JSX     |         32 |          3 |          6 |         41 |
+| d:\codes\xiaoguang-next-gen\frontend\src\components\chat-interface.tsx                                           | TypeScript JSX     |        138 |          4 |         13 |        155 |
+| d:\codes\xiaoguang-next-gen\frontend\src\components\chat-list.tsx                                                | TypeScript JSX     |         95 |          0 |          5 |        100 |
+| d:\codes\xiaoguang-next-gen\frontend\src\components\common\ErrorBoundary\index.tsx                               | TypeScript JSX     |         47 |          0 |          8 |         55 |
+| d:\codes\xiaoguang-next-gen\frontend\src\components\common\LoadingSpinner\index.tsx                              | TypeScript JSX     |         27 |          0 |          4 |         31 |
+| d:\codes\xiaoguang-next-gen\frontend\src\components\contact-detail-editable.tsx                                  | TypeScript JSX     |        146 |          5 |         13 |        164 |
+| d:\codes\xiaoguang-next-gen\frontend\src\components\contact-detail-simple.tsx                                    | TypeScript JSX     |         58 |          2 |          6 |         66 |
+| d:\codes\xiaoguang-next-gen\frontend\src\components\contact-detail.tsx                                           | TypeScript JSX     |        148 |          4 |          7 |        159 |
+| d:\codes\xiaoguang-next-gen\frontend\src\components\contacts-list.tsx                                            | TypeScript JSX     |        174 |          2 |         13 |        189 |
+| d:\codes\xiaoguang-next-gen\frontend\src\components\features\chat\components\ChatHeader\index.tsx                | TypeScript JSX     |         56 |          1 |          6 |         63 |
+| d:\codes\xiaoguang-next-gen\frontend\src\components\features\chat\components\ChatInput\index.tsx                 | TypeScript JSX     |        313 |         21 |         38 |        372 |
+| d:\codes\xiaoguang-next-gen\frontend\src\components\features\chat\components\ChatInterface\index.tsx             | TypeScript JSX     |        142 |         11 |         20 |        173 |
+| d:\codes\xiaoguang-next-gen\frontend\src\components\features\chat\components\ConversationList\index.tsx          | TypeScript JSX     |        339 |         22 |         35 |        396 |
+| d:\codes\xiaoguang-next-gen\frontend\src\components\features\chat\components\MessageBubble\index.tsx             | TypeScript JSX     |        236 |         14 |         19 |        269 |
+| d:\codes\xiaoguang-next-gen\frontend\src\components\features\contacts\components\ContactDetailEditable\index.tsx | TypeScript JSX     |        147 |          5 |         13 |        165 |
+| d:\codes\xiaoguang-next-gen\frontend\src\components\features\contacts\components\ContactList\index.tsx           | TypeScript JSX     |        192 |          3 |         13 |        208 |
+| d:\codes\xiaoguang-next-gen\frontend\src\components\features\files\components\FilesManagement\index.tsx          | TypeScript JSX     |         37 |          0 |          5 |         42 |
+| d:\codes\xiaoguang-next-gen\frontend\src\components\features\files\components\FilesTable\index.tsx               | TypeScript JSX     |        154 |          0 |          7 |        161 |
+| d:\codes\xiaoguang-next-gen\frontend\src\components\features\plugins\components\PluginCard\index.tsx             | TypeScript JSX     |         61 |          0 |          5 |         66 |
+| d:\codes\xiaoguang-next-gen\frontend\src\components\features\plugins\components\PluginConfigForm\index.tsx       | TypeScript JSX     |        134 |          0 |         11 |        145 |
+| d:\codes\xiaoguang-next-gen\frontend\src\components\features\plugins\components\PluginDetail\index.tsx           | TypeScript JSX     |         88 |          3 |          7 |         98 |
+| d:\codes\xiaoguang-next-gen\frontend\src\components\features\plugins\components\PluginsConfigured\index.tsx      | TypeScript JSX     |         76 |          0 |          6 |         82 |
+| d:\codes\xiaoguang-next-gen\frontend\src\components\features\plugins\components\PluginsMarketplace\index.tsx     | TypeScript JSX     |         66 |          2 |          9 |         77 |
+| d:\codes\xiaoguang-next-gen\frontend\src\components\features\plugins\data\pluginsData.ts                         | TypeScript         |        125 |          0 |          1 |        126 |
+| d:\codes\xiaoguang-next-gen\frontend\src\components\features\settings\components\SettingsLLM\index.tsx           | TypeScript JSX     |        183 |          4 |          9 |        196 |
+| d:\codes\xiaoguang-next-gen\frontend\src\components\features\timeline\components\SocialContent\index.tsx         | TypeScript JSX     |        169 |          4 |         10 |        183 |
+| d:\codes\xiaoguang-next-gen\frontend\src\components\features\timeline\components\SocialSidebar\index.tsx         | TypeScript JSX     |         41 |          0 |          5 |         46 |
+| d:\codes\xiaoguang-next-gen\frontend\src\components\file-detail-simple.tsx                                       | TypeScript JSX     |         90 |          2 |          5 |         97 |
+| d:\codes\xiaoguang-next-gen\frontend\src\components\file-preview.tsx                                             | TypeScript JSX     |        134 |          3 |         11 |        148 |
+| d:\codes\xiaoguang-next-gen\frontend\src\components\files-list-compact.tsx                                       | TypeScript JSX     |        159 |          2 |         10 |        171 |
+| d:\codes\xiaoguang-next-gen\frontend\src\components\files-list.tsx                                               | TypeScript JSX     |        141 |          2 |         10 |        153 |
+| d:\codes\xiaoguang-next-gen\frontend\src\components\files-management.tsx                                         | TypeScript JSX     |         36 |          0 |          5 |         41 |
+| d:\codes\xiaoguang-next-gen\frontend\src\components\files-table.tsx                                              | TypeScript JSX     |        153 |          0 |          7 |        160 |
+| d:\codes\xiaoguang-next-gen\frontend\src\components\layout\AppLayout\index.tsx                                   | TypeScript JSX     |         34 |          4 |          9 |         47 |
+| d:\codes\xiaoguang-next-gen\frontend\src\components\layout\ContentArea\index.tsx                                 | TypeScript JSX     |         16 |          0 |          3 |         19 |
+| d:\codes\xiaoguang-next-gen\frontend\src\components\layout\MainContent\index.tsx                                 | TypeScript JSX     |         70 |         27 |          9 |        106 |
+| d:\codes\xiaoguang-next-gen\frontend\src\components\layout\MainLayout\index.tsx                                  | TypeScript JSX     |         28 |          3 |          7 |         38 |
+| d:\codes\xiaoguang-next-gen\frontend\src\components\layout\MiddlePanel\index.tsx                                 | TypeScript JSX     |         70 |          2 |          8 |         80 |
+| d:\codes\xiaoguang-next-gen\frontend\src\components\layout\Sidebar\index.tsx                                     | TypeScript JSX     |        182 |          5 |         13 |        200 |
+| d:\codes\xiaoguang-next-gen\frontend\src\components\layout\ThemeProvider.tsx                                     | TypeScript JSX     |          7 |          0 |          3 |         10 |
+| d:\codes\xiaoguang-next-gen\frontend\src\components\main-content.tsx                                             | TypeScript JSX     |         61 |          0 |          7 |         68 |
+| d:\codes\xiaoguang-next-gen\frontend\src\components\middle-panel.tsx                                             | TypeScript JSX     |         49 |          2 |          7 |         58 |
+| d:\codes\xiaoguang-next-gen\frontend\src\components\plugin-detail.tsx                                            | TypeScript JSX     |        273 |          2 |         13 |        288 |
+| d:\codes\xiaoguang-next-gen\frontend\src\components\plugins-configured.tsx                                       | TypeScript JSX     |         75 |          0 |          6 |         81 |
+| d:\codes\xiaoguang-next-gen\frontend\src\components\plugins-list-simple.tsx                                      | TypeScript JSX     |         94 |          2 |          6 |        102 |
+| d:\codes\xiaoguang-next-gen\frontend\src\components\plugins-list.tsx                                             | TypeScript JSX     |        121 |          2 |          7 |        130 |
+| d:\codes\xiaoguang-next-gen\frontend\src\components\plugins-marketplace.tsx                                      | TypeScript JSX     |        377 |          4 |         16 |        397 |
+| d:\codes\xiaoguang-next-gen\frontend\src\components\post-detail.tsx                                              | TypeScript JSX     |        205 |          5 |         17 |        227 |
+| d:\codes\xiaoguang-next-gen\frontend\src\components\settings-llm.tsx                                             | TypeScript JSX     |        182 |          4 |          9 |        195 |
+| d:\codes\xiaoguang-next-gen\frontend\src\components\sidebar.tsx                                                  | TypeScript JSX     |         86 |          3 |          9 |         98 |
+| d:\codes\xiaoguang-next-gen\frontend\src\components\social-content.tsx                                           | TypeScript JSX     |        168 |          4 |         10 |        182 |
+| d:\codes\xiaoguang-next-gen\frontend\src\components\social-feed-simple.tsx                                       | TypeScript JSX     |        144 |          5 |         10 |        159 |
+| d:\codes\xiaoguang-next-gen\frontend\src\components\social-feed.tsx                                              | TypeScript JSX     |        100 |          0 |          5 |        105 |
+| d:\codes\xiaoguang-next-gen\frontend\src\components\social-sidebar.tsx                                           | TypeScript JSX     |         40 |          0 |          5 |         45 |
+| d:\codes\xiaoguang-next-gen\frontend\src\components\ui\LanguageSelector.tsx                                      | TypeScript JSX     |         43 |          0 |          5 |         48 |
+| d:\codes\xiaoguang-next-gen\frontend\src\components\ui\LanguageToggle\index.tsx                                  | TypeScript JSX     |         93 |          2 |         10 |        105 |
+| d:\codes\xiaoguang-next-gen\frontend\src\components\ui\ThemeToggle\index.tsx                                     | TypeScript JSX     |        149 |          3 |         13 |        165 |
+| d:\codes\xiaoguang-next-gen\frontend\src\components\ui\avatar.tsx                                                | TypeScript JSX     |         47 |          0 |          7 |         54 |
+| d:\codes\xiaoguang-next-gen\frontend\src\components\ui\badge.tsx                                                 | TypeScript JSX     |         41 |          0 |          6 |         47 |
+| d:\codes\xiaoguang-next-gen\frontend\src\components\ui\button.tsx                                                | TypeScript JSX     |         54 |          0 |          6 |         60 |
+| d:\codes\xiaoguang-next-gen\frontend\src\components\ui\card.tsx                                                  | TypeScript JSX     |         83 |          0 |         10 |         93 |
+| d:\codes\xiaoguang-next-gen\frontend\src\components\ui\checkbox.tsx                                              | TypeScript JSX     |         28 |          0 |          5 |         33 |
+| d:\codes\xiaoguang-next-gen\frontend\src\components\ui\command.tsx                                               | TypeScript JSX     |        165 |          0 |         13 |        178 |
+| d:\codes\xiaoguang-next-gen\frontend\src\components\ui\context-menu.tsx                                          | TypeScript JSX     |        103 |          0 |         16 |        119 |
+| d:\codes\xiaoguang-next-gen\frontend\src\components\ui\dialog.tsx                                                | TypeScript JSX     |        122 |          0 |         14 |        136 |
+| d:\codes\xiaoguang-next-gen\frontend\src\components\ui\dropdown-menu.tsx                                         | TypeScript JSX     |        239 |          0 |         19 |        258 |
+| d:\codes\xiaoguang-next-gen\frontend\src\components\ui\input.tsx                                                 | TypeScript JSX     |         18 |          0 |          4 |         22 |
+| d:\codes\xiaoguang-next-gen\frontend\src\components\ui\label.tsx                                                 | TypeScript JSX     |         20 |          0 |          5 |         25 |
+| d:\codes\xiaoguang-next-gen\frontend\src\components\ui\popover.tsx                                               | TypeScript JSX     |         41 |          0 |          8 |         49 |
+| d:\codes\xiaoguang-next-gen\frontend\src\components\ui\scroll-area.tsx                                           | TypeScript JSX     |         53 |          0 |          6 |         59 |
+| d:\codes\xiaoguang-next-gen\frontend\src\components\ui\select.tsx                                                | TypeScript JSX     |        172 |          0 |         14 |        186 |
+| d:\codes\xiaoguang-next-gen\frontend\src\components\ui\table.tsx                                                 | TypeScript JSX     |        105 |          0 |         12 |        117 |
+| d:\codes\xiaoguang-next-gen\frontend\src\components\ui\tabs.tsx                                                  | TypeScript JSX     |         59 |          0 |          8 |         67 |
+| d:\codes\xiaoguang-next-gen\frontend\src\components\ui\textarea.tsx                                              | TypeScript JSX     |         15 |          0 |          4 |         19 |
+| d:\codes\xiaoguang-next-gen\frontend\src\components\ui\tooltip.tsx                                               | TypeScript JSX     |         54 |          0 |          8 |         62 |
+| d:\codes\xiaoguang-next-gen\frontend\src\hooks\useAgentMention.ts                                                | TypeScript         |        175 |         24 |         39 |        238 |
+| d:\codes\xiaoguang-next-gen\frontend\src\hooks\useAuth.ts                                                        | TypeScript         |         82 |          4 |         13 |         99 |
+| d:\codes\xiaoguang-next-gen\frontend\src\hooks\useDebounce.ts                                                    | TypeScript         |         30 |          0 |         10 |         40 |
+| d:\codes\xiaoguang-next-gen\frontend\src\hooks\useErrorHandler.ts                                                | TypeScript         |         58 |          5 |         11 |         74 |
+| d:\codes\xiaoguang-next-gen\frontend\src\hooks\useKeyboardShortcuts.ts                                           | TypeScript         |        158 |         14 |         13 |        185 |
+| d:\codes\xiaoguang-next-gen\frontend\src\hooks\useLocalStorage.ts                                                | TypeScript         |         54 |          2 |          7 |         63 |
+| d:\codes\xiaoguang-next-gen\frontend\src\hooks\useTheme.ts                                                       | TypeScript         |         50 |          2 |         12 |         64 |
+| d:\codes\xiaoguang-next-gen\frontend\src\lib\api\auth.ts                                                         | TypeScript         |         52 |         24 |          9 |         85 |
+| d:\codes\xiaoguang-next-gen\frontend\src\lib\api\client.ts                                                       | TypeScript         |         92 |          5 |         20 |        117 |
+| d:\codes\xiaoguang-next-gen\frontend\src\lib\api\endpoints.ts                                                    | TypeScript         |         54 |          8 |          8 |         70 |
+| d:\codes\xiaoguang-next-gen\frontend\src\lib\api\errorHandler.ts                                                 | TypeScript         |         95 |          0 |         20 |        115 |
+| d:\codes\xiaoguang-next-gen\frontend\src\lib\api\interceptors.ts                                                 | TypeScript         |        127 |          6 |         25 |        158 |
+| d:\codes\xiaoguang-next-gen\frontend\src\lib\config\constants.ts                                                 | TypeScript         |         59 |          6 |         10 |         75 |
+| d:\codes\xiaoguang-next-gen\frontend\src\lib\config\env.ts                                                       | TypeScript         |         20 |          6 |          6 |         32 |
+| d:\codes\xiaoguang-next-gen\frontend\src\lib\config\features.ts                                                  | TypeScript         |         53 |          7 |         12 |         72 |
+| d:\codes\xiaoguang-next-gen\frontend\src\lib\design-system\theme-system.ts                                       | TypeScript         |        183 |         15 |         31 |        229 |
+| d:\codes\xiaoguang-next-gen\frontend\src\lib\design-system\tokens\colors.ts                                      | TypeScript         |        102 |          4 |          4 |        110 |
+| d:\codes\xiaoguang-next-gen\frontend\src\lib\design-system\tokens\index.ts                                       | TypeScript         |         22 |          0 |          5 |         27 |
+| d:\codes\xiaoguang-next-gen\frontend\src\lib\design-system\tokens\spacing.ts                                     | TypeScript         |         26 |          0 |          1 |         27 |
+| d:\codes\xiaoguang-next-gen\frontend\src\lib\design-system\tokens\typography.ts                                  | TypeScript         |         58 |          0 |          4 |         62 |
+| d:\codes\xiaoguang-next-gen\frontend\src\lib\i18n\I18nProvider.tsx                                               | TypeScript JSX     |         26 |          2 |          7 |         35 |
+| d:\codes\xiaoguang-next-gen\frontend\src\lib\i18n\client.ts                                                      | TypeScript         |         70 |          5 |         11 |         86 |
+| d:\codes\xiaoguang-next-gen\frontend\src\lib\i18n\config.ts                                                      | TypeScript         |         26 |          2 |          3 |         31 |
+| d:\codes\xiaoguang-next-gen\frontend\src\lib\i18n\locales\en.json                                                | JSON               |         79 |          0 |          0 |         79 |
+| d:\codes\xiaoguang-next-gen\frontend\src\lib\i18n\locales\zh.json                                                | JSON               |         79 |          0 |          0 |         79 |
+| d:\codes\xiaoguang-next-gen\frontend\src\lib\i18n\messages\en.json                                               | JSON               |        155 |          0 |          0 |        155 |
+| d:\codes\xiaoguang-next-gen\frontend\src\lib\i18n\messages\zh.json                                               | JSON               |        155 |          0 |          0 |        155 |
+| d:\codes\xiaoguang-next-gen\frontend\src\lib\i18n\types.ts                                                       | TypeScript         |         26 |          0 |          3 |         29 |
+| d:\codes\xiaoguang-next-gen\frontend\src\lib\seo\config.ts                                                       | TypeScript         |         99 |          1 |          5 |        105 |
+| d:\codes\xiaoguang-next-gen\frontend\src\lib\seo\metadata.ts                                                     | TypeScript         |        104 |         11 |         15 |        130 |
+| d:\codes\xiaoguang-next-gen\frontend\src\lib\seo\types.ts                                                        | TypeScript         |         52 |          0 |          4 |         56 |
+| d:\codes\xiaoguang-next-gen\frontend\src\lib\utils.ts                                                            | TypeScript         |          5 |          0 |          2 |          7 |
+| d:\codes\xiaoguang-next-gen\frontend\src\lib\utils\cn.ts                                                         | TypeScript         |          5 |          0 |          1 |          6 |
+| d:\codes\xiaoguang-next-gen\frontend\src\lib\utils\date.ts                                                       | TypeScript         |         54 |          0 |          7 |         61 |
+| d:\codes\xiaoguang-next-gen\frontend\src\lib\utils\performance.ts                                                | TypeScript         |        120 |          8 |         23 |        151 |
+| d:\codes\xiaoguang-next-gen\frontend\src\lib\utils\storage.ts                                                    | TypeScript         |         82 |          2 |         19 |        103 |
+| d:\codes\xiaoguang-next-gen\frontend\src\lib\utils\url.ts                                                        | TypeScript         |         34 |         12 |          7 |         53 |
+| d:\codes\xiaoguang-next-gen\frontend\src\lib\utils\validation.ts                                                 | TypeScript         |        118 |          0 |         30 |        148 |
+| d:\codes\xiaoguang-next-gen\frontend\src\middleware.ts                                                           | TypeScript         |         43 |         14 |         11 |         68 |
+| d:\codes\xiaoguang-next-gen\frontend\src\services\api.ts                                                         | TypeScript         |        312 |         13 |         44 |        369 |
+| d:\codes\xiaoguang-next-gen\frontend\src\services\apiClient.ts                                                   | TypeScript         |          8 |          9 |          4 |         21 |
+| d:\codes\xiaoguang-next-gen\frontend\src\services\websocket.ts                                                   | TypeScript         |        205 |         10 |         39 |        254 |
+| d:\codes\xiaoguang-next-gen\frontend\src\store\index.ts                                                          | TypeScript         |        243 |          7 |         30 |        280 |
+| d:\codes\xiaoguang-next-gen\frontend\src\store\middleware\hydration.ts                                           | TypeScript         |          8 |          0 |          3 |         11 |
+| d:\codes\xiaoguang-next-gen\frontend\src\store\middleware\logger.ts                                              | TypeScript         |         22 |          0 |          5 |         27 |
+| d:\codes\xiaoguang-next-gen\frontend\src\store\middleware\persist.ts                                             | TypeScript         |         29 |          0 |          4 |         33 |
+| d:\codes\xiaoguang-next-gen\frontend\src\store\slices\authSlice.ts                                               | TypeScript         |        299 |         19 |         50 |        368 |
+| d:\codes\xiaoguang-next-gen\frontend\src\store\slices\chatSlice.ts                                               | TypeScript         |        726 |         37 |         71 |        834 |
+| d:\codes\xiaoguang-next-gen\frontend\src\store\slices\uiSlice.ts                                                 | TypeScript         |        138 |         18 |         37 |        193 |
+| d:\codes\xiaoguang-next-gen\frontend\src\store\types.ts                                                          | TypeScript         |         10 |          5 |          3 |         18 |
+| d:\codes\xiaoguang-next-gen\frontend\src\styles\design-tokens.scss                                               | SCSS               |        159 |         15 |         25 |        199 |
+| d:\codes\xiaoguang-next-gen\frontend\src\types\api.ts                                                            | TypeScript         |         95 |          3 |         15 |        113 |
+| d:\codes\xiaoguang-next-gen\frontend\src\types\index.ts                                                          | TypeScript         |        244 |         12 |         24 |        280 |
+| d:\codes\xiaoguang-next-gen\frontend\tailwind.config.ts                                                          | TypeScript         |         38 |          0 |          2 |         40 |
+| d:\codes\xiaoguang-next-gen\frontend\tsconfig.json                                                               | JSON with Comments |         27 |          0 |          1 |         28 |
+| d:\codes\xiaoguang-next-gen\frontend\types\index.ts                                                              | TypeScript         |         51 |          0 |          6 |         57 |
+| Total                                                                                                            |                    |     17,613 |         23 |        849 |     18,485 |
++------------------------------------------------------------------------------------------------------------------+--------------------+------------+------------+------------+------------+

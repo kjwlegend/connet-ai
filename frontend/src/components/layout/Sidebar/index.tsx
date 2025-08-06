@@ -10,6 +10,7 @@ import { ThemeToggle } from "@/components/ui/ThemeToggle"
 import { LanguageToggle } from "@/components/ui/LanguageToggle"
 import { useTranslations } from "@/lib/i18n/client"
 import { useTheme } from "next-themes"
+import { useRouter, usePathname } from "next/navigation"
 
 interface SidebarProps {
   currentMode: NavigationMode
@@ -29,6 +30,13 @@ export function Sidebar({ currentMode, onModeChange }: SidebarProps) {
   const [isExpanded, setIsExpanded] = useState(true)
   const t = useTranslations()
   const { theme } = useTheme()
+  const router = useRouter()
+  const pathname = usePathname()
+
+  const handleNavigation = (mode: NavigationMode) => {
+    onModeChange(mode)
+    router.push(`/${mode}`)
+  }
 
   return (
     <div
@@ -81,7 +89,7 @@ export function Sidebar({ currentMode, onModeChange }: SidebarProps) {
                     : "bg-gray-100/90 text-gray-900 shadow-soft"),
                   !isExpanded && "justify-center px-2",
                 )}
-                onClick={() => onModeChange(item.id as NavigationMode)}
+                onClick={() => handleNavigation(item.id as NavigationMode)}
               >
                 <Icon className="h-5 w-5" />
                 {isExpanded && <span className="ml-3">{t(item.translationKey)}</span>}

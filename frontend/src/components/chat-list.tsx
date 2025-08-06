@@ -52,13 +52,13 @@ interface ChatListProps {
 
 export function ChatList({ selectedItem, onItemSelect }: ChatListProps) {
   return (
-    <div className="divide-y divide-gray-100">
+    <div className="divide-y divide-border">
       {mockConversations.map((conversation) => (
         <div
           key={conversation.id}
           className={cn(
-            "p-4 hover:bg-gray-50 cursor-pointer transition-colors",
-            selectedItem === conversation.id && "bg-blue-50 border-r-2 border-blue-500",
+            "p-4 hover:bg-accent/30 cursor-pointer transition-colors",
+            selectedItem === conversation.id && "bg-accent/50 border-r-2 border-primary",
           )}
           onClick={() => onItemSelect(conversation.id)}
         >
@@ -69,14 +69,14 @@ export function ChatList({ selectedItem, onItemSelect }: ChatListProps) {
                 <AvatarFallback>{conversation.name[0]}</AvatarFallback>
               </Avatar>
               {conversation.unreadCount > 0 && (
-                <div className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white text-xs rounded-full flex items-center justify-center">
+                <div className="absolute -top-1 -right-1 w-5 h-5 bg-destructive text-destructive-foreground text-xs rounded-full flex items-center justify-center">
                   {conversation.unreadCount > 9 ? "9+" : conversation.unreadCount}
                 </div>
               )}
             </div>
             <div className="flex-1 min-w-0">
               <div className="flex items-center justify-between">
-                <h3 className="font-medium text-gray-900 truncate">
+                <h3 className="font-medium text-foreground truncate">
                   {conversation.name}
                   {conversation.isGroup && (
                     <Badge variant="secondary" className="ml-2 text-xs">
@@ -84,11 +84,11 @@ export function ChatList({ selectedItem, onItemSelect }: ChatListProps) {
                     </Badge>
                   )}
                 </h3>
-                <span className="text-xs text-gray-500">{conversation.timestamp}</span>
+                <span className="text-xs text-muted-foreground">{conversation.timestamp}</span>
               </div>
-              <p className="text-sm text-gray-600 truncate mt-1">{conversation.lastMessage}</p>
+              <p className="text-sm text-muted-foreground truncate mt-1">{conversation.lastMessage}</p>
               {conversation.isGroup && conversation.participants && (
-                <p className="text-xs text-gray-400 mt-1">{conversation.participants.join(", ")}</p>
+                <p className="text-xs text-muted-foreground/70 mt-1">{conversation.participants.join(", ")}</p>
               )}
             </div>
           </div>

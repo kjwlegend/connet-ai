@@ -5,7 +5,25 @@
         "learnMore": "了解更多"
     },
     "chat": {
-        "inputPlaceholder": "输入你的消息..."
+        "inputPlaceholder": "输入你的消息...",
+        "conversations": "对话",
+        "newConversation": "新建对话",
+        "searchPlaceholder": "搜索对话...",
+        "filters": {
+            "contacts": "联系人",
+            "unread": "未读",
+            "groups": "群聊"
+        },
+        "emptyStates": {
+            "noConversations": "暂无对话",
+            "noContacts": "暂无联系人对话",
+            "noUnread": "暂无未读消息",
+            "noGroups": "暂无群聊对话",
+            "noSearchResults": "没有找到匹配 \"{query}\" 的对话",
+            "noMessages": "暂无消息",
+            "emptyTitle": "暂无对话",
+            "emptyDescription": "与 AI 代理开始新对话，开始协作完成您的项目。"
+        }
     },
     "auth": {
         "login": {

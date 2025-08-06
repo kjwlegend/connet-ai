@@ -153,12 +153,15 @@ export function ChatInput({
     }
   }, [placeholder])
 
-  // Auto-resize textarea
+  // Auto-resize textarea with 4-7 lines
   const adjustTextareaHeight = useCallback(() => {
     const textarea = textareaRef.current
     if (textarea) {
       textarea.style.height = 'auto'
-      const newHeight = Math.min(Math.max(textarea.scrollHeight, 44), 120) // Min 44px, max 120px
+      // 4 lines = ~88px, 7 lines = ~154px (22px per line with line-height 1.4)
+      const minHeight = 88 // 4 lines
+      const maxHeight = 154 // 7 lines
+      const newHeight = Math.min(Math.max(textarea.scrollHeight, minHeight), maxHeight)
       textarea.style.height = `${newHeight}px`
     }
   }, [])
@@ -205,46 +208,13 @@ export function ChatInput({
 
   return (
     <div className={cn(
-      "border-t border-border/60 bg-background/80 backdrop-blur-sm",
+      "fixed bottom-0 z-10 border-t border-border/60 bg-background/95 backdrop-blur-sm shadow-lg",
+      "left-0 right-0 md:left-[400px]", // Account for sidebar + middle panel width on desktop
       className
     )}>
       {/* Input Area */}
-      <div className="px-6 py-4">
+      <div className="px-6 py-4 max-w-4xl mx-auto">
         <div className="flex items-end gap-3">
-          {/* Attachment Button */}
-          <Popover>
-            <PopoverTrigger asChild>
-              <Button 
-                variant="ghost" 
-                size="sm" 
-                className="h-10 w-10 p-0 rounded-lg hover:bg-accent/50 transition-all duration-200 mb-1"
-                disabled={disabled}
-              >
-                <Plus className="h-5 w-5" />
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent side="top" className="w-56 p-2">
-              <div className="grid grid-cols-2 gap-1">
-                <Button variant="ghost" size="sm" className="h-10 justify-start">
-                  <Paperclip className="h-4 w-4 mr-2" />
-                  File
-                </Button>
-                <Button variant="ghost" size="sm" className="h-10 justify-start">
-                  <FileImage className="h-4 w-4 mr-2" />
-                  Image
-                </Button>
-                <Button variant="ghost" size="sm" className="h-10 justify-start">
-                  <Calendar className="h-4 w-4 mr-2" />
-                  Schedule
-                </Button>
-                <Button variant="ghost" size="sm" className="h-10 justify-start">
-                  <Hash className="h-4 w-4 mr-2" />
-                  Snippet
-                </Button>
-              </div>
-            </PopoverContent>
-          </Popover>
-
           {/* Main Input Area */}
           <div className="flex-1 relative">
             <Textarea
@@ -255,76 +225,116 @@ export function ChatInput({
               placeholder={displayPlaceholder}
               disabled={disabled}
               className={cn(
-                "min-h-[44px] max-h-[120px] resize-none rounded-2xl border-border/40",
+                "min-h-[88px] max-h-[154px] resize-none rounded-2xl border-border/40",
                 "bg-muted/30 focus:bg-background transition-all duration-200",
                 "placeholder:text-muted-foreground/60 placeholder:transition-all placeholder:duration-300",
                 "scrollbar-thin scrollbar-thumb-border/40 scrollbar-track-transparent",
-                "px-4 py-3 pr-12", // Space for emoji button
+                "px-4 py-3 pr-20 overflow-y-auto", // Space for emoji and attachment buttons
                 isSending && "opacity-50"
               )}
               style={{ 
-                paddingRight: '3rem', // Space for emoji button
+                paddingRight: '5rem', // Space for emoji and attachment buttons
                 lineHeight: '1.4'
               }}
             />
             
-            {/* Emoji Button inside textarea */}
-            <Popover open={isEmojiOpen} onOpenChange={setIsEmojiOpen}>
-              <PopoverTrigger asChild>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="absolute right-2 top-2 h-8 w-8 p-0 rounded-lg hover:bg-accent/50 transition-all duration-200"
-                  disabled={disabled}
-                >
-                  <Smile className="h-4 w-4" />
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent side="top" className="w-auto p-0 border-0 shadow-xl">
-                <EmojiPicker
-                  data={async () => {
-                    const response = await import('@emoji-mart/data')
-                    return response.default
-                  }}
-                  onEmojiSelect={handleEmojiSelect}
-                  theme="light"
-                  set="native"
-                  showPreview={false}
-                  showSkinTones={false}
-                  emojiSize={20}
-                  perLine={8}
-                  maxFrequentRows={2}
-                />
-              </PopoverContent>
-            </Popover>
+            {/* Input Controls */}
+            <div className="absolute right-2 top-2 flex items-center gap-1">
+              {/* Attachment Button */}
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    className="h-8 w-8 p-0 rounded-lg hover:bg-accent/50 transition-all duration-200"
+                    disabled={disabled}
+                  >
+                    <Plus className="h-4 w-4" />
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent side="top" className="w-56 p-2">
+                  <div className="grid grid-cols-2 gap-1">
+                    <Button variant="ghost" size="sm" className="h-10 justify-start">
+                      <Paperclip className="h-4 w-4 mr-2" />
+                      File
+                    </Button>
+                    <Button variant="ghost" size="sm" className="h-10 justify-start">
+                      <FileImage className="h-4 w-4 mr-2" />
+                      Image
+                    </Button>
+                    <Button variant="ghost" size="sm" className="h-10 justify-start">
+                      <Calendar className="h-4 w-4 mr-2" />
+                      Schedule
+                    </Button>
+                    <Button variant="ghost" size="sm" className="h-10 justify-start">
+                      <Hash className="h-4 w-4 mr-2" />
+                      Snippet
+                    </Button>
+                  </div>
+                </PopoverContent>
+              </Popover>
+
+              {/* Emoji Button */}
+              <Popover open={isEmojiOpen} onOpenChange={setIsEmojiOpen}>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="h-8 w-8 p-0 rounded-lg hover:bg-accent/50 transition-all duration-200"
+                    disabled={disabled}
+                  >
+                    <Smile className="h-4 w-4" />
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent side="top" className="w-auto p-0 border-0 shadow-xl">
+                  <EmojiPicker
+                    data={async () => {
+                      const response = await import('@emoji-mart/data')
+                      return response.default
+                    }}
+                    onEmojiSelect={handleEmojiSelect}
+                    theme="light"
+                    set="native"
+                    showPreview={false}
+                    showSkinTones={false}
+                    emojiSize={20}
+                    perLine={8}
+                    maxFrequentRows={2}
+                  />
+                </PopoverContent>
+              </Popover>
+            </div>
           </div>
 
-          {/* Voice Input Button */}
-          <Button 
-            variant="ghost" 
-            size="sm" 
-            className="h-10 w-10 p-0 rounded-lg hover:bg-accent/50 transition-all duration-200 mb-1"
-            disabled={disabled}
-          >
-            <Mic className="h-5 w-5" />
-          </Button>
+          {/* Action Buttons */}
+          <div className="flex items-center gap-2">
+            {/* Voice Input Button */}
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              className="h-10 w-10 p-0 rounded-lg hover:bg-accent/50 transition-all duration-200"
+              disabled={disabled}
+            >
+              <Mic className="h-5 w-5" />
+            </Button>
 
-          {/* Send Button */}
-          <Button
-            onClick={handleSend}
-            disabled={!value.trim() || disabled || isSending}
-            size="sm"
-            className={cn(
-              "h-10 w-10 p-0 rounded-lg transition-all duration-200 mb-1",
-              "hover:scale-105 active:scale-95",
-              "disabled:scale-100 disabled:opacity-50",
-              value.trim() && !disabled && !isSending 
-                ? "bg-primary text-primary-foreground shadow-md hover:shadow-lg" 
-                : ""
-            )}
-          >
-            <Send className="h-4 w-4" />
-          </Button>
+            {/* Send Button */}
+            <Button
+              onClick={handleSend}
+              disabled={!value.trim() || disabled || isSending}
+              size="sm"
+              className={cn(
+                "h-10 w-10 p-0 rounded-lg transition-all duration-200",
+                "hover:scale-105 active:scale-95",
+                "disabled:scale-100 disabled:opacity-50",
+                value.trim() && !disabled && !isSending 
+                  ? "bg-primary text-primary-foreground shadow-md hover:shadow-lg" 
+                  : ""
+              )}
+            >
+              <Send className="h-4 w-4" />
+            </Button>
+          </div>
         </div>
 
         {/* Input Help Text */}
