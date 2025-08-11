@@ -2,8 +2,8 @@ import { StateCreator } from 'zustand'
 import { StoreState } from '../types'
 import { StorageUtil } from '@/lib/utils/storage'
 import { STORAGE_KEYS } from '@/lib/config/constants'
-import { AuthAPI } from '@/lib/api/auth'
-import { APIError, apiClient } from '@/lib/api/client'
+import { AuthAPI } from '@/services/api/auth'
+import { APIError, apiClient } from '@/services/api'
 import { RegisterRequest } from '@/types/api'
 
 export interface User {
@@ -60,10 +60,12 @@ export interface AuthActions {
 export type AuthSlice = AuthState & AuthActions
 
 const createAuthSlice: StateCreator<StoreState, [], [], AuthSlice> = (set, get) => {
-  // Set up API client auth token getter
-  apiClient.setAuthTokenGetter(() => {
-    return get().token
-  })
+  // Set up API client auth token getter (only on client side)
+  if (typeof window !== 'undefined' && apiClient?.setAuthTokenGetter) {
+    apiClient.setAuthTokenGetter(() => {
+      return get().token
+    })
+  }
 
   return {
     // State

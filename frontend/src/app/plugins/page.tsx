@@ -1,13 +1,5 @@
-"use client";
-
-import { MainContent } from "@/components/layout/MainContent";
-
 export default function PluginsPage() {
-  return (
-    <MainContent
-      mode="plugins"
-      selectedItem={null}
-      onItemSelect={() => {}}
-    />
-  );
+  // The plugins page content is now handled directly by the layout
+  // This ensures proper state management between MiddlePanel and MainContent
+  return null;
 }

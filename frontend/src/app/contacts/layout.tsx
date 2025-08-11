@@ -3,12 +3,9 @@
 import { useState } from "react";
 import { MiddlePanel } from "@/components/layout/MiddlePanel";
 import { AppLayout } from "@/components/layout/AppLayout";
+import { MainContent } from "@/components/layout/MainContent";
 
-interface ContactsLayoutProps {
-  children: React.ReactNode;
-}
-
-export default function ContactsLayout({ children }: ContactsLayoutProps) {
+export default function ContactsLayout() {
   const [selectedItem, setSelectedItem] = useState<string | null>(null);
 
   return (
@@ -21,9 +18,11 @@ export default function ContactsLayout({ children }: ContactsLayoutProps) {
       />
 
       {/* Right Panel - Contact Content */}
-      <div className="flex-1">
-        {children}
-      </div>
+      <MainContent
+        mode="contacts"
+        selectedItem={selectedItem}
+        onItemSelect={setSelectedItem}
+      />
     </AppLayout>
   );
 }

@@ -195,6 +195,10 @@ export const useChat = () => {
   const deleteConversation = useCallback((conversationId: string) => {
     useAppStore.getState().deleteConversation(conversationId)
   }, [])
+
+  const addParticipantsToConversation = useCallback((conversationId: string, participantIds: string[]) => {
+    useAppStore.getState().addParticipantsToConversation(conversationId, participantIds)
+  }, [])
   
   return useMemo(() => {
     if (!hydrated) {
@@ -223,6 +227,7 @@ export const useChat = () => {
         unpinConversation: () => {},
         exportConversation: async () => '',
         deleteConversation: () => {},
+        addParticipantsToConversation: () => {},
       }
     }
     
@@ -251,6 +256,7 @@ export const useChat = () => {
       unpinConversation,
       exportConversation,
       deleteConversation,
+      addParticipantsToConversation,
     }
   }, [
     hydrated,
@@ -277,6 +283,7 @@ export const useChat = () => {
     unpinConversation,
     exportConversation,
     deleteConversation,
+    addParticipantsToConversation,
   ])
 }
 

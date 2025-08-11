@@ -52,8 +52,13 @@ Backend Architecture (FastAPI + Supabase)
 │   └── API Documentation (OpenAPI)
 │
 ├── 🏗️ Application Services Layer
-│   ├── AI Agent Service (LangChain/LangGraph)
+│   ├── AI Orchestrator Service (智能路由和协调)
+│   ├── Multi-Agent Service (多Agent协作管理)
 │   ├── Chat Service (实时消息处理)
+│   ├── Memory Management Service (三层记忆架构)
+│   ├── RAG Service (检索增强生成)
+│   ├── Tools Integration Service (外部工具调用)
+│   ├── Webhooks Service (事件驱动集成)
 │   ├── User Management Service
 │   ├── File Management Service
 │   ├── Notification Service
@@ -68,8 +73,10 @@ Backend Architecture (FastAPI + Supabase)
 ├── 🗄️ Data Access Layer
 │   ├── Repository Pattern (数据访问抽象)
 │   ├── ORM Integration (SQLModel/SQLAlchemy)
-│   ├── Cache Manager (Redis缓存)
-│   └── Vector Store (pgvector语义搜索)
+│   ├── Cache Manager (多级缓存架构)
+│   ├── Vector Store (pgvector语义搜索)
+│   ├── Memory Storage (三层记忆架构)
+│   └── Document Store (RAG文档存储)
 │
 ├── 🔧 Infrastructure Layer
 │   ├── Database (Supabase PostgreSQL)
@@ -267,47 +274,89 @@ bff/
 │   │
 │   ├── ai/                           # AI系统
 │   │   ├── __init__.py
+│   │   ├── orchestrator.py           # AI编排器主控制器
 │   │   ├── agents/                   # AI代理实现
 │   │   │   ├── __init__.py
 │   │   │   ├── base_agent.py         # 基础代理类
+│   │   │   ├── agent_factory.py      # Agent工厂
+│   │   │   ├── personality_engine.py # 人格引擎
 │   │   │   ├── chat_agent.py         # 聊天代理
 │   │   │   ├── task_agent.py         # 任务处理代理
 │   │   │   ├── planner_agent.py      # 规划代理
+│   │   │   ├── custom_agent.py       # 自定义代理
 │   │   │   └── specialist_agents/    # 专业代理
 │   │   │       ├── code_agent.py
 │   │   │       ├── design_agent.py
 │   │   │       └── writing_agent.py
 │   │   │
+│   │   ├── context/                  # 上下文管理
+│   │   │   ├── __init__.py
+│   │   │   ├── context_manager.py    # 上下文管理器
+│   │   │   ├── shared_context.py     # 共享上下文池
+│   │   │   ├── agent_perspective.py  # Agent视角管理
+│   │   │   ├── context_filter.py     # 上下文过滤器
+│   │   │   └── conflict_resolver.py  # 冲突解决器
+│   │   │
 │   │   ├── graphs/                   # LangGraph工作流
 │   │   │   ├── __init__.py
 │   │   │   ├── chat_graph.py         # 聊天流程图
 │   │   │   ├── multi_agent_graph.py  # 多代理协作图
-│   │   │   └── task_planning_graph.py # 任务规划图
+│   │   │   ├── task_planning_graph.py # 任务规划图
+│   │   │   └── collaboration_graph.py # 协作工作流
 │   │   │
 │   │   ├── tools/                    # AI工具
 │   │   │   ├── __init__.py
 │   │   │   ├── base_tool.py          # 基础工具类
-│   │   │   ├── search_tool.py        # 搜索工具
-│   │   │   ├── file_tool.py          # 文件处理工具
-│   │   │   └── api_tool.py           # API调用工具
+│   │   │   ├── tool_registry.py      # 工具注册中心
+│   │   │   ├── sandbox_executor.py   # 安全沙箱执行器
+│   │   │   ├── web_search_tool.py    # 网络搜索工具
+│   │   │   ├── file_processor_tool.py # 文件处理工具
+│   │   │   ├── api_call_tool.py      # API调用工具
+│   │   │   └── code_execution_tool.py # 代码执行工具
 │   │   │
 │   │   ├── memory/                   # 记忆管理
 │   │   │   ├── __init__.py
-│   │   │   ├── conversation_memory.py # 对话记忆
-│   │   │   ├── user_memory.py        # 用户记忆
-│   │   │   └── agent_memory.py       # 代理记忆
+│   │   │   ├── memory_manager.py     # 记忆管理器
+│   │   │   ├── short_term_memory.py  # 短期记忆(Redis)
+│   │   │   ├── medium_term_memory.py # 中期记忆(PostgreSQL+Redis)
+│   │   │   ├── long_term_memory.py   # 长期记忆(PostgreSQL+Vector DB)
+│   │   │   ├── memory_transfer.py    # 记忆转移管理器
+│   │   │   └── memory_compression.py # 记忆压缩算法
 │   │   │
-│   │   ├── prompts/                  # 提示模板
+│   │   ├── rag/                      # 检索增强生成
 │   │   │   ├── __init__.py
-│   │   │   ├── chat_prompts.py
-│   │   │   ├── agent_prompts.py
-│   │   │   └── system_prompts.py
+│   │   │   ├── rag_orchestrator.py   # RAG编排器
+│   │   │   ├── document_processor.py # 文档处理器
+│   │   │   ├── embedding_service.py  # 嵌入服务
+│   │   │   ├── vector_store.py       # 向量存储
+│   │   │   ├── hybrid_search.py      # 混合检索引擎
+│   │   │   ├── context_builder.py    # 上下文构建器
+│   │   │   └── quality_ranker.py     # 质量排序器
+│   │   │
+│   │   ├── prompts/                  # 提示词管理
+│   │   │   ├── __init__.py
+│   │   │   ├── prompt_manager.py     # 提示词管理器
+│   │   │   ├── template_engine.py    # 模板引擎
+│   │   │   ├── template_registry.py  # 模板注册中心
+│   │   │   ├── dynamic_generator.py  # 动态提示生成器
+│   │   │   ├── ab_testing.py         # A/B测试引擎
+│   │   │   ├── optimization.py       # 提示词优化器
+│   │   │   └── cache_delivery.py     # 缓存交付系统
+│   │   │
+│   │   ├── webhooks/                 # Webhook系统
+│   │   │   ├── __init__.py
+│   │   │   ├── webhook_manager.py    # Webhook管理器
+│   │   │   ├── trigger_engine.py     # 触发引擎
+│   │   │   ├── callback_handler.py   # 回调处理器
+│   │   │   ├── event_dispatcher.py   # 事件分发器
+│   │   │   └── retry_manager.py      # 重试管理器
 │   │   │
 │   │   └── evaluation/               # AI评估
 │   │       ├── __init__.py
 │   │       ├── response_quality.py   # 响应质量评估
 │   │       ├── performance_metrics.py # 性能指标
-│   │       └── safety_checks.py      # 安全检查
+│   │       ├── safety_checks.py      # 安全检查
+│   │       └── optimization_tracker.py # 优化跟踪器
 │   │
 │   ├── workers/                      # 后台任务
 │   │   ├── __init__.py
@@ -2212,6 +2261,224 @@ class MetricsCollector:
 **最后更新**: 2025-01-08  
 **下次审查**: 每月架构评审  
 
+## AI 系统数据库架构扩展
+
+基于完整的 AI 服务架构设计，需要在现有数据库基础上新增以下 AI 相关表结构：
+
+```sql
+-- AI相关表结构（基于AI系统架构设计）
+
+-- AI代理增强表
+ALTER TABLE agents ADD COLUMN IF NOT EXISTS capabilities TEXT[];
+ALTER TABLE agents ADD COLUMN IF NOT EXISTS collaboration_config JSONB;
+
+-- Agent性能指标表
+CREATE TABLE ai_agent_metrics (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    agent_id UUID REFERENCES agents(id),
+    metric_date DATE NOT NULL,
+    interactions_count INTEGER DEFAULT 0,
+    success_rate FLOAT DEFAULT 0.0,
+    avg_response_time_ms INTEGER DEFAULT 0,
+    user_satisfaction FLOAT DEFAULT 0.0,
+    tokens_used INTEGER DEFAULT 0,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- 三层记忆系统扩展
+ALTER TABLE ai_conversations_memory ADD COLUMN IF NOT EXISTS access_count INTEGER DEFAULT 0;
+ALTER TABLE ai_conversations_memory ADD COLUMN IF NOT EXISTS last_accessed_at TIMESTAMP;
+ALTER TABLE ai_conversations_memory ADD COLUMN IF NOT EXISTS compressed_content TEXT;
+ALTER TABLE ai_conversations_memory ADD COLUMN IF NOT EXISTS memory_cluster_id UUID;
+
+-- 共享上下文池表
+CREATE TABLE ai_shared_context_pools (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    conversation_id UUID REFERENCES conversations(id),
+    participants JSONB NOT NULL,
+    active_agents JSONB NOT NULL,
+    current_topics JSONB,
+    shared_decisions JSONB,
+    shared_tasks JSONB,
+    conversation_state JSONB,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Agent个性化上下文表
+CREATE TABLE ai_agent_contexts (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    agent_id UUID REFERENCES agents(id),
+    conversation_id UUID REFERENCES conversations(id),
+    relevant_messages JSONB,
+    focused_topics JSONB,
+    current_objectives JSONB,
+    personal_insights TEXT,
+    interaction_history JSONB,
+    context_window TEXT,
+    perspective_config JSONB,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- AI工具系统增强
+ALTER TABLE ai_tools ADD COLUMN IF NOT EXISTS safety_level VARCHAR(20) DEFAULT 'medium';
+ALTER TABLE ai_tools ADD COLUMN IF NOT EXISTS sandbox_config JSONB;
+ALTER TABLE ai_tools ADD COLUMN IF NOT EXISTS resource_limits JSONB;
+ALTER TABLE ai_tools ADD COLUMN IF NOT EXISTS updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP;
+
+-- 工具执行历史增强
+ALTER TABLE ai_tool_executions ADD COLUMN IF NOT EXISTS memory_usage_mb INTEGER;
+ALTER TABLE ai_tool_executions ADD COLUMN IF NOT EXISTS cpu_usage_percent FLOAT;
+ALTER TABLE ai_tool_executions ADD COLUMN IF NOT EXISTS safety_check_passed BOOLEAN DEFAULT TRUE;
+ALTER TABLE ai_tool_executions ADD COLUMN IF NOT EXISTS sandbox_violations JSONB;
+
+-- Webhook系统增强
+ALTER TABLE ai_webhooks ADD COLUMN IF NOT EXISTS timeout_seconds INTEGER DEFAULT 30;
+ALTER TABLE ai_webhooks ADD COLUMN IF NOT EXISTS auth_config JSONB;
+ALTER TABLE ai_webhooks ADD COLUMN IF NOT EXISTS rate_limit_config JSONB;
+ALTER TABLE ai_webhooks ADD COLUMN IF NOT EXISTS updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP;
+
+-- Webhook触发器增强
+ALTER TABLE ai_webhook_triggers ADD COLUMN IF NOT EXISTS retry_count INTEGER DEFAULT 0;
+ALTER TABLE ai_webhook_triggers ADD COLUMN IF NOT EXISTS max_retries INTEGER DEFAULT 3;
+ALTER TABLE ai_webhook_triggers ADD COLUMN IF NOT EXISTS next_retry_at TIMESTAMP;
+ALTER TABLE ai_webhook_triggers ADD COLUMN IF NOT EXISTS error_details JSONB;
+
+-- 提示词管理系统
+CREATE TABLE ai_prompt_templates (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    name VARCHAR(200) NOT NULL,
+    description TEXT,
+    template_content TEXT NOT NULL,
+    prompt_type VARCHAR(50) NOT NULL,
+    category VARCHAR(50) NOT NULL,
+    version VARCHAR(20) DEFAULT '1.0',
+    variables JSONB,
+    parent_template_id UUID REFERENCES ai_prompt_templates(id),
+    supported_models TEXT[],
+    supported_languages TEXT[],
+    agent_types TEXT[],
+    usage_count INTEGER DEFAULT 0,
+    success_rate FLOAT DEFAULT 0.0,
+    avg_response_quality FLOAT DEFAULT 0.0,
+    tags TEXT[],
+    created_by UUID REFERENCES users(id),
+    is_active BOOLEAN DEFAULT TRUE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- A/B测试实验表
+CREATE TABLE ai_ab_experiments (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    name VARCHAR(200) NOT NULL,
+    description TEXT,
+    control_template_id UUID REFERENCES ai_prompt_templates(id),
+    variant_template_ids UUID[],
+    traffic_split JSONB,
+    success_metrics JSONB,
+    sample_size_target INTEGER,
+    current_sample_size INTEGER DEFAULT 0,
+    start_date TIMESTAMP,
+    end_date TIMESTAMP,
+    status VARCHAR(20) DEFAULT 'draft',
+    results JSONB,
+    created_by UUID REFERENCES users(id),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- RAG文档系统
+CREATE TABLE ai_rag_documents (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    title VARCHAR(500),
+    content TEXT NOT NULL,
+    document_type VARCHAR(50) NOT NULL,
+    source_url VARCHAR(1000),
+    file_path VARCHAR(500),
+    metadata JSONB,
+    embedding VECTOR(1536),
+    chunk_size INTEGER,
+    overlap_size INTEGER,
+    quality_score FLOAT DEFAULT 0.0,
+    access_permissions JSONB,
+    indexed_at TIMESTAMP,
+    created_by UUID REFERENCES users(id),
+    is_active BOOLEAN DEFAULT TRUE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- RAG文档块表
+CREATE TABLE ai_rag_chunks (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    document_id UUID REFERENCES ai_rag_documents(id),
+    chunk_index INTEGER NOT NULL,
+    content TEXT NOT NULL,
+    embedding VECTOR(1536),
+    metadata JSONB,
+    keywords TEXT[],
+    importance_score FLOAT DEFAULT 0.0,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- AI系统索引优化
+-- 基础索引
+CREATE INDEX idx_ai_agents_capabilities ON agents USING GIN(capabilities);
+CREATE INDEX idx_ai_agents_type ON agents(agent_type);
+
+-- 记忆系统索引
+CREATE INDEX idx_ai_conversations_memory_importance ON ai_conversations_memory(importance_score DESC);
+CREATE INDEX idx_ai_conversations_memory_expires ON ai_conversations_memory(expires_at) WHERE expires_at IS NOT NULL;
+CREATE INDEX idx_ai_conversations_memory_cluster ON ai_conversations_memory(memory_cluster_id);
+
+-- 上下文系统索引
+CREATE INDEX idx_ai_shared_context_conversation ON ai_shared_context_pools(conversation_id);
+CREATE INDEX idx_ai_agent_contexts_agent ON ai_agent_contexts(agent_id);
+CREATE INDEX idx_ai_agent_contexts_conversation ON ai_agent_contexts(conversation_id);
+
+-- 提示词系统索引
+CREATE INDEX idx_ai_prompt_templates_type ON ai_prompt_templates(prompt_type);
+CREATE INDEX idx_ai_prompt_templates_category ON ai_prompt_templates(category);
+CREATE INDEX idx_ai_prompt_templates_parent ON ai_prompt_templates(parent_template_id);
+CREATE INDEX idx_ai_prompt_templates_usage ON ai_prompt_templates(usage_count DESC);
+
+-- A/B测试索引
+CREATE INDEX idx_ai_ab_experiments_status ON ai_ab_experiments(status);
+CREATE INDEX idx_ai_ab_experiments_dates ON ai_ab_experiments(start_date, end_date);
+
+-- RAG系统索引
+CREATE INDEX idx_ai_rag_documents_type ON ai_rag_documents(document_type);
+CREATE INDEX idx_ai_rag_documents_embedding ON ai_rag_documents USING ivfflat (embedding vector_cosine_ops);
+CREATE INDEX idx_ai_rag_chunks_document ON ai_rag_chunks(document_id);
+CREATE INDEX idx_ai_rag_chunks_embedding ON ai_rag_chunks USING ivfflat (embedding vector_cosine_ops);
+CREATE INDEX idx_ai_rag_chunks_importance ON ai_rag_chunks(importance_score DESC);
+
+-- 性能监控索引
+CREATE INDEX idx_ai_agent_metrics_agent ON ai_agent_metrics(agent_id);
+CREATE INDEX idx_ai_agent_metrics_date ON ai_agent_metrics(metric_date DESC);
+```
+
+这个扩展数据库架构支持：
+
+### AI 核心功能
+- **智能 Agent 管理**: 增强的 Agent 能力配置和协作管理
+- **三层记忆系统**: 短期、中期、长期记忆的完整实现
+- **多 Agent 上下文**: 共享上下文池和个性化视角管理
+- **工具集成**: 安全沙箱执行和资源监控
+- **Webhook 系统**: 事件驱动的外部集成
+- **提示词管理**: 模板系统、版本控制和 A/B 测试
+- **RAG 系统**: 文档处理、向量搜索和质量控制
+
+### 性能优化特性
+- **向量搜索优化**: pgvector 索引和混合检索
+- **智能缓存**: 多层缓存策略和失效管理
+- **资源监控**: CPU、内存使用量跟踪
+- **质量评估**: 响应质量和用户满意度指标
+
+---
+
 这个后端架构设计注重：
 1. **可扩展性**: 微服务友好的模块化设计和清晰的层次结构
 2. **清晰性**: 领域驱动设计和明确的职责分离
@@ -2219,5 +2486,6 @@ class MetricsCollector:
 4. **性能**: 多级缓存、异步处理和资源优化
 5. **安全性**: 全面的认证授权和数据保护机制
 6. **可观测性**: 结构化日志、指标收集和性能监控
+7. **AI 智能**: 完整的多 Agent 协作和智能化处理能力
 
-这个架构将为 Connet.AI 提供一个强大、安全、高性能的后端基础设施。
+这个架构将为 Connet.AI 提供一个强大、安全、高性能的后端基础设施，支持复杂的 AI Agent 协作和智能化功能。

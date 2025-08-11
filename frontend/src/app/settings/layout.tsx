@@ -1,15 +1,15 @@
-"use client";
+'use client'
 
-import { useState } from "react";
-import { MiddlePanel } from "@/components/layout/MiddlePanel";
-import { AppLayout } from "@/components/layout/AppLayout";
+import { useState } from 'react'
+import { MiddlePanel } from '@/components/layout/MiddlePanel'
+import { AppLayout } from '@/components/layout/AppLayout'
 
 interface SettingsLayoutProps {
-  children: React.ReactNode;
+  children: React.ReactNode
 }
 
 export default function SettingsLayout({ children }: SettingsLayoutProps) {
-  const [selectedItem, setSelectedItem] = useState<string | null>(null);
+  const [selectedItem, setSelectedItem] = useState<string | null>(null)
 
   return (
     <AppLayout>
@@ -21,9 +21,7 @@ export default function SettingsLayout({ children }: SettingsLayoutProps) {
       />
 
       {/* Right Panel - Settings Content */}
-      <div className="flex-1">
-        {children}
-      </div>
+      <div className="flex-1 h-screen overflow-auto">{children}</div>
     </AppLayout>
-  );
+  )
 }

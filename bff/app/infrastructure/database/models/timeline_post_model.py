@@ -62,6 +62,14 @@ class TimelinePostModel(SQLModel, table=True):
         description="Target audience tags"
     )
     
+    # Category for the frontend 4-category system
+    category: str = Field(
+        default="public",
+        max_length=20,
+        index=True,
+        description="Post category: friends_circle, public_square, my_circle, favorites"
+    )
+    
     # Association information
     conversation_id: Optional[UUID] = Field(
         default=None,

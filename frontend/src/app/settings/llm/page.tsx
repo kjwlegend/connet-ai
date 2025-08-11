@@ -1,13 +1,5 @@
-"use client";
-
-import { MainContent } from "@/components/layout/MainContent";
+import { SettingsLLM } from "@/components/features/settings/components/SettingsLLM"
 
 export default function LLMSettingsPage() {
-  return (
-    <MainContent
-      mode="settings"
-      selectedItem="llm"
-      onItemSelect={() => {}}
-    />
-  );
+  return <SettingsLLM />
 }

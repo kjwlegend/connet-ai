@@ -1,0 +1,150 @@
+"filename", "language", "JSON", "TypeScript JSX", "YAML", "TypeScript", "CSS", "comment", "blank", "total"
+"d:\codes\xiaoguang-next-gen\frontend\next.config.ts", "TypeScript", 0, 0, 0, 8, 0, 0, 0, 8
+"d:\codes\xiaoguang-next-gen\frontend\package.json", "JSON", 6, 0, 0, 0, 0, 0, 0, 6
+"d:\codes\xiaoguang-next-gen\frontend\pnpm-lock.yaml", "YAML", 0, 0, 361, 0, 0, 0, 82, 443
+"d:\codes\xiaoguang-next-gen\frontend\public\manifest.json", "JSON", -55, 0, 0, 0, 0, 0, 0, -55
+"d:\codes\xiaoguang-next-gen\frontend\src\app\chat\layout.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, -1, -1
+"d:\codes\xiaoguang-next-gen\frontend\src\app\chat\page.tsx", "TypeScript JSX", 0, -8, 0, 0, 0, 2, -2, -8
+"d:\codes\xiaoguang-next-gen\frontend\src\app\contacts\layout.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, -1, -1
+"d:\codes\xiaoguang-next-gen\frontend\src\app\contacts\page.tsx", "TypeScript JSX", 0, -8, 0, 0, 0, 2, -2, -8
+"d:\codes\xiaoguang-next-gen\frontend\src\app\files\layout.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, -1, -1
+"d:\codes\xiaoguang-next-gen\frontend\src\app\files\page.tsx", "TypeScript JSX", 0, -8, 0, 0, 0, 2, -2, -8
+"d:\codes\xiaoguang-next-gen\frontend\src\app\globals.css", "CSS", 0, 0, 0, 0, 18, 0, 2, 20
+"d:\codes\xiaoguang-next-gen\frontend\src\app\layout.tsx", "TypeScript JSX", 0, -2, 0, 0, 0, 0, 0, -2
+"d:\codes\xiaoguang-next-gen\frontend\src\app\plugins\layout.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, -1, -1
+"d:\codes\xiaoguang-next-gen\frontend\src\app\plugins\page.tsx", "TypeScript JSX", 0, -8, 0, 0, 0, 2, -2, -8
+"d:\codes\xiaoguang-next-gen\frontend\src\app\settings\account\page.tsx", "TypeScript JSX", 0, 4, 0, 0, 0, 0, 1, 5
+"d:\codes\xiaoguang-next-gen\frontend\src\app\settings\invitation\page.tsx", "TypeScript JSX", 0, 4, 0, 0, 0, 0, 1, 5
+"d:\codes\xiaoguang-next-gen\frontend\src\app\settings\layout.tsx", "TypeScript JSX", 0, -2, 0, 0, 0, 0, 1, -1
+"d:\codes\xiaoguang-next-gen\frontend\src\app\settings\llm\page.tsx", "TypeScript JSX", 0, -7, 0, 0, 0, 0, -1, -8
+"d:\codes\xiaoguang-next-gen\frontend\src\app\settings\membership\page.tsx", "TypeScript JSX", 0, 4, 0, 0, 0, 0, 2, 6
+"d:\codes\xiaoguang-next-gen\frontend\src\app\settings\orders\page.tsx", "TypeScript JSX", 0, 4, 0, 0, 0, 0, 1, 5
+"d:\codes\xiaoguang-next-gen\frontend\src\app\settings\prompt\page.tsx", "TypeScript JSX", 0, 4, 0, 0, 0, 0, 1, 5
+"d:\codes\xiaoguang-next-gen\frontend\src\app\social\layout.tsx", "TypeScript JSX", 0, 10, 0, 0, 0, 0, 0, 10
+"d:\codes\xiaoguang-next-gen\frontend\src\app\social\page.tsx", "TypeScript JSX", 0, -7, 0, 0, 0, 1, -1, -7
+"d:\codes\xiaoguang-next-gen\frontend\src\components\archive\MainLayout\index.tsx", "TypeScript JSX", 0, 28, 0, 0, 0, 3, 7, 38
+"d:\codes\xiaoguang-next-gen\frontend\src\components\archive\chat-interface.tsx", "TypeScript JSX", 0, 146, 0, 0, 0, 4, 13, 163
+"d:\codes\xiaoguang-next-gen\frontend\src\components\archive\chat-list.tsx", "TypeScript JSX", 0, 95, 0, 0, 0, 0, 5, 100
+"d:\codes\xiaoguang-next-gen\frontend\src\components\archive\contact-detail-editable.tsx", "TypeScript JSX", 0, 146, 0, 0, 0, 5, 13, 164
+"d:\codes\xiaoguang-next-gen\frontend\src\components\archive\contact-detail-simple.tsx", "TypeScript JSX", 0, 58, 0, 0, 0, 2, 6, 66
+"d:\codes\xiaoguang-next-gen\frontend\src\components\archive\contact-detail.tsx", "TypeScript JSX", 0, 148, 0, 0, 0, 4, 7, 159
+"d:\codes\xiaoguang-next-gen\frontend\src\components\archive\contacts-list.tsx", "TypeScript JSX", 0, 174, 0, 0, 0, 2, 13, 189
+"d:\codes\xiaoguang-next-gen\frontend\src\components\archive\file-detail-simple.tsx", "TypeScript JSX", 0, 90, 0, 0, 0, 2, 5, 97
+"d:\codes\xiaoguang-next-gen\frontend\src\components\archive\file-preview.tsx", "TypeScript JSX", 0, 134, 0, 0, 0, 3, 11, 148
+"d:\codes\xiaoguang-next-gen\frontend\src\components\archive\files-list-compact.tsx", "TypeScript JSX", 0, 159, 0, 0, 0, 2, 10, 171
+"d:\codes\xiaoguang-next-gen\frontend\src\components\archive\files-list.tsx", "TypeScript JSX", 0, 141, 0, 0, 0, 2, 10, 153
+"d:\codes\xiaoguang-next-gen\frontend\src\components\archive\files-management.tsx", "TypeScript JSX", 0, 36, 0, 0, 0, 0, 5, 41
+"d:\codes\xiaoguang-next-gen\frontend\src\components\archive\files-table.tsx", "TypeScript JSX", 0, 153, 0, 0, 0, 0, 7, 160
+"d:\codes\xiaoguang-next-gen\frontend\src\components\archive\main-content.tsx", "TypeScript JSX", 0, 61, 0, 0, 0, 0, 7, 68
+"d:\codes\xiaoguang-next-gen\frontend\src\components\archive\middle-panel.tsx", "TypeScript JSX", 0, 52, 0, 0, 0, 2, 7, 61
+"d:\codes\xiaoguang-next-gen\frontend\src\components\archive\plugin-detail.tsx", "TypeScript JSX", 0, 273, 0, 0, 0, 2, 13, 288
+"d:\codes\xiaoguang-next-gen\frontend\src\components\archive\plugins-configured.tsx", "TypeScript JSX", 0, 75, 0, 0, 0, 0, 6, 81
+"d:\codes\xiaoguang-next-gen\frontend\src\components\archive\plugins-list-simple.tsx", "TypeScript JSX", 0, 94, 0, 0, 0, 2, 6, 102
+"d:\codes\xiaoguang-next-gen\frontend\src\components\archive\plugins-list.tsx", "TypeScript JSX", 0, 121, 0, 0, 0, 2, 7, 130
+"d:\codes\xiaoguang-next-gen\frontend\src\components\archive\plugins-marketplace.tsx", "TypeScript JSX", 0, 494, 0, 0, 0, 4, 16, 514
+"d:\codes\xiaoguang-next-gen\frontend\src\components\archive\post-detail.tsx", "TypeScript JSX", 0, 205, 0, 0, 0, 5, 17, 227
+"d:\codes\xiaoguang-next-gen\frontend\src\components\archive\settings-llm.tsx", "TypeScript JSX", 0, 182, 0, 0, 0, 4, 9, 195
+"d:\codes\xiaoguang-next-gen\frontend\src\components\archive\sidebar.tsx", "TypeScript JSX", 0, 86, 0, 0, 0, 3, 9, 98
+"d:\codes\xiaoguang-next-gen\frontend\src\components\archive\social-content.tsx", "TypeScript JSX", 0, 168, 0, 0, 0, 4, 10, 182
+"d:\codes\xiaoguang-next-gen\frontend\src\components\archive\social-feed-simple.tsx", "TypeScript JSX", 0, 144, 0, 0, 0, 5, 10, 159
+"d:\codes\xiaoguang-next-gen\frontend\src\components\archive\social-feed.tsx", "TypeScript JSX", 0, 100, 0, 0, 0, 0, 5, 105
+"d:\codes\xiaoguang-next-gen\frontend\src\components\archive\social-sidebar.tsx", "TypeScript JSX", 0, 40, 0, 0, 0, 0, 5, 45
+"d:\codes\xiaoguang-next-gen\frontend\src\components\chat-interface.tsx", "TypeScript JSX", 0, -138, 0, 0, 0, -4, -13, -155
+"d:\codes\xiaoguang-next-gen\frontend\src\components\chat-list.tsx", "TypeScript JSX", 0, -95, 0, 0, 0, 0, -5, -100
+"d:\codes\xiaoguang-next-gen\frontend\src\components\contact-detail-editable.tsx", "TypeScript JSX", 0, -146, 0, 0, 0, -5, -13, -164
+"d:\codes\xiaoguang-next-gen\frontend\src\components\contact-detail-simple.tsx", "TypeScript JSX", 0, -58, 0, 0, 0, -2, -6, -66
+"d:\codes\xiaoguang-next-gen\frontend\src\components\contact-detail.tsx", "TypeScript JSX", 0, -148, 0, 0, 0, -4, -7, -159
+"d:\codes\xiaoguang-next-gen\frontend\src\components\contacts-list.tsx", "TypeScript JSX", 0, -174, 0, 0, 0, -2, -13, -189
+"d:\codes\xiaoguang-next-gen\frontend\src\components\features\chat\components\ChatHeader\index.tsx", "TypeScript JSX", 0, 5, 0, 0, 0, 0, 0, 5
+"d:\codes\xiaoguang-next-gen\frontend\src\components\features\chat\components\ChatInterface\index.tsx", "TypeScript JSX", 0, 16, 0, 0, 0, 2, 1, 19
+"d:\codes\xiaoguang-next-gen\frontend\src\components\features\chat\components\ChatRightPanel\AddContactDialog.tsx", "TypeScript JSX", 0, 367, 0, 0, 0, 14, 30, 411
+"d:\codes\xiaoguang-next-gen\frontend\src\components\features\chat\components\ChatRightPanel\ConversationMemorySection.tsx", "TypeScript JSX", 0, 114, 0, 0, 0, 2, 11, 127
+"d:\codes\xiaoguang-next-gen\frontend\src\components\features\chat\components\ChatRightPanel\ConversationSummaryDialog.tsx", "TypeScript JSX", 0, 359, 0, 0, 0, 8, 33, 400
+"d:\codes\xiaoguang-next-gen\frontend\src\components\features\chat\components\ChatRightPanel\FilesSection.tsx", "TypeScript JSX", 0, 148, 0, 0, 0, 3, 13, 164
+"d:\codes\xiaoguang-next-gen\frontend\src\components\features\chat\components\ChatRightPanel\ParticipantsSection.tsx", "TypeScript JSX", 0, 93, 0, 0, 0, 0, 9, 102
+"d:\codes\xiaoguang-next-gen\frontend\src\components\features\chat\components\ChatRightPanel\index.tsx", "TypeScript JSX", 0, 61, 0, 0, 0, 6, 13, 80
+"d:\codes\xiaoguang-next-gen\frontend\src\components\features\chat\components\ConversationList\DeleteConversationDialog.tsx", "TypeScript JSX", 0, 85, 0, 0, 0, 0, 5, 90
+"d:\codes\xiaoguang-next-gen\frontend\src\components\features\chat\components\ConversationList\index.tsx", "TypeScript JSX", 0, 82, 0, 0, 0, 5, 10, 97
+"d:\codes\xiaoguang-next-gen\frontend\src\components\features\contacts\components\AddContactDialog\index.tsx", "TypeScript JSX", 0, 464, 0, 0, 0, 18, 33, 515
+"d:\codes\xiaoguang-next-gen\frontend\src\components\features\contacts\components\ContactDetailEditable\index.tsx", "TypeScript JSX", 0, 268, 0, 0, 0, 14, 15, 297
+"d:\codes\xiaoguang-next-gen\frontend\src\components\features\contacts\components\ContactList\index.tsx", "TypeScript JSX", 0, 362, 0, 0, 0, 10, 27, 399
+"d:\codes\xiaoguang-next-gen\frontend\src\components\features\contacts\components\ShareContactDialog\index.tsx", "TypeScript JSX", 0, 158, 0, 0, 0, 4, 16, 178
+"d:\codes\xiaoguang-next-gen\frontend\src\components\features\plugins\components\AdvancedConfigForm\index.tsx", "TypeScript JSX", 0, 446, 0, 0, 0, 4, 47, 497
+"d:\codes\xiaoguang-next-gen\frontend\src\components\features\plugins\components\PluginCard\index.tsx", "TypeScript JSX", 0, 132, 0, 0, 0, 6, 12, 150
+"d:\codes\xiaoguang-next-gen\frontend\src\components\features\plugins\components\PluginConfigDialog\index.tsx", "TypeScript JSX", 0, 284, 0, 0, 0, 2, 21, 307
+"d:\codes\xiaoguang-next-gen\frontend\src\components\features\plugins\components\PluginConfigForm\index.tsx", "TypeScript JSX", 0, 19, 0, 0, 0, 0, 1, 20
+"d:\codes\xiaoguang-next-gen\frontend\src\components\features\plugins\components\PluginsConfigured\index.tsx", "TypeScript JSX", 0, 180, 0, 0, 0, 8, 10, 198
+"d:\codes\xiaoguang-next-gen\frontend\src\components\features\plugins\components\PluginsMarketplace\index.tsx", "TypeScript JSX", 0, 185, 0, 0, 0, 7, 11, 203
+"d:\codes\xiaoguang-next-gen\frontend\src\components\features\plugins\data\pluginsData.ts", "TypeScript", 0, 0, 0, 94, 0, 0, 0, 94
+"d:\codes\xiaoguang-next-gen\frontend\src\components\features\settings\components\SettingsAccount\index.tsx", "TypeScript JSX", 0, 252, 0, 0, 0, 8, 16, 276
+"d:\codes\xiaoguang-next-gen\frontend\src\components\features\settings\components\SettingsInvitation\index.tsx", "TypeScript JSX", 0, 330, 0, 0, 0, 7, 16, 353
+"d:\codes\xiaoguang-next-gen\frontend\src\components\features\settings\components\SettingsLLM\index.tsx", "TypeScript JSX", 0, 241, 0, 0, 0, -3, 23, 261
+"d:\codes\xiaoguang-next-gen\frontend\src\components\features\settings\components\SettingsMembership\index.tsx", "TypeScript JSX", 0, 484, 0, 0, 0, 6, 18, 508
+"d:\codes\xiaoguang-next-gen\frontend\src\components\features\settings\components\SettingsOrders\index.tsx", "TypeScript JSX", 0, 317, 0, 0, 0, 4, 16, 337
+"d:\codes\xiaoguang-next-gen\frontend\src\components\features\settings\components\SettingsPrompt\index.tsx", "TypeScript JSX", 0, 336, 0, 0, 0, 5, 18, 359
+"d:\codes\xiaoguang-next-gen\frontend\src\components\features\settings\components\SettingsSidebar\index.tsx", "TypeScript JSX", 0, 147, 0, 0, 0, 4, 11, 162
+"d:\codes\xiaoguang-next-gen\frontend\src\components\features\timeline\components\SocialContent\index.tsx", "TypeScript JSX", 0, 322, 0, 0, 0, 10, 18, 350
+"d:\codes\xiaoguang-next-gen\frontend\src\components\features\timeline\components\SocialSidebar\index.tsx", "TypeScript JSX", 0, 68, 0, 0, 0, 0, 3, 71
+"d:\codes\xiaoguang-next-gen\frontend\src\components\features\timeline\data\mockSocialData.ts", "TypeScript", 0, 0, 0, 284, 0, 0, 2, 286
+"d:\codes\xiaoguang-next-gen\frontend\src\components\file-detail-simple.tsx", "TypeScript JSX", 0, -90, 0, 0, 0, -2, -5, -97
+"d:\codes\xiaoguang-next-gen\frontend\src\components\file-preview.tsx", "TypeScript JSX", 0, -134, 0, 0, 0, -3, -11, -148
+"d:\codes\xiaoguang-next-gen\frontend\src\components\files-list-compact.tsx", "TypeScript JSX", 0, -159, 0, 0, 0, -2, -10, -171
+"d:\codes\xiaoguang-next-gen\frontend\src\components\files-list.tsx", "TypeScript JSX", 0, -141, 0, 0, 0, -2, -10, -153
+"d:\codes\xiaoguang-next-gen\frontend\src\components\files-management.tsx", "TypeScript JSX", 0, -36, 0, 0, 0, 0, -5, -41
+"d:\codes\xiaoguang-next-gen\frontend\src\components\files-table.tsx", "TypeScript JSX", 0, -153, 0, 0, 0, 0, -7, -160
+"d:\codes\xiaoguang-next-gen\frontend\src\components\layout\ContentArea\index.tsx", "TypeScript JSX", 0, -2, 0, 0, 0, 0, 1, -1
+"d:\codes\xiaoguang-next-gen\frontend\src\components\layout\MainLayout\index.tsx", "TypeScript JSX", 0, -28, 0, 0, 0, -3, -7, -38
+"d:\codes\xiaoguang-next-gen\frontend\src\components\layout\MiddlePanel\index.tsx", "TypeScript JSX", 0, 50, 0, 0, 0, 0, 2, 52
+"d:\codes\xiaoguang-next-gen\frontend\src\components\main-content.tsx", "TypeScript JSX", 0, -61, 0, 0, 0, 0, -7, -68
+"d:\codes\xiaoguang-next-gen\frontend\src\components\middle-panel.tsx", "TypeScript JSX", 0, -49, 0, 0, 0, -2, -7, -58
+"d:\codes\xiaoguang-next-gen\frontend\src\components\plugin-detail.tsx", "TypeScript JSX", 0, -273, 0, 0, 0, -2, -13, -288
+"d:\codes\xiaoguang-next-gen\frontend\src\components\plugins-configured.tsx", "TypeScript JSX", 0, -75, 0, 0, 0, 0, -6, -81
+"d:\codes\xiaoguang-next-gen\frontend\src\components\plugins-list-simple.tsx", "TypeScript JSX", 0, -94, 0, 0, 0, -2, -6, -102
+"d:\codes\xiaoguang-next-gen\frontend\src\components\plugins-list.tsx", "TypeScript JSX", 0, -121, 0, 0, 0, -2, -7, -130
+"d:\codes\xiaoguang-next-gen\frontend\src\components\plugins-marketplace.tsx", "TypeScript JSX", 0, -377, 0, 0, 0, -4, -16, -397
+"d:\codes\xiaoguang-next-gen\frontend\src\components\post-detail.tsx", "TypeScript JSX", 0, -205, 0, 0, 0, -5, -17, -227
+"d:\codes\xiaoguang-next-gen\frontend\src\components\settings-llm.tsx", "TypeScript JSX", 0, -182, 0, 0, 0, -4, -9, -195
+"d:\codes\xiaoguang-next-gen\frontend\src\components\sidebar.tsx", "TypeScript JSX", 0, -86, 0, 0, 0, -3, -9, -98
+"d:\codes\xiaoguang-next-gen\frontend\src\components\social-content.tsx", "TypeScript JSX", 0, -168, 0, 0, 0, -4, -10, -182
+"d:\codes\xiaoguang-next-gen\frontend\src\components\social-feed-simple.tsx", "TypeScript JSX", 0, -144, 0, 0, 0, -5, -10, -159
+"d:\codes\xiaoguang-next-gen\frontend\src\components\social-feed.tsx", "TypeScript JSX", 0, -100, 0, 0, 0, 0, -5, -105
+"d:\codes\xiaoguang-next-gen\frontend\src\components\social-sidebar.tsx", "TypeScript JSX", 0, -40, 0, 0, 0, 0, -5, -45
+"d:\codes\xiaoguang-next-gen\frontend\src\components\ui\alert.tsx", "TypeScript JSX", 0, 54, 0, 0, 0, 0, 7, 61
+"d:\codes\xiaoguang-next-gen\frontend\src\components\ui\collapsible.tsx", "TypeScript JSX", 0, 7, 0, 0, 0, 0, 5, 12
+"d:\codes\xiaoguang-next-gen\frontend\src\components\ui\context-menu.tsx", "TypeScript JSX", 0, 1, 0, 0, 0, 0, 1, 2
+"d:\codes\xiaoguang-next-gen\frontend\src\components\ui\input.tsx", "TypeScript JSX", 0, 1, 0, 0, 0, 0, 0, 1
+"d:\codes\xiaoguang-next-gen\frontend\src\components\ui\progress.tsx", "TypeScript JSX", 0, 27, 0, 0, 0, 0, 5, 32
+"d:\codes\xiaoguang-next-gen\frontend\src\components\ui\separator.tsx", "TypeScript JSX", 0, 27, 0, 0, 0, 0, 3, 30
+"d:\codes\xiaoguang-next-gen\frontend\src\components\ui\slider.tsx", "TypeScript JSX", 0, 24, 0, 0, 0, 0, 4, 28
+"d:\codes\xiaoguang-next-gen\frontend\src\components\ui\switch.tsx", "TypeScript JSX", 0, 25, 0, 0, 0, 0, 4, 29
+"d:\codes\xiaoguang-next-gen\frontend\src\components\ui\textarea.tsx", "TypeScript JSX", 0, 3, 0, 0, 0, 0, 0, 3
+"d:\codes\xiaoguang-next-gen\frontend\src\hooks\useContacts.enhanced.ts", "TypeScript", 0, 0, 0, 305, 0, 41, 55, 401
+"d:\codes\xiaoguang-next-gen\frontend\src\hooks\useContacts.ts", "TypeScript", 0, 0, 0, 198, 0, 15, 24, 237
+"d:\codes\xiaoguang-next-gen\frontend\src\hooks\useShareContact.ts", "TypeScript", 0, 0, 0, 49, 0, 9, 12, 70
+"d:\codes\xiaoguang-next-gen\frontend\src\lib\i18n\messages\en.json", "JSON", 376, 0, 0, 0, 0, 0, 0, 376
+"d:\codes\xiaoguang-next-gen\frontend\src\lib\i18n\messages\zh.json", "JSON", 376, 0, 0, 0, 0, 0, 1, 377
+"d:\codes\xiaoguang-next-gen\frontend\src\lib\seo\metadata.ts", "TypeScript", 0, 0, 0, -1, 0, 0, 0, -1
+"d:\codes\xiaoguang-next-gen\frontend\src\services\api\client.ts", "TypeScript", 0, 0, 0, 166, 0, 16, 37, 219
+"d:\codes\xiaoguang-next-gen\frontend\src\services\api\conversationService.ts", "TypeScript", 0, 0, 0, 234, 0, 21, 57, 312
+"d:\codes\xiaoguang-next-gen\frontend\src\services\api\index.ts", "TypeScript", 0, 0, 0, 2, 0, 7, 2, 11
+"d:\codes\xiaoguang-next-gen\frontend\src\services\index.ts", "TypeScript", 0, 0, 0, 2, 0, 3, 1, 6
+"d:\codes\xiaoguang-next-gen\frontend\src\services\types\index.ts", "TypeScript", 0, 0, 0, 91, 0, 8, 15, 114
+"d:\codes\xiaoguang-next-gen\frontend\src\store\hooks\useOptimizedSelectors.ts", "TypeScript", 0, 0, 0, 185, 0, 13, 21, 219
+"d:\codes\xiaoguang-next-gen\frontend\src\store\hooks\useStoreHydration.ts", "TypeScript", 0, 0, 0, 52, 0, 15, 9, 76
+"d:\codes\xiaoguang-next-gen\frontend\src\store\index.new.ts", "TypeScript", 0, 0, 0, 192, 0, 29, 24, 245
+"d:\codes\xiaoguang-next-gen\frontend\src\store\index.ts", "TypeScript", 0, 0, 0, 6, 0, 0, 1, 7
+"d:\codes\xiaoguang-next-gen\frontend\src\store\slices\chatSlice.ts", "TypeScript", 0, 0, 0, 64, 0, 2, 3, 69
+"d:\codes\xiaoguang-next-gen\frontend\src\store\slices\chat\conversationSlice.ts", "TypeScript", 0, 0, 0, 366, 0, 50, 68, 484
+"d:\codes\xiaoguang-next-gen\frontend\src\store\slices\ui\layoutSlice.ts", "TypeScript", 0, 0, 0, 238, 0, 30, 41, 309
+"d:\codes\xiaoguang-next-gen\frontend\src\store\slices\ui\notificationSlice.ts", "TypeScript", 0, 0, 0, 213, 0, 26, 43, 282
+"d:\codes\xiaoguang-next-gen\frontend\src\store\slices\ui\preferencesSlice.ts", "TypeScript", 0, 0, 0, 237, 0, 25, 33, 295
+"d:\codes\xiaoguang-next-gen\frontend\src\store\types\auth.ts", "TypeScript", 0, 0, 0, 221, 0, 32, 35, 288
+"d:\codes\xiaoguang-next-gen\frontend\src\store\types\chat.ts", "TypeScript", 0, 0, 0, 228, 0, 16, 28, 272
+"d:\codes\xiaoguang-next-gen\frontend\src\store\types\common.ts", "TypeScript", 0, 0, 0, 60, 0, 12, 13, 85
+"d:\codes\xiaoguang-next-gen\frontend\src\store\types\index.ts", "TypeScript", 0, 0, 0, 233, 0, 19, 24, 276
+"d:\codes\xiaoguang-next-gen\frontend\src\store\types\ui.ts", "TypeScript", 0, 0, 0, 113, 0, 15, 21, 149
+"d:\codes\xiaoguang-next-gen\frontend\src\store\utils\cache.ts", "TypeScript", 0, 0, 0, 208, 0, 84, 46, 338
+"d:\codes\xiaoguang-next-gen\frontend\src\store\utils\persistence.ts", "TypeScript", 0, 0, 0, 256, 0, 53, 53, 362
+"d:\codes\xiaoguang-next-gen\frontend\src\types\contact.ts", "TypeScript", 0, 0, 0, 60, 0, 1, 6, 67
+"d:\codes\xiaoguang-next-gen\frontend\src\types\plugin.ts", "TypeScript", 0, 0, 0, 270, 0, 83, 30, 383
+"Total", "-", 703, 6650, 361, 4634, 18, 788, 1271, 14425

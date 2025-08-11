@@ -1,0 +1,58 @@
+Date : 2025-08-09 15:36:29
+Directory : d:\codes\xiaoguang-next-gen\docs
+Total : 27 files,  16335 codes, 0 comments, 2969 blanks, all 19304 lines
+
+Languages
++----------+------------+------------+------------+------------+------------+
+| language | files      | code       | comment    | blank      | total      |
++----------+------------+------------+------------+------------+------------+
+| Markdown |         27 |     16,335 |          0 |      2,969 |     19,304 |
++----------+------------+------------+------------+------------+------------+
+
+Directories
++----------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| path                                                                                   | files      | code       | comment    | blank      | total      |
++----------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| .                                                                                      |         27 |     16,335 |          0 |      2,969 |     19,304 |
+| . (Files)                                                                              |          4 |      3,178 |          0 |        577 |      3,755 |
+| api                                                                                    |          1 |        416 |          0 |        114 |        530 |
+| architecture                                                                           |          2 |      2,970 |          0 |        464 |      3,434 |
+| backend                                                                                |          5 |      3,181 |          0 |        622 |      3,803 |
+| frontend                                                                               |         13 |      6,149 |          0 |      1,112 |      7,261 |
+| infrastructure                                                                         |          1 |        285 |          0 |         41 |        326 |
+| planning                                                                               |          1 |        156 |          0 |         39 |        195 |
++----------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+
+Files
++----------------------------------------------------------------------------------------+----------+------------+------------+------------+------------+
+| filename                                                                               | language | code       | comment    | blank      | total      |
++----------------------------------------------------------------------------------------+----------+------------+------------+------------+------------+
+| d:\codes\xiaoguang-next-gen\docs\api-design-specifications.md                          | Markdown |      1,053 |          0 |        139 |      1,192 |
+| d:\codes\xiaoguang-next-gen\docs\api\available_api.md                                  | Markdown |        416 |          0 |        114 |        530 |
+| d:\codes\xiaoguang-next-gen\docs\architecture\design-system-integration.md             | Markdown |      1,630 |          0 |        242 |      1,872 |
+| d:\codes\xiaoguang-next-gen\docs\architecture\security-authentication-architecture.md  | Markdown |      1,340 |          0 |        222 |      1,562 |
+| d:\codes\xiaoguang-next-gen\docs\backend\backend-architecture.md                       | Markdown |      1,886 |          0 |        337 |      2,223 |
+| d:\codes\xiaoguang-next-gen\docs\backend\backend-task-tracker.md                       | Markdown |        143 |          0 |         40 |        183 |
+| d:\codes\xiaoguang-next-gen\docs\backend\backend-todo.md                               | Markdown |        338 |          0 |         50 |        388 |
+| d:\codes\xiaoguang-next-gen\docs\backend\bff-database-flow.md                          | Markdown |        332 |          0 |        130 |        462 |
+| d:\codes\xiaoguang-next-gen\docs\backend\bff-progress-tracker.md                       | Markdown |        482 |          0 |         65 |        547 |
+| d:\codes\xiaoguang-next-gen\docs\chat-room-logic-thoughts.md                           | Markdown |        469 |          0 |        150 |        619 |
+| d:\codes\xiaoguang-next-gen\docs\data-flow-state-management.md                         | Markdown |      1,344 |          0 |        216 |      1,560 |
+| d:\codes\xiaoguang-next-gen\docs\frontend\components-reorganization.md                 | Markdown |        163 |          0 |         38 |        201 |
+| d:\codes\xiaoguang-next-gen\docs\frontend\contacts-system-updates.md                   | Markdown |        129 |          0 |         28 |        157 |
+| d:\codes\xiaoguang-next-gen\docs\frontend\data-flow-architecture.md                    | Markdown |        207 |          0 |         40 |        247 |
+| d:\codes\xiaoguang-next-gen\docs\frontend\frontend-architecture.md                     | Markdown |        864 |          0 |         88 |        952 |
+| d:\codes\xiaoguang-next-gen\docs\frontend\frontend-backend-integration-guide.md        | Markdown |        686 |          0 |        143 |        829 |
+| d:\codes\xiaoguang-next-gen\docs\frontend\frontend-core-function.md                    | Markdown |      1,047 |          0 |        228 |      1,275 |
+| d:\codes\xiaoguang-next-gen\docs\frontend\frontend-data-types-specification.md         | Markdown |      1,135 |          0 |        193 |      1,328 |
+| d:\codes\xiaoguang-next-gen\docs\frontend\frontend-integration-readiness-assessment.md | Markdown |        266 |          0 |         57 |        323 |
+| d:\codes\xiaoguang-next-gen\docs\frontend\frontend-progress-tracker.md                 | Markdown |        672 |          0 |         94 |        766 |
+| d:\codes\xiaoguang-next-gen\docs\frontend\frontend-refactor-summary.md                 | Markdown |        205 |          0 |         50 |        255 |
+| d:\codes\xiaoguang-next-gen\docs\frontend\frontend-todo.md                             | Markdown |        238 |          0 |         31 |        269 |
+| d:\codes\xiaoguang-next-gen\docs\frontend\state-management-fix.md                      | Markdown |        140 |          0 |         38 |        178 |
+| d:\codes\xiaoguang-next-gen\docs\frontend\store-architecture-v2.md                     | Markdown |        397 |          0 |         84 |        481 |
+| d:\codes\xiaoguang-next-gen\docs\infrastructure\infrastructure-todo.md                 | Markdown |        285 |          0 |         41 |        326 |
+| d:\codes\xiaoguang-next-gen\docs\llm-adapter-design.md                                 | Markdown |        312 |          0 |         72 |        384 |
+| d:\codes\xiaoguang-next-gen\docs\planning\overall-plan.md                              | Markdown |        156 |          0 |         39 |        195 |
+| Total                                                                                  |          |     16,335 |          0 |      2,969 |     19,304 |
++----------------------------------------------------------------------------------------+----------+------------+------------+------------+------------+

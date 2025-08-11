@@ -3,12 +3,9 @@
 import { useState } from "react";
 import { MiddlePanel } from "@/components/layout/MiddlePanel";
 import { AppLayout } from "@/components/layout/AppLayout";
+import { MainContent } from "@/components/layout/MainContent";
 
-interface PluginsLayoutProps {
-  children: React.ReactNode;
-}
-
-export default function PluginsLayout({ children }: PluginsLayoutProps) {
+export default function PluginsLayout() {
   const [selectedItem, setSelectedItem] = useState<string | null>(null);
 
   return (
@@ -21,9 +18,11 @@ export default function PluginsLayout({ children }: PluginsLayoutProps) {
       />
 
       {/* Right Panel - Plugin Content */}
-      <div className="flex-1">
-        {children}
-      </div>
+      <MainContent
+        mode="plugins"
+        selectedItem={selectedItem}
+        onItemSelect={setSelectedItem}
+      />
     </AppLayout>
   );
 }

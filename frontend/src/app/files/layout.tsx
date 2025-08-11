@@ -3,12 +3,9 @@
 import { useState } from "react";
 import { MiddlePanel } from "@/components/layout/MiddlePanel";
 import { AppLayout } from "@/components/layout/AppLayout";
+import { MainContent } from "@/components/layout/MainContent";
 
-interface FilesLayoutProps {
-  children: React.ReactNode;
-}
-
-export default function FilesLayout({ children }: FilesLayoutProps) {
+export default function FilesLayout() {
   const [selectedItem, setSelectedItem] = useState<string | null>(null);
 
   return (
@@ -21,9 +18,11 @@ export default function FilesLayout({ children }: FilesLayoutProps) {
       />
 
       {/* Right Panel - File Content */}
-      <div className="flex-1">
-        {children}
-      </div>
+      <MainContent
+        mode="files"
+        selectedItem={selectedItem}
+        onItemSelect={setSelectedItem}
+      />
     </AppLayout>
   );
 }

@@ -158,10 +158,36 @@ class UserModel(SQLModel, table=True):
         description="User roles"
     )
     
+    # Online status for contacts feature
+    online_status: str = Field(
+        default="offline",
+        max_length=20,
+        description="Current online status: online, offline, away, busy"
+    )
+    last_seen_at: Optional[datetime] = Field(
+        default=None,
+        description="Last seen timestamp"
+    )
+    
+    # QR code for contact sharing
+    qr_code_url: Optional[str] = Field(
+        default=None,
+        max_length=500,
+        description="Generated QR code URL for contact sharing"
+    )
+    qr_code_enabled: bool = Field(
+        default=True,
+        description="Whether QR code sharing is enabled"
+    )
+    
     # Statistics
     invitation_count: int = Field(
         default=0,
         description="Number of successful invitations"
+    )
+    invitation_rewards_earned: int = Field(
+        default=0,
+        description="Total rewards earned from invitations (in cents)"
     )
     total_conversations: int = Field(
         default=0,
@@ -170,6 +196,14 @@ class UserModel(SQLModel, table=True):
     total_messages: int = Field(
         default=0,
         description="Total number of messages sent"
+    )
+    total_ai_interactions: int = Field(
+        default=0,
+        description="Total number of AI agent interactions"
+    )
+    total_posts_created: int = Field(
+        default=0,
+        description="Total number of timeline posts created"
     )
     
     # Metadata

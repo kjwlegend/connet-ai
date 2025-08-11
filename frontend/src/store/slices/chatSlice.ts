@@ -74,6 +74,7 @@ export interface ChatActions {
   pinConversation: (conversationId: string) => void
   unpinConversation: (conversationId: string) => void
   exportConversation: (conversationId: string) => Promise<string>
+  addParticipantsToConversation: (conversationId: string, participantIds: string[]) => void
   
   // Message management
   addMessage: (message: Message) => void
@@ -828,6 +829,74 @@ const createChatSlice: StateCreator<StoreState, [], [], ChatSlice> = (set, get) 
       set({ error: error instanceof Error ? error.message : 'Failed to export conversation' })
       throw error
     }
+  },
+
+  addParticipantsToConversation: (conversationId, participantIds) => {
+    set((state) => {
+      // Mock participants data - in real implementation, these would be fetched from the contacts store
+      const mockParticipants: Record<string, Participant> = {
+        'ai-coding-assistant': {
+          id: 'ai-coding-assistant',
+          name: 'AI编程助手',
+          type: 'agent',
+          avatar: '/placeholder.svg',
+          status: 'online',
+          capabilities: ['开发', '代码审查', '优化']
+        },
+        'design-ai': {
+          id: 'design-ai',
+          name: 'AI设计师',
+          type: 'agent',
+          avatar: '/placeholder.svg',
+          status: 'online',
+          capabilities: ['设计', 'UI', 'UX']
+        },
+        'data-analyst': {
+          id: 'data-analyst',
+          name: '数据分析师',
+          type: 'agent',
+          avatar: '/placeholder.svg',
+          status: 'busy',
+          capabilities: ['数据', '分析', '洞察']
+        },
+        'marketing-ai': {
+          id: 'marketing-ai',
+          name: 'AI营销专家',
+          type: 'agent',
+          avatar: '/placeholder.svg',
+          status: 'online',
+          capabilities: ['营销', '推广', '策略']
+        },
+        'content-ai': {
+          id: 'content-ai',
+          name: 'AI内容创作',
+          type: 'agent',
+          avatar: '/placeholder.svg',
+          status: 'online',
+          capabilities: ['写作', '内容', '创意']
+        }
+      }
+
+      return {
+        conversations: state.conversations.map(conv => {
+          if (conv.id === conversationId) {
+            // Get new participants that aren't already in the conversation
+            const existingParticipantIds = new Set(conv.participants.map(p => p.id))
+            const newParticipants = participantIds
+              .filter(id => !existingParticipantIds.has(id))
+              .map(id => mockParticipants[id])
+              .filter(Boolean) // Remove undefined entries
+
+            return {
+              ...conv,
+              participants: [...conv.participants, ...newParticipants],
+              updatedAt: new Date().toISOString()
+            }
+          }
+          return conv
+        })
+      }
+    })
   },
 })
 

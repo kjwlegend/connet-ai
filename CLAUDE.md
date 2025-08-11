@@ -195,3 +195,5 @@ app/
 - Focus on clean, maintainable code following established patterns
 - The project is in early development with many components being newly added
 - Pay attention to existing coding preferences and maintain consistency
+- always remember to leverage on i18n for globalization
+- "We use UV for python package management"

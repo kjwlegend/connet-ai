@@ -75,7 +75,7 @@
       "participants": "参与者",
       "addParticipant": "添加参与者",
       "files": "群文件",
-      "summary": "对话记忆", 
+      "summary": "对话记忆",
       "keyPoints": "关键要点",
       "decisions": "重要决策",
       "actions": "行动项",
@@ -124,7 +124,57 @@
     "tags": "标签",
     "notes": "备注",
     "capabilities": "能力",
-    "tools": "工具"
+    "tools": "工具",
+    "searchLocal": "本地搜索...",
+    "searchContacts": "搜索联系人或输入@id",
+    "searchPlaceholder": "输入@用户名查找联系人",
+    "noResults": "未找到联系人",
+    "noResultsFor": "未找到匹配的联系人",
+    "allContacts": "全部",
+    "aiAgents": "AI助手",
+    "humans": "真人",
+    "pending": "待处理",
+    "online": "在线",
+    "offline": "离线",
+    "busy": "忙碌",
+    "startConversation": "开始对话",
+    "shareContact": "分享联系人",
+    "contactInfo": "联系人信息",
+    "note": "备注",
+    "addTag": "添加标签",
+    "newTag": "新标签",
+    "save": "保存",
+    "cancel": "取消",
+    "edit": "编辑",
+    "toolConfiguration": "工具配置",
+    "addTool": "添加工具",
+    "quickShare": "快速分享",
+    "shareToConversation": "分享到会话",
+    "generateShareLink": "生成分享链接",
+    "shareContactTitle": "分享联系人",
+    "shareContactDesc": "选择分享联系人的方式",
+    "pendingRequests": "待处理请求",
+    "requestsCount": "个请求",
+    "contactRequests": "联系人申请",
+    "approveRequest": "通过",
+    "rejectRequest": "拒绝",
+    "requestMessage": "申请备注",
+    "sendRequest": "发送申请",
+    "requestNote": "请简单介绍您自己或说明想要添加联系人的原因",
+    "requestSent": "申请已发送",
+    "alreadyConnected": "已是联系人",
+    "addToContacts": "添加联系人",
+    "aiAssistant": "AI助手",
+    "human": "真人",
+    "recommended": "推荐",
+    "searchByName": "按名称或@用户名搜索",
+    "categories": "分类",
+    "development": "开发",
+    "design": "设计",
+    "marketing": "营销",
+    "productivity": "生产力",
+    "education": "教育",
+    "entertainment": "娱乐"
   },
   "theme": {
     "light": "浅色主题",
@@ -229,8 +279,8 @@
     "categories": {
       "membership": "会员计划",
       "membershipDesc": "升级您的套餐",
-      "llm": "模型设置",
-      "llmDesc": "配置AI模型",
+      "llm": "使用统计",
+      "llmDesc": "查看Token使用",
       "account": "账户设置",
       "accountDesc": "管理您的资料",
       "invitation": "邀请管理",
@@ -239,6 +289,49 @@
       "ordersDesc": "账单历史",
       "prompt": "自定义提示词",
       "promptDesc": "全局提示词"
+    },
+    "usage": {
+      "title": "使用统计",
+      "description": "查看您的月度Token使用情况，了解您节省了多少费用",
+      "totalTokens": "总Token数",
+      "thisMonth": "本月",
+      "equivalentCost": "等效成本",
+      "ifPayAsYouGo": "如果按需付费",
+      "yourPlan": "您的套餐",
+      "perMonth": "/月",
+      "yourSavings": "您的节省",
+      "saved": "本月已节省",
+      "moreThanPlan": "超出套餐费用",
+      "dailyUsage": "每日Token使用量",
+      "dailyUsageDesc": "您的每日Token消耗可视化展示",
+      "average": "平均",
+      "peak": "峰值",
+      "breakdown": "使用明细",
+      "breakdownDesc": "本月按类别统计的使用情况",
+      "conversations": "对话",
+      "imageGeneration": "图像生成",
+      "fileAnalysis": "文件分析",
+      "advancedModels": "高级模型",
+      "comparison": "套餐对比",
+      "comparisonDesc": "查看您的会员价值",
+      "withMembership": "会员套餐",
+      "unlimitedConversations": "无限对话",
+      "priorityAccess": "优先访问",
+      "fixedPrice": "固定价格",
+      "withoutMembership": "非会员",
+      "payPerUse": "按Token付费",
+      "limitedModels": "有限的模型访问",
+      "rateLimits": "速率限制",
+      "estimatedCost": "预估费用",
+      "modelBreakdown": "模型使用明细",
+      "modelBreakdownDesc": "模型等级Token使用情况",
+      "premiumModels": "高级模型",
+      "proModels": "专业模型",
+      "basicModels": "基础模型",
+      "notAvailable": "不可用",
+      "unlimited": "无限制",
+      "resetTime": "使用量重置时间",
+      "selectMonth": "选择月份"
     },
     "llm": {
       "title": "模型设置",
@@ -268,33 +361,6 @@
         "embedding": "向量模型",
         "embeddingDesc": "用于文本向量化和搜索"
       }
-    },
-    "account": {
-      "title": "账户设置",
-      "description": "管理您的账户信息和安全设置",
-      "profile": "个人资料",
-      "profileDesc": "更新您的个人信息",
-      "nickname": "昵称",
-      "email": "邮箱地址",
-      "verified": "已验证",
-      "changeAvatar": "更换头像",
-      "avatarHint": "JPG或PNG格式，最大2MB",
-      "edit": "编辑资料",
-      "security": "安全设置",
-      "securityDesc": "管理您的密码和安全设置",
-      "currentPassword": "当前密码",
-      "newPassword": "新密码",
-      "confirmPassword": "确认密码",
-      "enterCurrentPassword": "请输入当前密码",
-      "enterNewPassword": "请输入新密码",
-      "enterConfirmPassword": "请确认新密码",
-      "passwordHint": "密码要求",
-      "passwordRequirements": "至少8个字符，包含大小写字母、数字和特殊字符",
-      "updatePassword": "更新密码",
-      "status": "账户状态",
-      "memberSince": "注册时间",
-      "lastLogin": "最后登录",
-      "accountType": "账户类型"
     },
     "invitation": {
       "title": "邀请设置",
@@ -342,8 +408,10 @@
         "title": "功能",
         "dailyMessages": "每日消息",
         "aiModels": "AI模型",
-        "contextMemory": "上下文记忆",
-        "contactsLimit": "AI联系人限额",
+        "contextMemory": "上下文长度",
+        "chatRooms": "最大聊天室数",
+        "contactsLimit": "联系人数量",
+        "pluginsTools": "插件和工具",
         "responseSpeed": "优先响应",
         "fileUpload": "文件上传大小",
         "customPrompts": "自定义提示词",
@@ -360,7 +428,36 @@
       "faq2Question": "接受哪些支付方式？",
       "faq2Answer": "我们接受所有主要信用卡、PayPal和支付宝国际支付。",
       "faq3Question": "有退款政策吗？",
-      "faq3Answer": "是的，我们为首次订阅者提供7天退款保证。"
+      "faq3Answer": "是的，我们为首次订阅者提供7天退款保证。",
+      "faq4Question": "超过Token限制会发生什么？",
+      "faq4Answer": "每个会员等级对高级模型都有特定的Token使用限制。当您超过每月Token配额时，系统会自动降级到低级模型（例如从GPT-5降级到GPT-4o-mini），以确保服务不中断。您可以在使用统计页面监控您的使用情况。"
+    },
+    "account": {
+      "title": "账户设置",
+      "description": "管理您的账户信息和安全设置",
+      "profile": "个人资料",
+      "profileDesc": "更新您的个人信息和头像",
+      "changeAvatar": "更换头像",
+      "avatarHint": "推荐尺寸：256x256px，最大2MB",
+      "nickname": "昵称",
+      "email": "邮箱地址",
+      "verified": "已验证",
+      "edit": "编辑资料",
+      "security": "安全设置",
+      "securityDesc": "修改密码并管理账户安全",
+      "currentPassword": "当前密码",
+      "enterCurrentPassword": "请输入当前密码",
+      "newPassword": "新密码",
+      "enterNewPassword": "请输入新密码",
+      "confirmPassword": "确认密码",
+      "enterConfirmPassword": "请确认新密码",
+      "passwordHint": "密码安全要求",
+      "passwordRequirements": "密码至少8位，包含大小写字母、数字和符号",
+      "updatePassword": "更新密码",
+      "status": "账户状态",
+      "memberSince": "注册时间",
+      "lastLogin": "最后登录",
+      "accountType": "账户类型"
     },
     "orders": {
       "title": "订单与账单",
@@ -415,6 +512,140 @@
       "exploreLibrary": "浏览提示词库"
     }
   },
+  "homepage": {
+    "nav": {
+      "features": "功能特性",
+      "how": "工作原理",
+      "about": "关于我们",
+      "home": "首页",
+      "contact": "联系我们",
+      "join": "加入候补"
+    },
+    "hero": {
+      "badge": "AI协作的未来",
+      "title": {
+        "line1": "连接",
+        "line2": "点",
+        "line3": "在虚拟现实中"
+      },
+      "title_v2": {
+        "line1": "你的AI联系人，",
+        "line2": "你的方式"
+      },
+      "description": "将AI代理体验为社交圈中的虚拟联系人。在无缝的人机AI生态系统中构建、协作和创新。",
+      "description_v2": "将AI代理体验为社交圈中的虚拟联系人",
+      "vr_description": "沉浸在下一代AI网络交流中。",
+      "email_placeholder": "输入您的邮箱",
+      "join_waitlist": "加入候补名单",
+      "joined": "已加入！",
+      "success_message": "感谢您！我们将在正式发布时通知您。"
+    },
+    "features": {
+      "title": "虚拟现实遇见AI",
+      "description": "通过沉浸式虚拟连接体验人机AI协作的未来",
+      "social": {
+        "title": "社交AI网络",
+        "description": "AI代理成为您社交圈的一部分，拥有个性、技能和记忆"
+      },
+      "natural": {
+        "title": "自然对话",
+        "description": "在对话中自然地@提及AI代理，就像与朋友聊天一样"
+      },
+      "collaborative": {
+        "title": "协作智能",
+        "description": "多个AI代理在复杂任务上合作，共享上下文和知识"
+      },
+      "discovery": {
+        "title": "发现",
+        "description": "发现并添加AI代理"
+      },
+      "conversation": {
+        "title": "对话",
+        "description": "具有记忆的一对一对话"
+      },
+      "collaboration": {
+        "title": "协作",
+        "description": "多个代理协同工作"
+      },
+      "immersive": {
+        "title": "沉浸式网络",
+        "description": "在虚拟现实环境中与AI代理连接"
+      }
+    },
+    "how": {
+      "title": "连接点，创造魔法",
+      "description": "三个简单步骤进入AI协作的未来",
+      "step1": {
+        "title": "发现AI代理",
+        "description": "浏览并连接专为您需求定制的专业AI代理"
+      },
+      "step2": {
+        "title": "构建您的网络",
+        "description": "将AI代理添加到虚拟联系人列表并开始自然对话"
+      },
+      "step3": {
+        "title": "协作与创造",
+        "description": "与AI代理一起在项目、任务和创意努力上协作"
+      }
+    },
+    "alternative": {
+      "title": "自然地与AI连接",
+      "description": "将AI代理体验为社交圈中的虚拟联系人",
+      "feature1": "发现专业AI代理",
+      "feature2": "建立自然关系",
+      "feature3": "协作完成复杂任务",
+      "cta": "加入未来"
+    },
+    "cta": {
+      "title": "准备好连接点了吗？",
+      "description": "加入数千名早期采用者，共同塑造AI协作的未来",
+      "email_placeholder": "您的邮箱地址",
+      "join_waitlist": "获取早期访问权",
+      "joined": "欢迎！",
+      "success_message": "您已在列表中！我们很快会联系您。"
+    },
+    "waitlist": {
+      "title": "加入AI交互的未来",
+      "description": "您的家庭代理和连接正在发展成不仅仅是聊天的东西——自信地配置和协作AI代理。",
+      "vr_description": "成为首批体验虚拟现实中AI协作下一次演进的用户之一。",
+      "email_placeholder": "输入您的邮箱",
+      "join_button": "加入候补名单",
+      "joining": "正在加入...",
+      "success_title": "欢迎来到未来！",
+      "success_message": "我们会在connet.ai发布时通知您。准备好连接点吧！"
+    },
+    "footer": {
+      "copyright": "© 2024 connet.ai. 连接未来，一个点一个点。",
+      "copyright_v2": "© 2024 connet.ai. 连接未来，一个点一个点。",
+      "copyright_v3": "© 2024 connet.ai. 体验连接的未来。"
+    }
+  },
+  "waitlist": {
+    "errors": {
+      "email_required": "邮箱是必填的",
+      "email_invalid": "邮箱地址无效",
+      "please_enter_email": "请输入您的邮箱地址",
+      "please_enter_valid_email": "请输入有效的邮箱地址",
+      "already_signed_up": "已经注册",
+      "email_already_registered": "此邮箱已在候补名单中注册",
+      "join_failed": "加入候补名单失败",
+      "unexpected": "发生意外错误",
+      "position_failed": "获取位置失败",
+      "referral_failed": "生成推荐链接失败"
+    },
+    "loading": {
+      "joining": "正在加入候补名单...",
+      "please_wait": "请稍候，我们正在处理您的请求"
+    },
+    "success": {
+      "welcome": "欢迎加入候补名单！",
+      "position_message": "您是第 {{position}} 位，共有 {{total}} 位订阅者"
+    },
+    "referral": {
+      "link_generated": "推荐链接已生成",
+      "share_to_improve": "分享此链接以提升您在队列中的位置"
+    }
+  },
   "common": {
     "save": "保存",
     "cancel": "取消",
@@ -426,9 +657,9 @@
     "required": "必填",
     "saving": "保存中...",
     "testing": "测试中...",
-    "loading": "加载中..."
-  },
-  "ui": {
-    "delete": "删除"
+    "loading": "加载中...",
+    "back": "返回",
+    "sending": "发送中...",
+    "received": "收到时间"
   }
 }

@@ -1,13 +1,5 @@
-"use client";
-
-import { MainContent } from "@/components/layout/MainContent";
-
 export default function ContactsPage() {
-  return (
-    <MainContent
-      mode="contacts"
-      selectedItem={null}
-      onItemSelect={() => {}}
-    />
-  );
+  // The contacts page content is now handled directly by the layout
+  // This ensures proper state management between MiddlePanel and MainContent
+  return null;
 }

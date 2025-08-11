@@ -70,6 +70,28 @@ class ContactModel(SQLModel, table=True):
         description="Whether this contact is blocked"
     )
     
+    # Contact status tracking (for users and agents)
+    online_status: str = Field(
+        default="unknown",
+        max_length=20,
+        description="Online status: online, offline, away, busy, unknown"
+    )
+    last_seen_at: Optional[datetime] = Field(
+        default=None,
+        description="Last seen timestamp"
+    )
+    
+    # QR code feature for easy contact addition
+    qr_code_shared: bool = Field(
+        default=False,
+        description="Whether contact was added via QR code"
+    )
+    shared_via: Optional[str] = Field(
+        default=None,
+        max_length=50,
+        description="Method contact was shared: qr_code, invite_link, search, etc."
+    )
+    
     # Notification settings
     notification_level: str = Field(
         default="normal",

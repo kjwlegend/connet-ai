@@ -1,7 +1,6 @@
 import { useCallback } from 'react'
 import { useAuth as useAuthStore } from '@/store'
-import { apiClient } from '@/lib/api/client'
-import { API_ENDPOINTS } from '@/lib/api/endpoints'
+import { apiClient, API_ENDPOINTS } from '@/services/api'
 import type { User } from '@/store/slices/authSlice'
 
 interface LoginCredentials {

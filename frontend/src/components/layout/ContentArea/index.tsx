@@ -8,10 +8,8 @@ interface ContentAreaProps {
 
 export function ContentArea({ children, className }: ContentAreaProps) {
   return (
-    <div className={cn('h-full bg-background', className)}>
-      <div className="h-full overflow-auto">
-        {children}
-      </div>
+    <div className={cn('h-full bg-background ', className)}>
+      <div className="h-full overflow-auto">{children}</div>
     </div>
   )
 }

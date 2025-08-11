@@ -37,6 +37,8 @@ export function ChatInterface({ selectedItem }: ChatInterfaceProps) {
     sendMessage,
     loadMessages,
     clearError,
+    addParticipantsToConversation,
+    deleteConversation,
   } = useChat()
 
   // Get current conversation
@@ -178,6 +180,17 @@ export function ChatInterface({ selectedItem }: ChatInterfaceProps) {
         conversation={currentConversation}
         isOpen={isRightPanelOpen}
         onClose={() => setIsRightPanelOpen(false)}
+        onAddParticipants={(participantIds) => {
+          if (activeConversationId) {
+            addParticipantsToConversation(activeConversationId, participantIds)
+          }
+        }}
+        onLeaveGroup={(conversationId) => {
+          // When leaving a group, delete the conversation from the user's view
+          deleteConversation(conversationId)
+          // Close the right panel
+          setIsRightPanelOpen(false)
+        }}
       />
     </div>
   )

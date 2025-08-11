@@ -491,3 +491,123 @@ class Environment:
     PRODUCTION = "production"
     
     VALID_ENVIRONMENTS = [DEVELOPMENT, TESTING, STAGING, PRODUCTION]
+
+
+# Additional constants for frontend features
+CONVERSATION_EXPORT_FORMATS = ["markdown", "json", "txt"]
+
+DEFAULT_CONVERSATION_SETTINGS = {
+    "auto_archive_days": 30,
+    "allow_agent_mentions": True,
+    "notification_level": "all",
+    "max_participants": 50,
+    "allow_file_sharing": True,
+    "enable_typing_indicators": True,
+    "message_retention_days": 365,
+    "auto_summarize": True
+}
+
+# Subscription plan details
+SUBSCRIPTION_PLANS = {
+    "free": {
+        "name": "Free Plan",
+        "price": 0.00,
+        "monthly_message_limit": 100,
+        "monthly_ai_token_limit": 10000,
+        "max_file_storage_gb": 0.5,
+        "max_conversation_history_days": 7,
+        "features": {
+            "basic_chat": True,
+            "ai_agents": False,
+            "file_upload": False,
+            "export_conversations": False,
+            "custom_prompts": False,
+            "priority_support": False,
+            "advanced_ai_models": False
+        }
+    },
+    "basic": {
+        "name": "Basic Plan",
+        "price": 9.99,
+        "monthly_message_limit": 2000,
+        "monthly_ai_token_limit": 100000,
+        "max_file_storage_gb": 2,
+        "max_conversation_history_days": 30,
+        "features": {
+            "basic_chat": True,
+            "ai_agents": True,
+            "file_upload": True,
+            "export_conversations": True,
+            "custom_prompts": False,
+            "priority_support": False,
+            "advanced_ai_models": False
+        }
+    },
+    "premium": {
+        "name": "Premium Plan",
+        "price": 19.99,
+        "monthly_message_limit": 10000,
+        "monthly_ai_token_limit": 500000,
+        "max_file_storage_gb": 10,
+        "max_conversation_history_days": 365,
+        "features": {
+            "basic_chat": True,
+            "ai_agents": True,
+            "file_upload": True,
+            "export_conversations": True,
+            "custom_prompts": True,
+            "priority_support": True,
+            "advanced_ai_models": True
+        }
+    }
+}
+
+# LLM Provider configurations
+LLM_PROVIDERS = {
+    "openai": {
+        "name": "OpenAI",
+        "models": [
+            {"id": "gpt-4o", "name": "GPT-4o", "context_length": 128000},
+            {"id": "gpt-4", "name": "GPT-4", "context_length": 8192},
+            {"id": "gpt-3.5-turbo", "name": "GPT-3.5 Turbo", "context_length": 16385}
+        ]
+    },
+    "anthropic": {
+        "name": "Anthropic",
+        "models": [
+            {"id": "claude-3-opus", "name": "Claude 3 Opus", "context_length": 200000},
+            {"id": "claude-3-sonnet", "name": "Claude 3 Sonnet", "context_length": 200000},
+            {"id": "claude-3-haiku", "name": "Claude 3 Haiku", "context_length": 200000}
+        ]
+    },
+    "google": {
+        "name": "Google",
+        "models": [
+            {"id": "gemini-pro", "name": "Gemini Pro", "context_length": 32768}
+        ]
+    },
+    "cohere": {
+        "name": "Cohere", 
+        "models": [
+            {"id": "command", "name": "Command", "context_length": 4096}
+        ]
+    },
+    "mistral": {
+        "name": "Mistral AI",
+        "models": [
+            {"id": "mistral-large", "name": "Mistral Large", "context_length": 32000}
+        ]
+    },
+    "perplexity": {
+        "name": "Perplexity",
+        "models": [
+            {"id": "llama-3-sonar-large", "name": "Llama 3 Sonar Large", "context_length": 28000}
+        ]
+    },
+    "together": {
+        "name": "Together AI",
+        "models": [
+            {"id": "meta-llama/Llama-2-70b", "name": "Llama 2 70B", "context_length": 4096}
+        ]
+    }
+}

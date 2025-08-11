@@ -73,6 +73,28 @@ class ConversationModel(SQLModel, table=True):
         description="ID of the last message"
     )
     
+    # Pin status (user-specific pinning handled via many-to-many relationship)
+    is_pinned: bool = Field(
+        default=False,
+        description="Whether conversation is globally pinned (admin feature)"
+    )
+    
+    # Conversation summary/memory for AI context
+    summary: Optional[str] = Field(
+        default=None,
+        description="AI-generated conversation summary for context"
+    )
+    
+    # Export metadata
+    export_count: int = Field(
+        default=0,
+        description="Number of times conversation was exported"
+    )
+    last_exported_at: Optional[datetime] = Field(
+        default=None,
+        description="Last export timestamp"
+    )
+    
     # Settings
     settings: Optional[dict] = Field(
         default=None,

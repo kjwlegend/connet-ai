@@ -75,7 +75,7 @@
       "participants": "Participants",
       "addParticipant": "Add Participant",
       "files": "Group Files",
-      "summary": "Conversation Memory", 
+      "summary": "Conversation Memory",
       "keyPoints": "Key Points",
       "decisions": "Important Decisions",
       "actions": "Action Items",
@@ -111,20 +111,70 @@
     }
   },
   "contacts": {
-    "title": "Contacts",
-    "addContact": "Add contact",
-    "editContact": "Edit contact",
-    "deleteContact": "Delete contact",
     "contactDetails": "Contact details",
     "name": "Name",
     "email": "Email",
     "phone": "Phone",
     "company": "Company",
     "role": "Role",
-    "tags": "Tags",
     "notes": "Notes",
     "capabilities": "Capabilities",
-    "tools": "Tools"
+    "tools": "Tools",
+    "title": "Contacts",
+    "addContact": "Add Contact",
+    "searchLocal": "Local search...",
+    "searchContacts": "Search contacts or enter @id",
+    "searchPlaceholder": "Enter @username to find contacts",
+    "noResults": "No contacts found",
+    "noResultsFor": "No contacts found for",
+    "allContacts": "All",
+    "aiAgents": "AI Agents",
+    "humans": "Humans",
+    "pending": "Pending",
+    "online": "Online",
+    "offline": "Offline",
+    "busy": "Busy",
+    "startConversation": "Start Conversation",
+    "deleteContact": "Delete Contact",
+    "editContact": "Edit Contact",
+    "shareContact": "Share Contact",
+    "contactInfo": "Contact Information",
+    "note": "Note",
+    "tags": "Tags",
+    "addTag": "Add Tag",
+    "newTag": "New tag",
+    "save": "Save",
+    "cancel": "Cancel",
+    "edit": "Edit",
+    "toolConfiguration": "Tool Configuration",
+    "addTool": "Add Tool",
+    "quickShare": "Quick Share",
+    "shareToConversation": "Share to Conversation",
+    "generateShareLink": "Generate Share Link",
+    "shareContactTitle": "Share Contact",
+    "shareContactDesc": "Choose how you want to share this contact",
+    "pendingRequests": "Pending Requests",
+    "requestsCount": "requests",
+    "contactRequests": "Contact Requests",
+    "approveRequest": "Approve",
+    "rejectRequest": "Reject",
+    "requestMessage": "Request Message",
+    "sendRequest": "Send Request",
+    "requestNote": "Please introduce yourself or explain why you'd like to connect",
+    "requestSent": "Request Sent",
+    "alreadyConnected": "Already Connected",
+    "addToContacts": "Add to Contacts",
+    "aiAssistant": "AI Assistant",
+    "human": "Human",
+    "recommended": "Recommended",
+    "searchByName": "Search by name or @username",
+    "categories": "Categories",
+    "development": "Development",
+    "design": "Design",
+    "marketing": "Marketing",
+    "productivity": "Productivity",
+    "education": "Education",
+    "entertainment": "Entertainment"
   },
   "theme": {
     "light": "Light theme",
@@ -229,9 +279,9 @@
     "categories": {
       "membership": "Membership",
       "membershipDesc": "Upgrade your plan",
-      "llm": "Model Settings",
-      "llmDesc": "Configure AI models",
-      "account": "Account Settings", 
+      "llm": "Usage Statistics",
+      "llmDesc": "View token usage",
+      "account": "Account Settings",
       "accountDesc": "Manage your profile",
       "invitation": "Invitations",
       "invitationDesc": "Invite friends",
@@ -239,6 +289,49 @@
       "ordersDesc": "Billing history",
       "prompt": "Custom Prompts",
       "promptDesc": "Global prompts"
+    },
+    "usage": {
+      "title": "Usage Statistics",
+      "description": "View your monthly token usage and see how much you're saving",
+      "totalTokens": "Total Tokens",
+      "thisMonth": "This month",
+      "equivalentCost": "Equivalent Cost",
+      "ifPayAsYouGo": "If pay-as-you-go",
+      "yourPlan": "Your Plan",
+      "perMonth": "/month",
+      "yourSavings": "Your Savings",
+      "saved": "Saved this month",
+      "moreThanPlan": "More than plan cost",
+      "dailyUsage": "Daily Token Usage",
+      "dailyUsageDesc": "Visual representation of your daily token consumption",
+      "average": "Average",
+      "peak": "Peak",
+      "breakdown": "Usage Breakdown",
+      "breakdownDesc": "Your usage by category this month",
+      "conversations": "Conversations",
+      "imageGeneration": "Image Generation",
+      "fileAnalysis": "File Analysis",
+      "advancedModels": "Advanced Models",
+      "comparison": "Plan Comparison",
+      "comparisonDesc": "See the value of your membership",
+      "withMembership": "With Membership",
+      "unlimitedConversations": "Unlimited conversations",
+      "priorityAccess": "Priority access",
+      "fixedPrice": "Fixed price",
+      "withoutMembership": "Without Membership",
+      "payPerUse": "Pay per token used",
+      "limitedModels": "Limited model access",
+      "rateLimits": "Rate limits apply",
+      "estimatedCost": "Estimated cost",
+      "modelBreakdown": "Model Usage Breakdown",
+      "modelBreakdownDesc": "Token usage by model tier for",
+      "premiumModels": "Premium Models",
+      "proModels": "Pro Models",
+      "basicModels": "Basic Models",
+      "notAvailable": "Not Available",
+      "unlimited": "Unlimited",
+      "resetTime": "Usage resets on",
+      "selectMonth": "Select Month"
     },
     "llm": {
       "title": "Model Settings",
@@ -263,38 +356,11 @@
       "modelType": {
         "chat": "Chat Model",
         "chatDesc": "For daily conversations and Q&A",
-        "memory": "Memory Model", 
+        "memory": "Memory Model",
         "memoryDesc": "For context memory and summarization",
         "embedding": "Embedding Model",
         "embeddingDesc": "For text vectorization and search"
       }
-    },
-    "account": {
-      "title": "Account Settings",
-      "description": "Manage your account information and security settings",
-      "profile": "Profile Information",
-      "profileDesc": "Update your personal information",
-      "nickname": "Nickname",
-      "email": "Email Address",
-      "verified": "Verified",
-      "changeAvatar": "Change Avatar",
-      "avatarHint": "JPG or PNG, max 2MB",
-      "edit": "Edit Profile",
-      "security": "Security",
-      "securityDesc": "Manage your password and security settings",
-      "currentPassword": "Current Password",
-      "newPassword": "New Password",
-      "confirmPassword": "Confirm Password",
-      "enterCurrentPassword": "Enter current password",
-      "enterNewPassword": "Enter new password",
-      "enterConfirmPassword": "Confirm new password",
-      "passwordHint": "Password Requirements",
-      "passwordRequirements": "At least 8 characters, including uppercase, lowercase, numbers and special characters",
-      "updatePassword": "Update Password",
-      "status": "Account Status",
-      "memberSince": "Member Since",
-      "lastLogin": "Last Login",
-      "accountType": "Account Type"
     },
     "invitation": {
       "title": "Invitation Settings",
@@ -342,8 +408,10 @@
         "title": "Features",
         "dailyMessages": "Daily Messages",
         "aiModels": "AI Models",
-        "contextMemory": "Context Memory",
-        "contactsLimit": "AI Contacts Limit",
+        "contextMemory": "Context Length",
+        "chatRooms": "Max Chat Rooms",
+        "contactsLimit": "Contacts Limit",
+        "pluginsTools": "Plugins & Tools",
         "responseSpeed": "Priority Response",
         "fileUpload": "File Upload Size",
         "customPrompts": "Custom Prompts",
@@ -360,7 +428,36 @@
       "faq2Question": "What payment methods do you accept?",
       "faq2Answer": "We accept all major credit cards, PayPal, and Alipay for international payments.",
       "faq3Question": "Is there a refund policy?",
-      "faq3Answer": "Yes, we offer a 7-day money-back guarantee for first-time subscribers."
+      "faq3Answer": "Yes, we offer a 7-day money-back guarantee for first-time subscribers.",
+      "faq4Question": "What happens when I exceed token limits?",
+      "faq4Answer": "Each membership tier has specific token usage limits for premium models. When you exceed your monthly token allocation, the system will automatically fallback to a lower-tier model (e.g., from GPT-5 to GPT-4o-mini) to ensure uninterrupted service. You can monitor your usage in the Usage Statistics page."
+    },
+    "account": {
+      "title": "Account Settings",
+      "description": "Manage your account information and security settings",
+      "profile": "Profile Information",
+      "profileDesc": "Update your personal information and avatar",
+      "changeAvatar": "Change Avatar",
+      "avatarHint": "Recommended size: 256x256px, max 2MB",
+      "nickname": "Nickname",
+      "email": "Email Address",
+      "verified": "Verified",
+      "edit": "Edit Profile",
+      "security": "Security Settings",
+      "securityDesc": "Change your password and manage account security",
+      "currentPassword": "Current Password",
+      "enterCurrentPassword": "Enter your current password",
+      "newPassword": "New Password",
+      "enterNewPassword": "Enter your new password",
+      "confirmPassword": "Confirm Password",
+      "enterConfirmPassword": "Confirm your new password",
+      "passwordHint": "Password Security Requirements",
+      "passwordRequirements": "Password must be at least 8 characters with uppercase, lowercase, numbers, and symbols",
+      "updatePassword": "Update Password",
+      "status": "Account Status",
+      "memberSince": "Member Since",
+      "lastLogin": "Last Login",
+      "accountType": "Account Type"
     },
     "orders": {
       "title": "Orders & Billing",
@@ -415,6 +512,140 @@
       "exploreLibrary": "Explore Prompt Library"
     }
   },
+  "homepage": {
+    "nav": {
+      "features": "Features",
+      "how": "How It Works",
+      "about": "About",
+      "home": "Home",
+      "contact": "Contact",
+      "join": "Join Waitlist"
+    },
+    "hero": {
+      "badge": "The Future of AI Collaboration",
+      "title": {
+        "line1": "Connect",
+        "line2": "Dots",
+        "line3": "in Virtual Reality"
+      },
+      "title_v2": {
+        "line1": "Your AI Contacts,",
+        "line2": "Your Way"
+      },
+      "description": "Experience AI agents as virtual contacts in your social circle. Build, collaborate, and innovate in a seamless human-AI ecosystem.",
+      "description_v2": "Experience AI agents as virtual contacts in your social circle",
+      "vr_description": "Immerse yourself in next-generation AI networking.",
+      "email_placeholder": "Enter your email",
+      "join_waitlist": "Join Waitlist",
+      "joined": "Joined!",
+      "success_message": "Thank you! We'll notify you when we launch."
+    },
+    "features": {
+      "title": "Connect with AI, Naturally",
+      "description": "Experience the future of human-AI collaboration through immersive virtual connections",
+      "social": {
+        "title": "Social AI Network",
+        "description": "AI agents become part of your social circle, with personalities, skills, and memories"
+      },
+      "natural": {
+        "title": "Natural Conversations",
+        "description": "@mention AI agents naturally in conversations, just like chatting with friends"
+      },
+      "collaborative": {
+        "title": "Collaborative Intelligence",
+        "description": "Multiple AI agents work together on complex tasks, sharing context and knowledge"
+      },
+      "discovery": {
+        "title": "Discovery",
+        "description": "Find and add AI agents"
+      },
+      "conversation": {
+        "title": "Conversation",
+        "description": "One-on-one dialogue with memory"
+      },
+      "collaboration": {
+        "title": "Collaboration",
+        "description": "Multiple agents working together"
+      },
+      "immersive": {
+        "title": "Immersive Networking",
+        "description": "Connect with AI agents in virtual reality environments"
+      }
+    },
+    "how": {
+      "title": "Connect Dots, Create Magic",
+      "description": "Three simple steps to enter the future of AI collaboration",
+      "step1": {
+        "title": "Discover AI Agents",
+        "description": "Browse and connect with specialized AI agents tailored to your needs"
+      },
+      "step2": {
+        "title": "Build Your Network",
+        "description": "Add AI agents to your virtual contact list and start natural conversations"
+      },
+      "step3": {
+        "title": "Collaborate & Create",
+        "description": "Work together with AI agents on projects, tasks, and creative endeavors"
+      }
+    },
+    "alternative": {
+      "title": "Connect with AI, Naturally",
+      "description": "Experience AI agents as virtual contacts in your social circle",
+      "feature1": "Discover specialized AI agents",
+      "feature2": "Build natural relationships",
+      "feature3": "Collaborate on complex tasks",
+      "cta": "Join the Future"
+    },
+    "cta": {
+      "title": "Ready to Connect the Dots?",
+      "description": "Join thousands of early adopters shaping the future of AI collaboration",
+      "email_placeholder": "Your email address",
+      "join_waitlist": "Get Early Access",
+      "joined": "Welcome!",
+      "success_message": "You're on the list! We'll be in touch soon."
+    },
+    "waitlist": {
+      "title": "Join the Future of AI Interaction",
+      "description": "Your family agents and connections are evolving into something more than just chats - configure and collaborate confidently with AI agents.",
+      "vr_description": "Be among the first to experience the next evolution of AI collaboration in virtual reality.",
+      "email_placeholder": "Enter your email",
+      "join_button": "Join Waitlist",
+      "joining": "Joining...",
+      "success_title": "Welcome to the Future!",
+      "success_message": "We'll notify you when connet.ai launches. Get ready to connect the dots!"
+    },
+    "footer": {
+      "copyright": "© 2024 connet.ai. Connecting the future, one dot at a time.",
+      "copyright_v2": "© 2024 connet.ai. Connecting the future, one dot at a time.",
+      "copyright_v3": "© 2024 connet.ai. Experience the future of connection."
+    }
+  },
+  "waitlist": {
+    "errors": {
+      "email_required": "Email is required",
+      "email_invalid": "Invalid email address",
+      "please_enter_email": "Please enter your email address",
+      "please_enter_valid_email": "Please enter a valid email address",
+      "already_signed_up": "Already signed up",
+      "email_already_registered": "This email is already registered for the waitlist",
+      "join_failed": "Failed to join waitlist",
+      "unexpected": "An unexpected error occurred",
+      "position_failed": "Failed to get position",
+      "referral_failed": "Failed to generate referral link"
+    },
+    "loading": {
+      "joining": "Joining waitlist...",
+      "please_wait": "Please wait while we process your request"
+    },
+    "success": {
+      "welcome": "Welcome to the waitlist!",
+      "position_message": "You are #{{position}} in line with {{total}} total subscribers"
+    },
+    "referral": {
+      "link_generated": "Referral link generated",
+      "share_to_improve": "Share this link to improve your position in line"
+    }
+  },
   "common": {
     "save": "Save",
     "cancel": "Cancel",
@@ -426,9 +657,9 @@
     "required": "Required",
     "saving": "Saving...",
     "testing": "Testing...",
-    "loading": "Loading..."
-  },
-  "ui": {
-    "delete": "Delete"
+    "loading": "Loading...",
+    "back": "Back",
+    "sending": "Sending...",
+    "received": "Received"
   }
 }

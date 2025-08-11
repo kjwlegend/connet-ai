@@ -3,12 +3,9 @@
 import { useState } from "react";
 import { MiddlePanel } from "@/components/layout/MiddlePanel";
 import { AppLayout } from "@/components/layout/AppLayout";
+import { MainContent } from "@/components/layout/MainContent";
 
-interface ChatLayoutProps {
-  children: React.ReactNode;
-}
-
-export default function ChatLayout({ children }: ChatLayoutProps) {
+export default function ChatLayout() {
   const [selectedItem, setSelectedItem] = useState<string | null>(null);
 
   return (
@@ -21,9 +18,11 @@ export default function ChatLayout({ children }: ChatLayoutProps) {
       />
 
       {/* Right Panel - Chat Content */}
-      <div className="flex-1">
-        {children}
-      </div>
+      <MainContent
+        mode="chat"
+        selectedItem={selectedItem}
+        onItemSelect={setSelectedItem}
+      />
     </AppLayout>
   );
 }

@@ -12,7 +12,8 @@
       "Bash(pnpm lint:*)",
       "Bash(pnpm:*)",
       "Bash(pip install:*)",
-      "Bash(ls:*)"
+      "Bash(ls:*)",
+      "Bash(uv pip install:*)"
     ],
     "deny": []
   }
