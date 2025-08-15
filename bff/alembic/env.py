@@ -36,6 +36,27 @@ from app.infrastructure.database.models.timeline_like_model import TimelineLikeM
 from app.infrastructure.database.models.file_model import FileModel
 from app.infrastructure.database.models.file_permission_model import FilePermissionModel
 
+# Import additional models from existing files
+from app.infrastructure.database.models.conversation_user_setting_model import ConversationUserSettingModel
+from app.infrastructure.database.models.user_subscription_model import UserSubscriptionModel
+from app.infrastructure.database.models.user_llm_settings_model import UserLLMSettingsModel
+from app.infrastructure.database.models.user_prompt_library_model import UserPromptLibraryModel
+
+# Import AI Service models
+from app.infrastructure.database.models.ai_agent_model import (
+    AIAgentModel,
+    AIAgentVersionModel,
+    AIAgentKnowledgeBaseModel,
+    AIMemoryModel,
+    AIConversationSummaryModel,
+    AIToolModel,
+    AIToolExecutionModel,
+    AIWebhookModel,
+    AIWebhookTriggerModel,
+    AIRAGDocumentModel,
+    AIRAGDocumentChunkModel,
+)
+
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
 config = context.config

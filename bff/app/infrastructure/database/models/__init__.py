@@ -20,6 +20,21 @@ from .user_prompt_library_model import UserPromptLibraryModel
 from .user_registration_source_model import UserRegistrationSourceModel
 from .user_subscription_model import UserSubscriptionModel
 
+# AI Service models
+from .ai_agent_model import (
+    AIAgentModel,
+    AIAgentVersionModel,
+    AIAgentKnowledgeBaseModel,
+    AIMemoryModel,
+    AIConversationSummaryModel,
+    AIToolModel,
+    AIToolExecutionModel,
+    AIWebhookModel,
+    AIWebhookTriggerModel,
+    AIRAGDocumentModel,
+    AIRAGDocumentChunkModel,
+)
+
 __all__ = [
     # User system models
     "UserModel",
@@ -49,4 +64,17 @@ __all__ = [
     "TimelinePostModel",
     "TimelineCommentModel",
     "TimelineLikeModel",
+    
+    # AI Service models
+    "AIAgentModel",
+    "AIAgentVersionModel", 
+    "AIAgentKnowledgeBaseModel",
+    "AIMemoryModel",
+    "AIConversationSummaryModel",
+    "AIToolModel",
+    "AIToolExecutionModel",
+    "AIWebhookModel",
+    "AIWebhookTriggerModel",
+    "AIRAGDocumentModel",
+    "AIRAGDocumentChunkModel",
 ]

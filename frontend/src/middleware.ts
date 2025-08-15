@@ -39,10 +39,10 @@ export function middleware(request: NextRequest) {
   }
 
   // Redirect authenticated users away from auth pages
-  if (isAuthRoute && isAuthenticated) {
-    const dashboardUrl = new URL('/dashboard', request.url)
-    return NextResponse.redirect(dashboardUrl)
-  }
+  // if (isAuthRoute && isAuthenticated) {
+  //   const dashboardUrl = new URL('/dashboard', request.url)
+  //   return NextResponse.redirect(dashboardUrl)
+  // }
 
   // Allow authenticated users to access home page, redirect unauthenticated to login
   if (pathname === '/' && !isAuthenticated) {
