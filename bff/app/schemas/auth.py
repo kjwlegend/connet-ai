@@ -79,3 +79,34 @@ class ChangePasswordRequest(BaseSchema):
     """Change password request schema."""
     current_password: str = Field(..., description="Current password")
     new_password: str = Field(..., min_length=8, description="New password")
+
+
+class OAuthCallbackRequest(BaseSchema):
+    """OAuth callback request schema."""
+    code: str = Field(..., description="OAuth authorization code")
+    state: Optional[str] = Field(None, description="OAuth state parameter")
+    provider: str = Field(..., description="OAuth provider (google, github)")
+    redirect_uri: str = Field(..., description="Redirect URI used in OAuth flow")
+
+
+class OAuthLoginResponse(BaseSchema):
+    """OAuth login response schema."""
+    access_token: str = Field(..., description="JWT access token")
+    refresh_token: str = Field(..., description="JWT refresh token")
+    token_type: str = Field("bearer", description="Token type")
+    expires_in: int = Field(..., description="Token expiration time in seconds")
+    user: UserResponse = Field(..., description="User information")
+    is_new_user: bool = Field(..., description="Whether this is a newly created user")
+
+
+class OAuthUrlRequest(BaseSchema):
+    """OAuth URL generation request schema."""
+    provider: str = Field(..., description="OAuth provider (google, github)")
+    redirect_uri: str = Field(..., description="Redirect URI for OAuth callback")
+    state: Optional[str] = Field(None, description="Optional state parameter")
+
+
+class OAuthUrlResponse(BaseSchema):
+    """OAuth URL response schema."""
+    url: str = Field(..., description="OAuth authorization URL")
+    state: str = Field(..., description="State parameter for security")

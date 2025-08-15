@@ -1,384 +1,480 @@
 # LLM Adapter Design Document
 
 ## Overview
-This document outlines the architecture and implementation strategy for supporting multiple LLM providers in the Connet.AI platform, handling both user-provided API keys and platform-managed keys.
 
-## Architecture Decision: Server-Side Processing
+This document outlines the **simplified, unified architecture** for supporting multiple LLM providers in the Connet.AI platform.
 
-### Recommendation: **Server-Side Adapter Pattern**
-We recommend implementing all LLM provider integrations on the **server side (BFF layer)** for the following reasons:
+**Core Principle**: All users go through the same backend architecture, with differences in available features and models based on their subscription tier.
 
-#### ✅ Advantages of Server-Side Processing:
-1. **Security**: API keys never exposed to client/browser
-2. **Unified Interface**: Single API endpoint regardless of provider
-3. **Rate Limiting**: Centralized control over API usage
-4. **Cost Management**: Track and limit usage per user/plan
-5. **Error Handling**: Consistent error handling and retry logic
-6. **Caching**: Response caching for identical requests
-7. **Monitoring**: Centralized logging and metrics
-8. **Provider Switching**: Easy to switch providers without client updates
-9. **Compliance**: Better control over data flow for compliance requirements
+## Architecture Decision: Unified Backend with Tiered Features
 
-#### ❌ Why Not Client-Side:
-- Security risk: API keys visible in browser
-- CORS issues with many providers
-- Difficult to track usage and costs
-- No centralized rate limiting
-- Inconsistent error handling
+### Why Unified Architecture?
+
+#### ✅ **Advantages**:
+
+1. **Simplicity**: One codebase, one architecture to maintain
+2. **Consistency**: Identical user experience across all tiers
+3. **Reliability**: Proven patterns for multi-agent chat rooms
+4. **Scalability**: Easy to add new providers and features
+5. **Security**: Centralized security and monitoring
+6. **Maintainability**: Single point of truth for business logic
+
+#### ❌ **Why Not Hybrid/Mixed Approaches**:
+
+- Exponential complexity in multi-agent scenarios
+- Inconsistent user experience
+- Double maintenance burden
+- Complex error handling and debugging
+- Poor upgrade conversion rates
 
 ## Proposed Architecture
 
-### 1. Unified LLM Gateway (BFF Layer)
+### Unified LLM Gateway (BFF Layer)
 
 ```
+All Users → Unified BFF → LLM Providers
 ┌─────────────┐     ┌──────────────┐     ┌──────────────────┐
 │   Frontend  │────▶│  BFF Gateway │────▶│  LLM Providers   │
 │             │     │              │     │                  │
-│  - Chat UI  │     │  - Router    │     │  - OpenAI        │
-│  - Settings │     │  - Adapter   │     │  - Anthropic     │
-│             │     │  - RateLimit │     │  - Google        │
+│  - Chat UI  │     │  - Unified   │     │  - Platform Keys │
+│  - Settings │     │    Service   │     │  - User Keys     │
+│             │     │  - Tier      │     │    (BYOK)        │
+│             │     │    Control   │     │  - OpenAI        │
+│             │     │  - Multi     │     │  - Anthropic     │
+│             │     │    Agent     │     │  - Google        │
 └─────────────┘     └──────────────┘     │  - DeepSeek      │
-                                          │  - Kimi          │
-                                          │  - Qwen          │
-                                          └──────────────────┘
+                                        │  - Others        │
+                                        └──────────────────┘
 ```
 
-### 2. Adapter Pattern Implementation
+### User Tier Management
 
 ```python
-# bff/app/services/llm/base_adapter.py
-from abc import ABC, abstractmethod
-from typing import Dict, Any, AsyncGenerator
+# bff/app/services/llm/unified_service.py
+from typing import Dict, Any, List
+from enum import Enum
 
-class BaseLLMAdapter(ABC):
-    """Base adapter interface for all LLM providers"""
-    
-    @abstractmethod
-    async def chat_completion(
-        self, 
-        messages: list,
-        model: str,
-        temperature: float = 0.7,
-        **kwargs
-    ) -> Dict[str, Any]:
-        """Standard chat completion interface"""
-        pass
-    
-    @abstractmethod
-    async def stream_chat_completion(
-        self,
-        messages: list,
-        model: str,
-        **kwargs
-    ) -> AsyncGenerator[str, None]:
-        """Streaming chat completion interface"""
-        pass
-    
-    @abstractmethod
-    async def embeddings(
-        self,
-        text: str,
-        model: str
-    ) -> list[float]:
-        """Text embeddings interface"""
-        pass
-```
+class UserTier(Enum):
+    FREE = "free"
+    PRO = "pro"
+    ENTERPRISE = "enterprise"
 
-### 3. Provider-Specific Adapters
+class UnifiedLLMService:
+    """
+    Single LLM service handling all users with tier-based features
+    """
 
-```python
-# bff/app/services/llm/adapters/openai_adapter.py
-from openai import AsyncOpenAI
-from ..base_adapter import BaseLLMAdapter
-
-class OpenAIAdapter(BaseLLMAdapter):
-    def __init__(self, api_key: str, base_url: str = None):
-        self.client = AsyncOpenAI(
-            api_key=api_key,
-            base_url=base_url
-        )
-    
-    async def chat_completion(self, messages, model, **kwargs):
-        response = await self.client.chat.completions.create(
-            model=model,
-            messages=messages,
-            **kwargs
-        )
-        return response.model_dump()
-
-# Similar implementations for other providers...
-```
-
-### 4. LLM Service Manager
-
-```python
-# bff/app/services/llm/manager.py
-from typing import Dict, Optional
-from .adapters import (
-    OpenAIAdapter,
-    AnthropicAdapter,
-    GoogleAdapter,
-    DeepSeekAdapter,
-    KimiAdapter,
-    QwenAdapter
-)
-
-class LLMManager:
-    """Manages multiple LLM providers and routes requests"""
-    
-    def __init__(self):
-        self.adapters: Dict[str, BaseLLMAdapter] = {}
-        self.user_configs: Dict[str, Dict] = {}
-    
-    def register_user_config(self, user_id: str, provider: str, config: Dict):
-        """Register user's LLM configuration"""
-        if provider == "openai":
-            adapter = OpenAIAdapter(config["api_key"], config.get("base_url"))
-        elif provider == "anthropic":
-            adapter = AnthropicAdapter(config["api_key"])
-        elif provider == "google":
-            adapter = GoogleAdapter(config["api_key"])
-        elif provider == "deepseek":
-            adapter = DeepSeekAdapter(config["api_key"])
-        # ... other providers
-        
-        self.adapters[f"{user_id}_{provider}"] = adapter
-        self.user_configs[user_id] = {
-            "provider": provider,
-            "models": config.get("models", {})
+    TIER_FEATURES = {
+        UserTier.FREE: {
+            "models": ["gpt-3.5-turbo", "gemini-flash"],
+            "custom_agents": 3,
+            "daily_quota": 100,
+            "multi_agent_limit": 2,
+            "byok_allowed": False
+        },
+        UserTier.PRO: {
+            "models": ["gpt-4", "claude-3.5", "gemini-pro"],
+            "custom_agents": 50,
+            "daily_quota": 2000,
+            "multi_agent_limit": 10,
+            "byok_allowed": True
+        },
+        UserTier.ENTERPRISE: {
+            "models": "all",
+            "custom_agents": "unlimited",
+            "daily_quota": "unlimited",
+            "multi_agent_limit": "unlimited",
+            "byok_allowed": True
         }
-    
-    async def chat(self, user_id: str, messages: list, model_type: str = "chat"):
-        """Route chat request to appropriate provider"""
-        config = self.user_configs.get(user_id)
-        
-        if not config:
-            # Use platform default based on user's membership
-            config = self._get_default_config(user_id)
-        
-        provider = config["provider"]
-        model = config["models"].get(model_type)
-        adapter = self.adapters.get(f"{user_id}_{provider}")
-        
-        if not adapter:
-            adapter = self._get_platform_adapter(provider)
-        
-        return await adapter.chat_completion(messages, model)
+    }
+
+    async def chat(
+        self,
+        user_id: str,
+        agent_config: Dict[str, Any],
+        message: str,
+        context: Dict[str, Any]
+    ) -> Dict[str, Any]:
+        """Unified chat interface for all users and agents"""
+
+        # 1. Get user tier and validate quota
+        user_tier = await self.get_user_tier(user_id)
+        await self.validate_quota(user_id, user_tier)
+
+        # 2. Get appropriate LLM adapter
+        adapter = await self.get_llm_adapter(user_id, user_tier, agent_config)
+
+        # 3. Execute chat with unified error handling
+        return await adapter.chat_completion(
+            messages=self.prepare_messages(agent_config, message, context),
+            model=self.select_model(agent_config, user_tier),
+            **self.get_parameters(agent_config, user_tier)
+        )
+
+    async def get_llm_adapter(self, user_id: str, tier: UserTier, agent_config: Dict):
+        """Get appropriate adapter based on user configuration"""
+
+        # Check if user has BYOK configuration
+        user_api_key = await self.api_key_manager.get_user_key(
+            user_id, agent_config.get("provider")
+        )
+
+        if user_api_key and tier.value in ["pro", "enterprise"]:
+            # Use user's API key
+            return self.create_byok_adapter(agent_config["provider"], user_api_key)
+        else:
+            # Use platform-managed keys
+            return self.create_platform_adapter(agent_config["provider"])
 ```
 
-## Existing Solutions & Libraries
-
-### Recommended: **LangChain** Integration
-
-LangChain provides excellent abstractions for multiple LLM providers:
+### API Key Management (BYOK Support)
 
 ```python
-# Using LangChain for unified interface
-from langchain.chat_models import ChatOpenAI, ChatAnthropic
-from langchain.embeddings import OpenAIEmbeddings
-from langchain.schema import HumanMessage, SystemMessage
+# bff/app/services/llm/api_key_manager.py
+from cryptography.fernet import Fernet
+import os
 
-class LangChainLLMAdapter:
-    """Adapter using LangChain for provider abstraction"""
-    
-    PROVIDERS = {
-        "openai": ChatOpenAI,
-        "anthropic": ChatAnthropic,
-        # Extended with custom providers
-    }
-    
-    def __init__(self, provider: str, **kwargs):
-        model_class = self.PROVIDERS.get(provider)
-        self.model = model_class(**kwargs)
-    
-    async def chat(self, messages):
-        return await self.model.ainvoke(messages)
+class APIKeyManager:
+    """
+    Secure API key management for BYOK (Bring Your Own Key) users
+    """
+
+    def __init__(self):
+        self.cipher = Fernet(os.environ["API_KEY_ENCRYPTION_KEY"])
+
+    async def store_user_api_key(
+        self,
+        user_id: str,
+        provider: str,
+        api_key: str,
+        user_consent: bool = True
+    ):
+        """Securely store user's API key with proper consent"""
+
+        if not user_consent:
+            raise ValueError("User consent required for API key storage")
+
+        # Validate API key works
+        is_valid = await self.validate_api_key(provider, api_key)
+        if not is_valid:
+            raise ValueError(f"Invalid {provider} API key")
+
+        # Encrypt and store
+        encrypted_key = self.cipher.encrypt(api_key.encode())
+
+        await self.db.execute("""
+            INSERT INTO user_api_keys (user_id, provider, encrypted_key, created_at)
+            VALUES (?, ?, ?, ?)
+            ON CONFLICT (user_id, provider) DO UPDATE SET
+                encrypted_key = excluded.encrypted_key,
+                updated_at = CURRENT_TIMESTAMP
+        """, (user_id, provider, encrypted_key, datetime.utcnow()))
+
+        # Audit log
+        await self.audit_logger.log_key_storage(user_id, provider)
+
+    async def get_user_key(self, user_id: str, provider: str) -> str | None:
+        """Retrieve and decrypt user's API key"""
+
+        result = await self.db.fetch_one(
+            "SELECT encrypted_key FROM user_api_keys WHERE user_id = ? AND provider = ?",
+            (user_id, provider)
+        )
+
+        if not result:
+            return None
+
+        # Decrypt
+        decrypted_key = self.cipher.decrypt(result["encrypted_key"]).decode()
+
+        # Audit log
+        await self.audit_logger.log_key_access(user_id, provider)
+
+        return decrypted_key
 ```
 
-### Alternative Solutions:
+### Multi-Agent Chat Support
 
-1. **LiteLLM** - Lightweight unified interface for 100+ LLMs
-   ```python
-   import litellm
-   response = await litellm.acompletion(
-       model="gpt-4",  # or "claude-3", "gemini-pro", etc.
-       messages=messages
-   )
-   ```
+```python
+# bff/app/services/chat/multi_agent_manager.py
+import asyncio
+from typing import List
 
-2. **OpenRouter** - API gateway service (3rd party)
-   - Single API endpoint for multiple providers
-   - Usage-based pricing
-   - Good for quick prototyping
+class MultiAgentChatManager:
+    """
+    Unified multi-agent chat manager
+    All agents use the same execution pipeline regardless of configuration
+    """
 
-3. **Custom Implementation** - Full control but more development effort
+    def __init__(self, llm_service: UnifiedLLMService):
+        self.llm_service = llm_service
+
+    async def execute_multi_agent_chat(
+        self,
+        user_id: str,
+        room_id: str,
+        message: str,
+        agents: List[Dict[str, Any]]
+    ) -> List[Dict[str, Any]]:
+        """Execute multi-agent chat with unified timeout and error handling"""
+
+        # Validate user can use multi-agent features
+        user_tier = await self.llm_service.get_user_tier(user_id)
+        max_agents = self.llm_service.TIER_FEATURES[user_tier]["multi_agent_limit"]
+
+        if len(agents) > max_agents:
+            raise ValueError(f"Too many agents for {user_tier.value} tier")
+
+        # Execute all agents concurrently with timeout
+        tasks = []
+        for agent in agents:
+            task = asyncio.create_task(
+                self._execute_agent_with_timeout(user_id, agent, message)
+            )
+            tasks.append((agent["id"], task))
+
+        # Wait for all responses
+        responses = []
+        for agent_id, task in tasks:
+            try:
+                response = await asyncio.wait_for(task, timeout=30.0)
+                responses.append({
+                    "agent_id": agent_id,
+                    "response": response,
+                    "status": "success"
+                })
+            except asyncio.TimeoutError:
+                responses.append({
+                    "agent_id": agent_id,
+                    "error": "Response timeout",
+                    "status": "timeout"
+                })
+            except Exception as e:
+                responses.append({
+                    "agent_id": agent_id,
+                    "error": str(e),
+                    "status": "error"
+                })
+
+        return responses
+
+    async def _execute_agent_with_timeout(
+        self,
+        user_id: str,
+        agent: Dict[str, Any],
+        message: str
+    ):
+        """Execute single agent with proper context and error handling"""
+
+        context = await self.get_chat_context(agent["id"], message)
+
+        return await self.llm_service.chat(
+            user_id=user_id,
+            agent_config=agent,
+            message=message,
+            context=context
+        )
+```
 
 ## Implementation Plan
 
-### Phase 1: Core Infrastructure (Week 1)
-- [ ] Set up base adapter interface
-- [ ] Implement OpenAI adapter
-- [ ] Implement Google (Gemini) adapter
-- [ ] Create LLM manager service
-- [ ] Add user configuration storage
+### Phase 1: Core Infrastructure (Week 1-2)
 
-### Phase 2: Additional Providers (Week 2)
-- [ ] Implement DeepSeek adapter
-- [ ] Implement Kimi adapter
-- [ ] Implement Qwen adapter
-- [ ] Implement Anthropic adapter
+- [ ] Unified LLM service foundation
+- [ ] User tier management system
+- [ ] Secure API key storage (BYOK)
+- [ ] Basic provider adapters (OpenAI, Anthropic)
 
-### Phase 3: Advanced Features (Week 3)
-- [ ] Add response caching
-- [ ] Implement rate limiting per user/provider
-- [ ] Add usage tracking and billing integration
-- [ ] Implement fallback providers
-- [ ] Add streaming support
+### Phase 2: Multi-Agent Support (Week 3-4)
 
-### Phase 4: Optimization (Week 4)
-- [ ] Add connection pooling
-- [ ] Implement retry logic with exponential backoff
-- [ ] Add provider health checks
-- [ ] Optimize for latency
+- [ ] Multi-agent chat manager
+- [ ] Concurrent execution with timeout handling
+- [ ] Context management across agents
+- [ ] Error handling and fallback mechanisms
+
+### Phase 3: Additional Providers & Features (Week 5-6)
+
+- [ ] Add more providers (Google, DeepSeek, etc.)
+- [ ] Advanced quota management
+- [ ] Usage analytics and billing
+- [ ] Performance optimization
+
+### Phase 4: Enterprise Features (Week 7-8)
+
+- [ ] Advanced security features
+- [ ] Audit logging and compliance
+- [ ] Custom deployment options
+- [ ] Advanced monitoring and alerting
 
 ## API Design
 
-### Endpoint Structure
+### Unified Chat Endpoint
 
 ```yaml
-POST /api/v1/llm/chat
+POST /api/v1/chat
 Content-Type: application/json
 Authorization: Bearer {user_token}
 
 {
-  "messages": [
-    {"role": "system", "content": "You are a helpful assistant"},
-    {"role": "user", "content": "Hello"}
-  ],
-  "model_type": "chat",  # or "memory", "embedding"
-  "stream": false,
-  "temperature": 0.7,
-  "max_tokens": 1000
+  "agent_id": "agent_123",
+  "message": "Hello, how can you help me?",
+  "context": {
+    "conversation_id": "conv_456",
+    "history": [...]
+  }
 }
 
 Response:
 {
-  "id": "chat-123",
-  "provider": "openai",
-  "model": "gpt-4",
-  "usage": {
-    "prompt_tokens": 10,
-    "completion_tokens": 20,
-    "total_tokens": 30
-  },
-  "choices": [{
-    "message": {
-      "role": "assistant",
-      "content": "Hello! How can I help you today?"
-    }
-  }]
+  "id": "response_789",
+  "agent_id": "agent_123",
+  "message": "Hello! I'm here to help you with...",
+  "metadata": {
+    "model": "gpt-4",
+    "provider": "openai",
+    "tokens_used": 150,
+    "response_time_ms": 1200
+  }
 }
 ```
 
-### Configuration Endpoint
+### Multi-Agent Chat Endpoint
 
 ```yaml
-POST /api/v1/llm/config
+POST /api/v1/chat/multi-agent
+Content-Type: application/json
+Authorization: Bearer {user_token}
+
+{
+  "room_id": "room_123",
+  "message": "What do you all think about this?",
+  "agents": ["agent_1", "agent_2", "agent_3"]
+}
+
+Response:
+{
+  "room_id": "room_123",
+  "responses": [
+    {
+      "agent_id": "agent_1",
+      "response": "I think this is interesting because...",
+      "status": "success"
+    },
+    {
+      "agent_id": "agent_2",
+      "response": "From my perspective...",
+      "status": "success"
+    }
+  ]
+}
+```
+
+### BYOK Configuration
+
+```yaml
+POST /api/v1/user/api-keys
 Content-Type: application/json
 Authorization: Bearer {user_token}
 
 {
   "provider": "openai",
   "api_key": "sk-...",
-  "base_url": "https://api.openai.com/v1",  # optional
-  "models": {
-    "chat": "gpt-4",
-    "memory": "gpt-3.5-turbo",
-    "embedding": "text-embedding-3"
-  }
+  "consent": true
+}
+
+Response:
+{
+  "success": true,
+  "provider": "openai",
+  "status": "configured",
+  "features_unlocked": [
+    "Cost optimization",
+    "Higher rate limits",
+    "Custom model access"
+  ]
 }
 ```
 
 ## Security Considerations
 
-1. **API Key Storage**: 
-   - Encrypt API keys using AES-256
-   - Store in secure database with access logging
-   - Never log or return API keys in responses
+### API Key Protection
 
-2. **Rate Limiting**:
-   - Per-user limits based on membership tier
-   - Per-provider limits to prevent abuse
-   - Circuit breaker for provider failures
+1. **Encryption**: All user API keys encrypted with AES-256
+2. **Access Control**: Keys only accessible during LLM calls
+3. **Audit Logging**: All key access logged with user consent
+4. **Consent Management**: Clear user consent for key storage
 
-3. **Input Validation**:
-   - Sanitize all user inputs
-   - Limit message size and token count
-   - Validate model names against whitelist
+### Rate Limiting
 
-4. **Audit Logging**:
-   - Log all LLM requests (without content)
-   - Track usage per user and provider
-   - Monitor for anomalous patterns
+1. **Tier-based Limits**: Different quotas per subscription tier
+2. **Per-agent Limits**: Prevent abuse in multi-agent scenarios
+3. **Provider Limits**: Respect upstream provider rate limits
+4. **Circuit Breakers**: Automatic failover for provider issues
 
 ## Cost Management
 
 ### Usage Tracking
+
 ```python
 class UsageTracker:
     async def track_usage(
         self,
         user_id: str,
+        agent_id: str,
         provider: str,
         model: str,
         tokens: int,
         cost: float
     ):
-        """Track usage for billing and limits"""
-        # Store in database
-        # Check against user limits
-        # Trigger alerts if needed
+        """Track usage for billing and quota management"""
+        await self.db.execute("""
+            INSERT INTO usage_logs
+            (user_id, agent_id, provider, model, tokens, cost, timestamp)
+            VALUES (?, ?, ?, ?, ?, ?, ?)
+        """, (user_id, agent_id, provider, model, tokens, cost, datetime.utcnow()))
+
+        # Check quotas
+        await self.check_and_enforce_quotas(user_id)
 ```
 
-### Membership-Based Limits
-- **Free**: GPT-4o-mini, Gemini-2.0-flash only
-- **Pro ($9.99)**: GPT-4o, Gemini-2.5-Pro
-- **Premium ($19.99)**: All models including latest versions
-- **Own API Key**: No model restrictions
+### Subscription Tiers
 
-## Monitoring & Observability
-
-1. **Metrics to Track**:
-   - Request latency per provider
-   - Error rates
-   - Token usage per user
-   - Cost per request
-   - Provider availability
-
-2. **Recommended Tools**:
-   - OpenTelemetry for distributed tracing
-   - Prometheus for metrics
-   - Grafana for visualization
-   - Sentry for error tracking
+- **Free**: Basic models, limited agents, 100 daily requests
+- **Pro ($19/month)**: Advanced models, BYOK option, higher limits
+- **Enterprise**: Custom pricing, unlimited usage, dedicated support
 
 ## Conclusion
 
-The server-side adapter pattern provides the best balance of security, flexibility, and control. Using LangChain or LiteLLM as a foundation will accelerate development while maintaining the ability to add custom providers and features.
+This simplified, unified architecture provides:
+
+### ✅ **Technical Benefits**
+
+- **Single codebase** to maintain and debug
+- **Consistent performance** across all features
+- **Reliable multi-agent support** with proper error handling
+- **Scalable foundation** for future growth
+
+### ✅ **Business Benefits**
+
+- **Clear upgrade path** from free to paid tiers
+- **Reduced support complexity** with unified experience
+- **Cost optimization** through BYOK for power users
+- **Enterprise-ready** with proper security and compliance
+
+### ✅ **User Benefits**
+
+- **Consistent experience** regardless of subscription
+- **Powerful multi-agent capabilities** that actually work
+- **Flexible payment options** (platform credits or BYOK)
+- **Simple configuration** without technical complexity
+
+**Focus on what matters**: Building amazing multi-agent experiences, not managing complex technical architectures.
 
 ## Next Steps
 
-1. **Immediate Actions**:
-   - Set up BFF LLM service structure
-   - Implement OpenAI adapter as proof of concept
-   - Create database schema for user configurations
+1. **Week 1**: Start with unified LLM service and basic tier management
+2. **Week 2**: Add secure BYOK support for Pro+ users
+3. **Week 3**: Implement robust multi-agent chat manager
+4. **Week 4**: Add more providers and polish the experience
 
-2. **Testing Strategy**:
-   - Unit tests for each adapter
-   - Integration tests with mock providers
-   - Load testing for concurrent users
-   - Failover testing
-
-3. **Documentation**:
-   - API documentation with OpenAPI/Swagger
-   - Provider-specific configuration guides
-   - Troubleshooting guide for common issues
+Keep it simple, keep it unified, and focus on delivering value to users! 🚀

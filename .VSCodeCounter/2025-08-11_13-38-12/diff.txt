@@ -1,0 +1,225 @@
+Date : 2025-08-11 13:38:12
+Directory : d:\Codes\xiaoguang-next-gen\frontend
+Total : 146 files,  -38981 codes, -757 comments, -8314 blanks, all -48052 lines
+
+Languages
++------------------+------------+------------+------------+------------+------------+
+| language         | files      | code       | comment    | blank      | total      |
++------------------+------------+------------+------------+------------+------------+
+| JSON             |          1 |        -20 |          0 |          0 |        -20 |
+| Docker           |          1 |        -22 |        -10 |        -10 |        -42 |
+| pip requirements |          1 |        -38 |        -13 |        -12 |        -63 |
+| Makefile         |          1 |        -67 |         -9 |        -19 |        -95 |
+| YAML             |          1 |        -76 |         -6 |         -8 |        -90 |
+| Ini              |          1 |        -86 |          0 |        -23 |       -109 |
+| Python           |         94 |    -11,551 |       -719 |     -2,483 |    -14,753 |
+| Markdown         |         46 |    -27,121 |          0 |     -5,759 |    -32,880 |
++------------------+------------+------------+------------+------------+------------+
+
+Directories
++----------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| path                                                                                                     | files      | code       | comment    | blank      | total      |
++----------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| .                                                                                                        |        146 |    -38,981 |       -757 |     -8,314 |    -48,052 |
+| ..                                                                                                       |        146 |    -38,981 |       -757 |     -8,314 |    -48,052 |
+| .. (Files)                                                                                               |          3 |     -2,285 |          0 |       -471 |     -2,756 |
+| ..\.claude                                                                                               |          1 |        -20 |          0 |          0 |        -20 |
+| ..\.cursor                                                                                               |          2 |        -99 |          0 |        -18 |       -117 |
+| ..\.cursor\rules                                                                                         |          2 |        -99 |          0 |        -18 |       -117 |
+| ..\bff                                                                                                   |        102 |    -12,799 |       -757 |     -2,874 |    -16,430 |
+| ..\bff (Files)                                                                                           |         10 |     -1,582 |        -64 |       -434 |     -2,080 |
+| ..\bff\alembic                                                                                           |          3 |       -261 |        -40 |        -88 |       -389 |
+| ..\bff\app                                                                                               |         80 |     -9,252 |       -569 |     -1,971 |    -11,792 |
+| ..\bff\app (Files)                                                                                       |          2 |       -128 |        -15 |        -37 |       -180 |
+| ..\bff\app\api                                                                                           |         13 |     -1,772 |        -85 |       -360 |     -2,217 |
+| ..\bff\app\api (Files)                                                                                   |          3 |       -331 |        -36 |        -96 |       -463 |
+| ..\bff\app\api\v1                                                                                        |         10 |     -1,441 |        -49 |       -264 |     -1,754 |
+| ..\bff\app\api\v1 (Files)                                                                                |          2 |        -15 |         -9 |         -6 |        -30 |
+| ..\bff\app\api\v1\endpoints                                                                              |          8 |     -1,426 |        -40 |       -258 |     -1,724 |
+| ..\bff\app\config                                                                                        |          2 |       -121 |        -14 |        -33 |       -168 |
+| ..\bff\app\core                                                                                          |          5 |        -96 |          0 |        -26 |       -122 |
+| ..\bff\app\core (Files)                                                                                  |          1 |         -1 |          0 |          0 |         -1 |
+| ..\bff\app\core\interfaces                                                                               |          4 |        -95 |          0 |        -26 |       -121 |
+| ..\bff\app\core\interfaces (Files)                                                                       |          1 |         -1 |          0 |          0 |         -1 |
+| ..\bff\app\core\interfaces\repositories                                                                  |          3 |        -94 |          0 |        -26 |       -120 |
+| ..\bff\app\infrastructure                                                                                |         40 |     -4,499 |       -233 |       -824 |     -5,556 |
+| ..\bff\app\infrastructure (Files)                                                                        |          1 |         -1 |          0 |          0 |         -1 |
+| ..\bff\app\infrastructure\database                                                                       |         28 |     -3,685 |       -203 |       -596 |     -4,484 |
+| ..\bff\app\infrastructure\database (Files)                                                               |          2 |        -75 |         -4 |        -30 |       -109 |
+| ..\bff\app\infrastructure\database\models                                                                |         20 |     -2,282 |       -166 |       -300 |     -2,748 |
+| ..\bff\app\infrastructure\database\repositories                                                          |          6 |     -1,328 |        -33 |       -266 |     -1,627 |
+| ..\bff\app\infrastructure\external                                                                       |          6 |       -622 |        -20 |       -172 |       -814 |
+| ..\bff\app\infrastructure\external (Files)                                                               |          1 |         -1 |          0 |          0 |         -1 |
+| ..\bff\app\infrastructure\external\supabase                                                              |          5 |       -621 |        -20 |       -172 |       -813 |
+| ..\bff\app\infrastructure\messaging                                                                      |          2 |        -68 |         -2 |        -21 |        -91 |
+| ..\bff\app\infrastructure\security                                                                       |          3 |       -123 |         -8 |        -35 |       -166 |
+| ..\bff\app\schemas                                                                                       |          7 |       -437 |        -35 |       -157 |       -629 |
+| ..\bff\app\services                                                                                      |          6 |     -1,089 |        -96 |       -263 |     -1,448 |
+| ..\bff\app\utils                                                                                         |          5 |     -1,110 |        -91 |       -271 |     -1,472 |
+| ..\bff\scripts                                                                                           |          6 |       -817 |        -44 |       -197 |     -1,058 |
+| ..\bff\tests                                                                                             |          3 |       -887 |        -40 |       -184 |     -1,111 |
+| ..\docs                                                                                                  |         38 |    -23,778 |          0 |     -4,951 |    -28,729 |
+| ..\docs (Files)                                                                                          |          5 |     -3,585 |          0 |       -745 |     -4,330 |
+| ..\docs\AI                                                                                               |          8 |     -6,194 |          0 |     -1,662 |     -7,856 |
+| ..\docs\api                                                                                              |          1 |       -416 |          0 |       -114 |       -530 |
+| ..\docs\architecture                                                                                     |          2 |     -2,970 |          0 |       -464 |     -3,434 |
+| ..\docs\backend                                                                                          |          7 |     -4,023 |          0 |       -774 |     -4,797 |
+| ..\docs\frontend                                                                                         |         13 |     -6,149 |          0 |     -1,112 |     -7,261 |
+| ..\docs\frontend (Files)                                                                                 |         11 |     -5,857 |          0 |     -1,046 |     -6,903 |
+| ..\docs\frontend\log                                                                                     |          2 |       -292 |          0 |        -66 |       -358 |
+| ..\docs\infrastructure                                                                                   |          1 |       -285 |          0 |        -41 |       -326 |
+| ..\docs\planning                                                                                         |          1 |       -156 |          0 |        -39 |       -195 |
++----------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+
+Files
++----------------------------------------------------------------------------------------------------------+------------------+------------+------------+------------+------------+
+| filename                                                                                                 | language         | code       | comment    | blank      | total      |
++----------------------------------------------------------------------------------------------------------+------------------+------------+------------+------------+------------+
+| d:\Codes\xiaoguang-next-gen\.claude\settings.local.json                                                  | JSON             |        -20 |          0 |          0 |        -20 |
+| d:\Codes\xiaoguang-next-gen\.cursor\rules\coding-preferences.mdc                                         | Markdown         |        -16 |          0 |         -4 |        -20 |
+| d:\Codes\xiaoguang-next-gen\.cursor\rules\project-tech-stack.mdc                                         | Markdown         |        -83 |          0 |        -14 |        -97 |
+| d:\Codes\xiaoguang-next-gen\CLAUDE.md                                                                    | Markdown         |       -166 |          0 |        -33 |       -199 |
+| d:\Codes\xiaoguang-next-gen\Design-system.md                                                             | Markdown         |       -901 |          0 |       -216 |     -1,117 |
+| d:\Codes\xiaoguang-next-gen\README.md                                                                    | Markdown         |     -1,218 |          0 |       -222 |     -1,440 |
+| d:\Codes\xiaoguang-next-gen\bff\AUTH_SETUP.md                                                            | Markdown         |       -209 |          0 |        -73 |       -282 |
+| d:\Codes\xiaoguang-next-gen\bff\Dockerfile                                                               | Docker           |        -22 |        -10 |        -10 |        -42 |
+| d:\Codes\xiaoguang-next-gen\bff\Makefile                                                                 | Makefile         |        -67 |         -9 |        -19 |        -95 |
+| d:\Codes\xiaoguang-next-gen\bff\README.md                                                                | Markdown         |       -183 |          0 |        -61 |       -244 |
+| d:\Codes\xiaoguang-next-gen\bff\alembic.ini                                                              | Ini              |        -86 |          0 |        -23 |       -109 |
+| d:\Codes\xiaoguang-next-gen\bff\alembic\env.py                                                           | Python           |        -89 |        -13 |        -28 |       -130 |
+| d:\Codes\xiaoguang-next-gen\bff\alembic\env_backup.py                                                    | Python           |        -83 |        -14 |        -32 |       -129 |
+| d:\Codes\xiaoguang-next-gen\bff\alembic\env_simple.py                                                    | Python           |        -89 |        -13 |        -28 |       -130 |
+| d:\Codes\xiaoguang-next-gen\bff\app\__init__.py                                                          | Python           |         -9 |          0 |         -4 |        -13 |
+| d:\Codes\xiaoguang-next-gen\bff\app\api\__init__.py                                                      | Python           |         -1 |          0 |          0 |         -1 |
+| d:\Codes\xiaoguang-next-gen\bff\app\api\dependencies.py                                                  | Python           |       -159 |         -7 |        -45 |       -211 |
+| d:\Codes\xiaoguang-next-gen\bff\app\api\middleware.py                                                    | Python           |       -171 |        -29 |        -51 |       -251 |
+| d:\Codes\xiaoguang-next-gen\bff\app\api\v1\__init__.py                                                   | Python           |         -1 |          0 |          0 |         -1 |
+| d:\Codes\xiaoguang-next-gen\bff\app\api\v1\endpoints\__init__.py                                         | Python           |         -1 |          0 |          0 |         -1 |
+| d:\Codes\xiaoguang-next-gen\bff\app\api\v1\endpoints\auth.py                                             | Python           |       -241 |        -10 |        -46 |       -297 |
+| d:\Codes\xiaoguang-next-gen\bff\app\api\v1\endpoints\contacts.py                                         | Python           |       -176 |          0 |        -28 |       -204 |
+| d:\Codes\xiaoguang-next-gen\bff\app\api\v1\endpoints\conversations.py                                    | Python           |       -203 |          0 |        -30 |       -233 |
+| d:\Codes\xiaoguang-next-gen\bff\app\api\v1\endpoints\health.py                                           | Python           |       -143 |        -19 |        -30 |       -192 |
+| d:\Codes\xiaoguang-next-gen\bff\app\api\v1\endpoints\settings.py                                         | Python           |       -253 |         -6 |        -49 |       -308 |
+| d:\Codes\xiaoguang-next-gen\bff\app\api\v1\endpoints\timeline.py                                         | Python           |       -205 |          0 |        -32 |       -237 |
+| d:\Codes\xiaoguang-next-gen\bff\app\api\v1\endpoints\users.py                                            | Python           |       -204 |         -5 |        -43 |       -252 |
+| d:\Codes\xiaoguang-next-gen\bff\app\api\v1\router.py                                                     | Python           |        -14 |         -9 |         -6 |        -29 |
+| d:\Codes\xiaoguang-next-gen\bff\app\config\__init__.py                                                   | Python           |         -3 |          0 |         -2 |         -5 |
+| d:\Codes\xiaoguang-next-gen\bff\app\config\settings.py                                                   | Python           |       -118 |        -14 |        -31 |       -163 |
+| d:\Codes\xiaoguang-next-gen\bff\app\core\__init__.py                                                     | Python           |         -1 |          0 |          0 |         -1 |
+| d:\Codes\xiaoguang-next-gen\bff\app\core\interfaces\__init__.py                                          | Python           |         -1 |          0 |          0 |         -1 |
+| d:\Codes\xiaoguang-next-gen\bff\app\core\interfaces\repositories\__init__.py                             | Python           |         -1 |          0 |          0 |         -1 |
+| d:\Codes\xiaoguang-next-gen\bff\app\core\interfaces\repositories\base_repository.py                      | Python           |        -43 |          0 |        -12 |        -55 |
+| d:\Codes\xiaoguang-next-gen\bff\app\core\interfaces\repositories\user_repository.py                      | Python           |        -50 |          0 |        -14 |        -64 |
+| d:\Codes\xiaoguang-next-gen\bff\app\infrastructure\__init__.py                                           | Python           |         -1 |          0 |          0 |         -1 |
+| d:\Codes\xiaoguang-next-gen\bff\app\infrastructure\database\__init__.py                                  | Python           |         -1 |          0 |          0 |         -1 |
+| d:\Codes\xiaoguang-next-gen\bff\app\infrastructure\database\connection.py                                | Python           |        -74 |         -4 |        -30 |       -108 |
+| d:\Codes\xiaoguang-next-gen\bff\app\infrastructure\database\models\__init__.py                           | Python           |        -41 |         -5 |         -6 |        -52 |
+| d:\Codes\xiaoguang-next-gen\bff\app\infrastructure\database\models\agent_knowledge_base_model.py         | Python           |        -93 |         -7 |        -14 |       -114 |
+| d:\Codes\xiaoguang-next-gen\bff\app\infrastructure\database\models\agent_model.py                        | Python           |       -170 |        -12 |        -19 |       -201 |
+| d:\Codes\xiaoguang-next-gen\bff\app\infrastructure\database\models\contact_model.py                      | Python           |       -109 |         -8 |        -15 |       -132 |
+| d:\Codes\xiaoguang-next-gen\bff\app\infrastructure\database\models\conversation_model.py                 | Python           |       -114 |         -9 |        -16 |       -139 |
+| d:\Codes\xiaoguang-next-gen\bff\app\infrastructure\database\models\conversation_participant_model.py     | Python           |        -77 |         -4 |        -11 |        -92 |
+| d:\Codes\xiaoguang-next-gen\bff\app\infrastructure\database\models\conversation_topic_model.py           | Python           |       -125 |         -9 |        -16 |       -150 |
+| d:\Codes\xiaoguang-next-gen\bff\app\infrastructure\database\models\conversation_user_setting_model.py    | Python           |       -103 |         -7 |        -14 |       -124 |
+| d:\Codes\xiaoguang-next-gen\bff\app\infrastructure\database\models\file_model.py                         | Python           |       -140 |         -9 |        -16 |       -165 |
+| d:\Codes\xiaoguang-next-gen\bff\app\infrastructure\database\models\file_permission_model.py              | Python           |        -55 |         -3 |        -10 |        -68 |
+| d:\Codes\xiaoguang-next-gen\bff\app\infrastructure\database\models\message_model.py                      | Python           |       -116 |        -10 |        -17 |       -143 |
+| d:\Codes\xiaoguang-next-gen\bff\app\infrastructure\database\models\timeline_comment_model.py             | Python           |       -101 |         -9 |        -16 |       -126 |
+| d:\Codes\xiaoguang-next-gen\bff\app\infrastructure\database\models\timeline_like_model.py                | Python           |        -50 |         -4 |        -11 |        -65 |
+| d:\Codes\xiaoguang-next-gen\bff\app\infrastructure\database\models\timeline_post_model.py                | Python           |       -186 |        -13 |        -20 |       -219 |
+| d:\Codes\xiaoguang-next-gen\bff\app\infrastructure\database\models\user_invitation_model.py              | Python           |        -81 |         -7 |        -14 |       -102 |
+| d:\Codes\xiaoguang-next-gen\bff\app\infrastructure\database\models\user_llm_settings_model.py            | Python           |       -165 |        -11 |        -18 |       -194 |
+| d:\Codes\xiaoguang-next-gen\bff\app\infrastructure\database\models\user_model.py                         | Python           |       -198 |        -14 |        -21 |       -233 |
+| d:\Codes\xiaoguang-next-gen\bff\app\infrastructure\database\models\user_prompt_library_model.py          | Python           |       -114 |         -8 |        -15 |       -137 |
+| d:\Codes\xiaoguang-next-gen\bff\app\infrastructure\database\models\user_registration_source_model.py     | Python           |       -111 |         -7 |        -14 |       -132 |
+| d:\Codes\xiaoguang-next-gen\bff\app\infrastructure\database\models\user_subscription_model.py            | Python           |       -133 |        -10 |        -17 |       -160 |
+| d:\Codes\xiaoguang-next-gen\bff\app\infrastructure\database\repositories\__init__.py                     | Python           |         -1 |          0 |          0 |         -1 |
+| d:\Codes\xiaoguang-next-gen\bff\app\infrastructure\database\repositories\agent_repository_impl.py        | Python           |       -191 |         -6 |        -32 |       -229 |
+| d:\Codes\xiaoguang-next-gen\bff\app\infrastructure\database\repositories\base_repository.py              | Python           |       -261 |         -3 |        -52 |       -316 |
+| d:\Codes\xiaoguang-next-gen\bff\app\infrastructure\database\repositories\conversation_repository_impl.py | Python           |       -285 |         -7 |        -45 |       -337 |
+| d:\Codes\xiaoguang-next-gen\bff\app\infrastructure\database\repositories\message_repository_impl.py      | Python           |       -288 |         -2 |        -53 |       -343 |
+| d:\Codes\xiaoguang-next-gen\bff\app\infrastructure\database\repositories\user_repository_impl.py         | Python           |       -302 |        -15 |        -84 |       -401 |
+| d:\Codes\xiaoguang-next-gen\bff\app\infrastructure\external\__init__.py                                  | Python           |         -1 |          0 |          0 |         -1 |
+| d:\Codes\xiaoguang-next-gen\bff\app\infrastructure\external\supabase\__init__.py                         | Python           |         -1 |          0 |          0 |         -1 |
+| d:\Codes\xiaoguang-next-gen\bff\app\infrastructure\external\supabase\auth.py                             | Python           |       -126 |         -1 |        -32 |       -159 |
+| d:\Codes\xiaoguang-next-gen\bff\app\infrastructure\external\supabase\client.py                           | Python           |        -32 |         -2 |        -15 |        -49 |
+| d:\Codes\xiaoguang-next-gen\bff\app\infrastructure\external\supabase\realtime.py                         | Python           |       -248 |        -10 |        -68 |       -326 |
+| d:\Codes\xiaoguang-next-gen\bff\app\infrastructure\external\supabase\storage.py                          | Python           |       -214 |         -7 |        -57 |       -278 |
+| d:\Codes\xiaoguang-next-gen\bff\app\infrastructure\messaging\__init__.py                                 | Python           |         -1 |          0 |          0 |         -1 |
+| d:\Codes\xiaoguang-next-gen\bff\app\infrastructure\messaging\event_bus.py                                | Python           |        -67 |         -2 |        -21 |        -90 |
+| d:\Codes\xiaoguang-next-gen\bff\app\infrastructure\security\__init__.py                                  | Python           |         -1 |          0 |          0 |         -1 |
+| d:\Codes\xiaoguang-next-gen\bff\app\infrastructure\security\auth.py                                      | Python           |        -73 |         -1 |        -19 |        -93 |
+| d:\Codes\xiaoguang-next-gen\bff\app\infrastructure\security\permissions.py                               | Python           |        -49 |         -7 |        -16 |        -72 |
+| d:\Codes\xiaoguang-next-gen\bff\app\main.py                                                              | Python           |       -119 |        -15 |        -33 |       -167 |
+| d:\Codes\xiaoguang-next-gen\bff\app\schemas\__init__.py                                                  | Python           |         -1 |          0 |          0 |         -1 |
+| d:\Codes\xiaoguang-next-gen\bff\app\schemas\auth.py                                                      | Python           |        -53 |         -3 |        -25 |        -81 |
+| d:\Codes\xiaoguang-next-gen\bff\app\schemas\base.py                                                      | Python           |        -64 |          0 |        -23 |        -87 |
+| d:\Codes\xiaoguang-next-gen\bff\app\schemas\contact.py                                                   | Python           |        -79 |        -12 |        -29 |       -120 |
+| d:\Codes\xiaoguang-next-gen\bff\app\schemas\conversation.py                                              | Python           |       -108 |        -15 |        -36 |       -159 |
+| d:\Codes\xiaoguang-next-gen\bff\app\schemas\responses.py                                                 | Python           |        -47 |          0 |        -20 |        -67 |
+| d:\Codes\xiaoguang-next-gen\bff\app\schemas\user.py                                                      | Python           |        -85 |         -5 |        -24 |       -114 |
+| d:\Codes\xiaoguang-next-gen\bff\app\services\__init__.py                                                 | Python           |         -1 |          0 |          0 |         -1 |
+| d:\Codes\xiaoguang-next-gen\bff\app\services\auth_service.py                                             | Python           |       -112 |        -16 |        -34 |       -162 |
+| d:\Codes\xiaoguang-next-gen\bff\app\services\base.py                                                     | Python           |       -199 |         -9 |        -52 |       -260 |
+| d:\Codes\xiaoguang-next-gen\bff\app\services\conversation_service.py                                     | Python           |       -370 |        -32 |        -72 |       -474 |
+| d:\Codes\xiaoguang-next-gen\bff\app\services\supabase_auth_service.py                                    | Python           |       -278 |        -27 |        -69 |       -374 |
+| d:\Codes\xiaoguang-next-gen\bff\app\services\user_service.py                                             | Python           |       -129 |        -12 |        -36 |       -177 |
+| d:\Codes\xiaoguang-next-gen\bff\app\utils\__init__.py                                                    | Python           |         -1 |          0 |          0 |         -1 |
+| d:\Codes\xiaoguang-next-gen\bff\app\utils\constants.py                                                   | Python           |       -442 |        -69 |       -102 |       -613 |
+| d:\Codes\xiaoguang-next-gen\bff\app\utils\datetime.py                                                    | Python           |       -224 |         -5 |        -54 |       -283 |
+| d:\Codes\xiaoguang-next-gen\bff\app\utils\helpers.py                                                     | Python           |       -355 |        -10 |        -87 |       -452 |
+| d:\Codes\xiaoguang-next-gen\bff\app\utils\logging.py                                                     | Python           |        -88 |         -7 |        -28 |       -123 |
+| d:\Codes\xiaoguang-next-gen\bff\create_manual_migration.py                                               | Python           |       -302 |        -20 |        -30 |       -352 |
+| d:\Codes\xiaoguang-next-gen\bff\database_schema_design.md                                                | Markdown         |       -567 |          0 |       -185 |       -752 |
+| d:\Codes\xiaoguang-next-gen\bff\docker-compose.yml                                                       | YAML             |        -76 |         -6 |         -8 |        -90 |
+| d:\Codes\xiaoguang-next-gen\bff\generate_migration.py                                                    | Python           |        -32 |         -6 |        -13 |        -51 |
+| d:\Codes\xiaoguang-next-gen\bff\requirements.txt                                                         | pip requirements |        -38 |        -13 |        -12 |        -63 |
+| d:\Codes\xiaoguang-next-gen\bff\scripts\__init__.py                                                      | Python           |         -1 |          0 |          0 |         -1 |
+| d:\Codes\xiaoguang-next-gen\bff\scripts\create_env.py                                                    | Python           |        -45 |         -3 |        -16 |        -64 |
+| d:\Codes\xiaoguang-next-gen\bff\scripts\init_database.py                                                 | Python           |       -145 |        -19 |        -40 |       -204 |
+| d:\Codes\xiaoguang-next-gen\bff\scripts\seed_data.py                                                     | Python           |       -481 |        -12 |        -86 |       -579 |
+| d:\Codes\xiaoguang-next-gen\bff\scripts\setup_auth.py                                                    | Python           |       -117 |         -9 |        -45 |       -171 |
+| d:\Codes\xiaoguang-next-gen\bff\scripts\start_dev.py                                                     | Python           |        -28 |         -1 |        -10 |        -39 |
+| d:\Codes\xiaoguang-next-gen\bff\tests\conftest.py                                                        | Python           |       -271 |        -14 |        -61 |       -346 |
+| d:\Codes\xiaoguang-next-gen\bff\tests\test_conversation_service.py                                       | Python           |       -216 |        -26 |        -47 |       -289 |
+| d:\Codes\xiaoguang-next-gen\bff\tests\test_models.py                                                     | Python           |       -400 |          0 |        -76 |       -476 |
+| d:\Codes\xiaoguang-next-gen\docs\AI\ai-service-architecture.md                                           | Markdown         |       -593 |          0 |       -174 |       -767 |
+| d:\Codes\xiaoguang-next-gen\docs\AI\custom-agent-system.md                                               | Markdown         |     -1,159 |          0 |       -324 |     -1,483 |
+| d:\Codes\xiaoguang-next-gen\docs\AI\implementation-roadmap.md                                            | Markdown         |       -416 |          0 |        -84 |       -500 |
+| d:\Codes\xiaoguang-next-gen\docs\AI\memory-management-system.md                                          | Markdown         |       -677 |          0 |       -222 |       -899 |
+| d:\Codes\xiaoguang-next-gen\docs\AI\multi-agent-context-management.md                                    | Markdown         |       -510 |          0 |       -141 |       -651 |
+| d:\Codes\xiaoguang-next-gen\docs\AI\prompts-management-system.md                                         | Markdown         |       -704 |          0 |       -182 |       -886 |
+| d:\Codes\xiaoguang-next-gen\docs\AI\rag-system-design.md                                                 | Markdown         |       -959 |          0 |       -284 |     -1,243 |
+| d:\Codes\xiaoguang-next-gen\docs\AI\tools-webhook-system.md                                              | Markdown         |     -1,176 |          0 |       -251 |     -1,427 |
+| d:\Codes\xiaoguang-next-gen\docs\api-design-specifications.md                                            | Markdown         |     -1,053 |          0 |       -139 |     -1,192 |
+| d:\Codes\xiaoguang-next-gen\docs\api\available_api.md                                                    | Markdown         |       -416 |          0 |       -114 |       -530 |
+| d:\Codes\xiaoguang-next-gen\docs\architecture\design-system-integration.md                               | Markdown         |     -1,630 |          0 |       -242 |     -1,872 |
+| d:\Codes\xiaoguang-next-gen\docs\architecture\security-authentication-architecture.md                    | Markdown         |     -1,340 |          0 |       -222 |     -1,562 |
+| d:\Codes\xiaoguang-next-gen\docs\backend\backend-architecture.md                                         | Markdown         |     -2,127 |          0 |       -364 |     -2,491 |
+| d:\Codes\xiaoguang-next-gen\docs\backend\backend-task-tracker.md                                         | Markdown         |       -143 |          0 |        -40 |       -183 |
+| d:\Codes\xiaoguang-next-gen\docs\backend\backend-todo.md                                                 | Markdown         |       -338 |          0 |        -50 |       -388 |
+| d:\Codes\xiaoguang-next-gen\docs\backend\bff-database-flow.md                                            | Markdown         |       -332 |          0 |       -130 |       -462 |
+| d:\Codes\xiaoguang-next-gen\docs\backend\bff-progress-tracker.md                                         | Markdown         |       -575 |          0 |        -69 |       -644 |
+| d:\Codes\xiaoguang-next-gen\docs\backend\development-log.md                                              | Markdown         |       -301 |          0 |        -65 |       -366 |
+| d:\Codes\xiaoguang-next-gen\docs\backend\need-human-action.md                                            | Markdown         |       -207 |          0 |        -56 |       -263 |
+| d:\Codes\xiaoguang-next-gen\docs\chat-room-logic-thoughts.md                                             | Markdown         |       -469 |          0 |       -150 |       -619 |
+| d:\Codes\xiaoguang-next-gen\docs\data-flow-state-management.md                                           | Markdown         |     -1,344 |          0 |       -216 |     -1,560 |
+| d:\Codes\xiaoguang-next-gen\docs\frontend\data-flow-architecture.md                                      | Markdown         |       -207 |          0 |        -40 |       -247 |
+| d:\Codes\xiaoguang-next-gen\docs\frontend\frontend-architecture.md                                       | Markdown         |       -864 |          0 |        -88 |       -952 |
+| d:\Codes\xiaoguang-next-gen\docs\frontend\frontend-backend-integration-guide.md                          | Markdown         |       -686 |          0 |       -143 |       -829 |
+| d:\Codes\xiaoguang-next-gen\docs\frontend\frontend-core-function.md                                      | Markdown         |     -1,047 |          0 |       -228 |     -1,275 |
+| d:\Codes\xiaoguang-next-gen\docs\frontend\frontend-data-types-specification.md                           | Markdown         |     -1,135 |          0 |       -193 |     -1,328 |
+| d:\Codes\xiaoguang-next-gen\docs\frontend\frontend-integration-readiness-assessment.md                   | Markdown         |       -266 |          0 |        -57 |       -323 |
+| d:\Codes\xiaoguang-next-gen\docs\frontend\frontend-progress-tracker.md                                   | Markdown         |       -672 |          0 |        -94 |       -766 |
+| d:\Codes\xiaoguang-next-gen\docs\frontend\frontend-refactor-summary.md                                   | Markdown         |       -205 |          0 |        -50 |       -255 |
+| d:\Codes\xiaoguang-next-gen\docs\frontend\frontend-todo.md                                               | Markdown         |       -238 |          0 |        -31 |       -269 |
+| d:\Codes\xiaoguang-next-gen\docs\frontend\log\components-reorganization.md                               | Markdown         |       -163 |          0 |        -38 |       -201 |
+| d:\Codes\xiaoguang-next-gen\docs\frontend\log\contacts-system-updates.md                                 | Markdown         |       -129 |          0 |        -28 |       -157 |
+| d:\Codes\xiaoguang-next-gen\docs\frontend\state-management-fix.md                                        | Markdown         |       -140 |          0 |        -38 |       -178 |
+| d:\Codes\xiaoguang-next-gen\docs\frontend\store-architecture-v2.md                                       | Markdown         |       -397 |          0 |        -84 |       -481 |
+| d:\Codes\xiaoguang-next-gen\docs\infrastructure\infrastructure-todo.md                                   | Markdown         |       -285 |          0 |        -41 |       -326 |
+| d:\Codes\xiaoguang-next-gen\docs\llm-adapter-design.md                                                   | Markdown         |       -382 |          0 |        -99 |       -481 |
+| d:\Codes\xiaoguang-next-gen\docs\membership-design.md                                                    | Markdown         |       -337 |          0 |       -141 |       -478 |
+| d:\Codes\xiaoguang-next-gen\docs\planning\overall-plan.md                                                | Markdown         |       -156 |          0 |        -39 |       -195 |
+| Total                                                                                                    |                  |    -38,981 |       -757 |     -8,314 |    -48,052 |
++----------------------------------------------------------------------------------------------------------+------------------+------------+------------+------------+------------+

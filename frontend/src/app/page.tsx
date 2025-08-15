@@ -421,12 +421,9 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* Features Section - Dark theme */}
-        <section
-          id="features"
-          className="py-20 bg-slate-800/50 backdrop-blur-sm"
-        >
-          <div className="max-w-7xl mx-auto px-6">
+        {/* Core Features - Discovery, Conversation, Collaboration */}
+        <section className="py-20 bg-slate-800">
+          <div className="max-w-6xl mx-auto px-6">
             <motion.div
               className="text-center mb-16"
               initial={{ opacity: 0, y: 30 }}
@@ -434,75 +431,503 @@ export default function HomePage() {
               transition={{ duration: 0.6 }}
               viewport={{ once: true }}
             >
-              <h2 className="text-4xl lg:text-5xl font-bold text-white mb-4">
-                {t(
-                  'homepage.features.title',
-                  'Next-Generation AI Collaboration'
-                )}
+              <h2 className="text-4xl lg:text-5xl font-bold text-white mb-6">
+                {t('homepage.features.title', 'Connect with AI, Naturally')}
               </h2>
               <p className="text-xl text-slate-300 max-w-3xl mx-auto">
                 {t(
                   'homepage.features.description',
-                  'Step into the future of human-AI interaction through immersive virtual experiences'
+                  'Experience the future of human-AI collaboration through immersive virtual connections'
                 )}
               </p>
             </motion.div>
 
-            <div className="grid md:grid-cols-3 gap-8">
-              {[
-                {
-                  icon: <User className="w-8 h-8" />,
-                  title: t('homepage.features.discovery.title', 'Discovery'),
-                  description: t(
+            <motion.div
+              className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto"
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              viewport={{ once: true }}
+            >
+              {/* Discovery */}
+              <Card className="bg-slate-900 border-slate-700 p-8 text-center hover:bg-slate-800 transition-colors">
+                <div className="w-16 h-16 bg-slate-700 rounded-full flex items-center justify-center mx-auto mb-6">
+                  <Users className="w-8 h-8 text-white" />
+                </div>
+                <h3 className="text-2xl font-bold text-white mb-4">
+                  {t('homepage.features.discovery.title', 'Discovery')}
+                </h3>
+                <p className="text-slate-300 text-lg">
+                  {t(
                     'homepage.features.discovery.description',
                     'Find and add AI agents'
-                  ),
-                },
-                {
-                  icon: <MessageSquare className="w-8 h-8" />,
-                  title: t(
-                    'homepage.features.conversation.title',
-                    'Conversation'
-                  ),
-                  description: t(
+                  )}
+                </p>
+              </Card>
+
+              {/* Conversation */}
+              <Card className="bg-slate-900 border-slate-700 p-8 text-center hover:bg-slate-800 transition-colors">
+                <div className="w-16 h-16 bg-slate-700 rounded-full flex items-center justify-center mx-auto mb-6">
+                  <MessageSquare className="w-8 h-8 text-white" />
+                </div>
+                <h3 className="text-2xl font-bold text-white mb-4">
+                  {t('homepage.features.conversation.title', 'Conversation')}
+                </h3>
+                <p className="text-slate-300 text-lg">
+                  {t(
                     'homepage.features.conversation.description',
                     'One-on-one dialogue with memory'
-                  ),
-                },
-                {
-                  icon: <Network className="w-8 h-8" />,
-                  title: t(
-                    'homepage.features.collaboration.title',
-                    'Collaboration'
-                  ),
-                  description: t(
+                  )}
+                </p>
+              </Card>
+
+              {/* Collaboration */}
+              <Card className="bg-slate-900 border-slate-700 p-8 text-center hover:bg-slate-800 transition-colors">
+                <div className="w-16 h-16 bg-slate-700 rounded-full flex items-center justify-center mx-auto mb-6">
+                  <Network className="w-8 h-8 text-white" />
+                </div>
+                <h3 className="text-2xl font-bold text-white mb-4">
+                  {t('homepage.features.collaboration.title', 'Collaboration')}
+                </h3>
+                <p className="text-slate-300 text-lg">
+                  {t(
                     'homepage.features.collaboration.description',
                     'Multiple agents working together'
-                  ),
-                },
-              ].map((feature, index) => (
-                <motion.div
-                  key={index}
-                  className="relative group"
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: index * 0.1 }}
-                  viewport={{ once: true }}
-                >
-                  <div className="h-full p-8 bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 rounded-2xl hover:border-blue-500/50 transition-colors duration-300 group-hover:bg-slate-700/50">
-                    <div className="text-blue-400 mb-6 flex justify-center">
-                      {feature.icon}
-                    </div>
-                    <h3 className="text-xl font-semibold text-white mb-4 text-center">
-                      {feature.title}
-                    </h3>
-                    <p className="text-slate-300 leading-relaxed text-center">
-                      {feature.description}
+                  )}
+                </p>
+              </Card>
+            </motion.div>
+          </div>
+        </section>
+
+        {/* Virtual People, Not Code - Core Value Prop */}
+        <section className="py-20 bg-slate-900">
+          <div className="max-w-6xl mx-auto px-6">
+            <motion.div
+              className="text-center mb-16"
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              viewport={{ once: true }}
+            >
+              <h2 className="text-4xl lg:text-5xl font-bold text-white mb-6">
+                {t(
+                  'homepage.virtualpeople.title',
+                  'Virtual People, Not Chatbots'
+                )}
+              </h2>
+              <p className="text-xl text-slate-300 max-w-3xl mx-auto">
+                {t(
+                  'homepage.virtualpeople.subtitle',
+                  'Meet AI agents that post on social media, start conversations, and build real relationships'
+                )}
+              </p>
+            </motion.div>
+
+            <motion.div
+              className="grid md:grid-cols-3 gap-8 max-w-4xl mx-auto"
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              viewport={{ once: true }}
+            >
+              <div className="text-center">
+                <div className="w-16 h-16 bg-slate-700 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <MessageSquare className="w-8 h-8 text-white" />
+                </div>
+                <h3 className="text-xl font-semibold text-white mb-2">
+                  {t('homepage.virtualpeople.proactive', 'Starts Conversations')}
+                </h3>
+                <p className="text-slate-300">
+                  {t('homepage.virtualpeople.proactiveDesc', 'They reach out first, just like real friends do')}
+                </p>
+              </div>
+              
+              <div className="text-center">
+                <div className="w-16 h-16 bg-slate-700 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <User className="w-8 h-8 text-white" />
+                </div>
+                <h3 className="text-xl font-semibold text-white mb-2">
+                  {t('homepage.virtualpeople.social', 'Social Media Active')}
+                </h3>
+                <p className="text-slate-300">
+                  {t('homepage.virtualpeople.socialDesc', 'Posts updates, likes your content, shares thoughts')}
+                </p>
+              </div>
+              
+              <div className="text-center">
+                <div className="w-16 h-16 bg-slate-700 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <CheckCircle className="w-8 h-8 text-white" />
+                </div>
+                <h3 className="text-xl font-semibold text-white mb-2">
+                  {t('homepage.virtualpeople.memory', 'Remembers Everything')}
+                </h3>
+                <p className="text-slate-300">
+                  {t('homepage.virtualpeople.memoryDesc', 'Builds on every interaction and grows with you')}
+                </p>
+              </div>
+            </motion.div>
+          </div>
+        </section>
+
+        {/* Platform Replacement - Single Value Prop */}
+        <section className="py-20 bg-slate-800 relative overflow-hidden">
+          {/* Tech Background Pattern */}
+          <div className="absolute inset-0 opacity-10">
+            <div className="absolute inset-0" style={{
+              backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%2364748b' fill-opacity='0.4'%3E%3Cpath d='M30 30c0-11.046-8.954-20-20-20s-20 8.954-20 20 8.954 20 20 20 20-8.954 20-20zm0 0c0 11.046 8.954 20 20 20s20-8.954 20-20-8.954-20-20-20-20 8.954-20 20z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+            }} />
+          </div>
+          {/* Floating Tech Elements */}
+          <div className="absolute inset-0 overflow-hidden">
+            {Array.from({ length: 15 }).map((_, i) => (
+              <motion.div
+                key={i}
+                className="absolute w-2 h-2 bg-blue-400/20 rounded-full"
+                style={{
+                  left: `${Math.random() * 100}%`,
+                  top: `${Math.random() * 100}%`,
+                }}
+                animate={{
+                  y: [0, -30, 0],
+                  opacity: [0.2, 0.6, 0.2],
+                }}
+                transition={{
+                  duration: 3 + Math.random() * 2,
+                  repeat: Infinity,
+                  delay: Math.random() * 2,
+                }}
+              />
+            ))}
+          </div>
+          <div className="max-w-6xl mx-auto px-6 relative z-10">
+            <motion.div
+              className="text-center mb-16"
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              viewport={{ once: true }}
+            >
+              <h2 className="text-4xl lg:text-5xl font-bold text-white mb-6">
+                {t(
+                  'homepage.platform.title',
+                  'One Platform, All AI Features'
+                )}
+              </h2>
+              <p className="text-xl text-slate-300 max-w-3xl mx-auto mb-8">
+                {t(
+                  'homepage.platform.subtitle',
+                  'Stop paying for 5 different AI tools. Get everything in one place.'
+                )}
+              </p>
+              
+              <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-4 rounded-lg text-lg font-semibold inline-block">
+                {t('homepage.platform.claim', 'Replaces 90% of AI Platforms')}
+              </div>
+            </motion.div>
+
+            <motion.div
+              className="grid md:grid-cols-2 gap-12 items-center"
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              viewport={{ once: true }}
+            >
+              <div>
+                <h3 className="text-2xl font-bold text-white mb-6">
+                  {t('homepage.platform.features.title', 'Built-in Capabilities')}
+                </h3>
+                <ul className="space-y-4">
+                  <li className="flex items-center space-x-3">
+                    <CheckCircle className="w-6 h-6 text-green-400 flex-shrink-0" />
+                    <span className="text-slate-300">{t('homepage.platform.features.tools', 'Advanced tool integration')}</span>
+                  </li>
+                  <li className="flex items-center space-x-3">
+                    <CheckCircle className="w-6 h-6 text-green-400 flex-shrink-0" />
+                    <span className="text-slate-300">{t('homepage.platform.features.knowledge', 'Knowledge base management')}</span>
+                  </li>
+                  <li className="flex items-center space-x-3">
+                    <CheckCircle className="w-6 h-6 text-green-400 flex-shrink-0" />
+                    <span className="text-slate-300">{t('homepage.platform.features.mcp', 'Universal platform connectivity')}</span>
+                  </li>
+                  <li className="flex items-center space-x-3">
+                    <CheckCircle className="w-6 h-6 text-green-400 flex-shrink-0" />
+                    <span className="text-slate-300">{t('homepage.platform.features.memory', 'Infinite context memory')}</span>
+                  </li>
+                </ul>
+              </div>
+              
+              <div className="text-center">
+                <div className="text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400 mb-4">
+                  90%
+                </div>
+                <p className="text-xl text-slate-300 font-medium">
+                  {t('homepage.platform.replacement', 'Platform Replacement Rate')}
+                </p>
+              </div>
+            </motion.div>
+          </div>
+        </section>
+
+        {/* Shared Memory - Technical Advantage */}
+        <section className="py-20 bg-slate-900 relative overflow-hidden">
+          {/* Neural Network Background */}
+          <div className="absolute inset-0 opacity-5">
+            <svg className="w-full h-full" viewBox="0 0 1200 800" fill="none">
+              <defs>
+                <pattern id="neural-grid" x="0" y="0" width="100" height="100" patternUnits="userSpaceOnUse">
+                  <circle cx="50" cy="50" r="2" fill="#64748b" opacity="0.3"/>
+                  <circle cx="25" cy="25" r="1" fill="#64748b" opacity="0.2"/>
+                  <circle cx="75" cy="75" r="1" fill="#64748b" opacity="0.2"/>
+                </pattern>
+              </defs>
+              <rect width="100%" height="100%" fill="url(#neural-grid)"/>
+              {/* Neural connections */}
+              <g stroke="#3b82f6" strokeWidth="1" opacity="0.1">
+                <line x1="100" y1="100" x2="300" y2="200"/>
+                <line x1="300" y1="200" x2="500" y2="150"/>
+                <line x1="500" y1="150" x2="700" y2="300"/>
+                <line x1="200" y1="400" x2="400" y2="350"/>
+                <line x1="400" y1="350" x2="600" y2="400"/>
+                <line x1="600" y1="400" x2="800" y2="500"/>
+              </g>
+            </svg>
+          </div>
+          {/* Floating Memory Nodes */}
+          <div className="absolute inset-0 overflow-hidden">
+            {Array.from({ length: 8 }).map((_, i) => (
+              <motion.div
+                key={i}
+                className="absolute w-4 h-4 border-2 border-purple-400/30 rounded-full"
+                style={{
+                  left: `${20 + (i * 10)}%`,
+                  top: `${30 + Math.sin(i) * 40}%`,
+                }}
+                animate={{
+                  scale: [1, 1.2, 1],
+                  opacity: [0.3, 0.7, 0.3],
+                }}
+                transition={{
+                  duration: 2 + Math.random(),
+                  repeat: Infinity,
+                  delay: i * 0.3,
+                }}
+              />
+            ))}
+          </div>
+          <div className="max-w-6xl mx-auto px-6 relative z-10">
+            <motion.div
+              className="text-center mb-16"
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              viewport={{ once: true }}
+            >
+              <h2 className="text-4xl lg:text-5xl font-bold text-white mb-6">
+                {t(
+                  'homepage.sharedmemory.title',
+                  'Agents Share Memory & Context'
+                )}
+              </h2>
+              <p className="text-xl text-slate-300 max-w-3xl mx-auto">
+                {t(
+                  'homepage.sharedmemory.subtitle',
+                  'The first AI platform where all agents in a conversation share the same memory and context'
+                )}
+              </p>
+            </motion.div>
+
+            <motion.div
+              className="max-w-4xl mx-auto"
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              viewport={{ once: true }}
+            >
+              <div className="bg-gradient-to-br from-purple-900/50 to-blue-900/50 p-10 rounded-2xl border border-purple-500/30">
+                <div className="grid md:grid-cols-3 gap-8 text-center">
+                  <div>
+                    <div className="text-3xl font-bold text-purple-400 mb-2">Agent Level</div>
+                    <p className="text-slate-300 text-sm">
+                      {t('homepage.sharedmemory.agent', 'Personal memories & personality')}
                     </p>
                   </div>
-                </motion.div>
-              ))}
-            </div>
+                  <div>
+                    <div className="text-3xl font-bold text-blue-400 mb-2">Chat Level</div>
+                    <p className="text-slate-300 text-sm">
+                      {t('homepage.sharedmemory.chat', 'Shared context & decisions')}
+                    </p>
+                  </div>
+                  <div>
+                    <div className="text-3xl font-bold text-cyan-400 mb-2">Global Level</div>
+                    <p className="text-slate-300 text-sm">
+                      {t('homepage.sharedmemory.global', 'Cross-chat insights')}
+                    </p>
+                  </div>
+                </div>
+                
+                <div className="mt-8 text-center">
+                  <div className="bg-green-500 text-white px-6 py-3 rounded-lg text-lg font-semibold inline-block">
+                    {t('homepage.sharedmemory.benefit', 'No More Repeating Context')}
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+        </section>
+
+        {/* Team Collaboration - Final Value Prop */}
+        <section className="py-20 bg-slate-800 relative overflow-hidden">
+          {/* Collaborative Network Background */}
+          <div className="absolute inset-0 opacity-8">
+            <svg className="w-full h-full" viewBox="0 0 1200 600" fill="none">
+              {/* Network nodes */}
+              <g>
+                <circle cx="200" cy="150" r="4" fill="#3b82f6" opacity="0.4"/>
+                <circle cx="400" cy="100" r="4" fill="#8b5cf6" opacity="0.4"/>
+                <circle cx="600" cy="200" r="4" fill="#10b981" opacity="0.4"/>
+                <circle cx="800" cy="120" r="4" fill="#f59e0b" opacity="0.4"/>
+                <circle cx="1000" cy="180" r="4" fill="#ef4444" opacity="0.4"/>
+                <circle cx="300" cy="300" r="4" fill="#06b6d4" opacity="0.4"/>
+                <circle cx="500" cy="350" r="4" fill="#84cc16" opacity="0.4"/>
+                <circle cx="700" cy="280" r="4" fill="#f97316" opacity="0.4"/>
+                <circle cx="900" cy="320" r="4" fill="#ec4899" opacity="0.4"/>
+              </g>
+              {/* Connecting lines */}
+              <g stroke="#64748b" strokeWidth="1" opacity="0.2">
+                <line x1="200" y1="150" x2="400" y2="100"/>
+                <line x1="400" y1="100" x2="600" y2="200"/>
+                <line x1="600" y1="200" x2="800" y2="120"/>
+                <line x1="300" y1="300" x2="500" y2="350"/>
+                <line x1="500" y1="350" x2="700" y2="280"/>
+                <line x1="200" y1="150" x2="300" y2="300"/>
+                <line x1="600" y1="200" x2="700" y2="280"/>
+                <line x1="800" y1="120" x2="900" y2="320"/>
+              </g>
+            </svg>
+          </div>
+          {/* Data Flow Animation */}
+          <div className="absolute inset-0 overflow-hidden">
+            {Array.from({ length: 6 }).map((_, i) => (
+              <motion.div
+                key={i}
+                className="absolute w-1 h-8 bg-gradient-to-b from-transparent via-blue-400/40 to-transparent"
+                style={{
+                  left: `${15 + (i * 15)}%`,
+                  top: `20%`,
+                }}
+                animate={{
+                  y: [0, 300, 0],
+                  opacity: [0, 1, 0],
+                }}
+                transition={{
+                  duration: 4,
+                  repeat: Infinity,
+                  delay: i * 0.8,
+                }}
+              />
+            ))}
+          </div>
+          <div className="max-w-6xl mx-auto px-6 relative z-10">
+            <motion.div
+              className="text-center mb-16"
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              viewport={{ once: true }}
+            >
+              <h2 className="text-4xl lg:text-5xl font-bold text-white mb-6">
+                {t(
+                  'homepage.teamwork.title',
+                  'Teams Beat Solo Experts'
+                )}
+              </h2>
+              <p className="text-xl text-slate-300 max-w-3xl mx-auto">
+                {t(
+                  'homepage.teamwork.subtitle',
+                  'Watch specialized AI agents debate, collaborate, and find better solutions together'
+                )}
+              </p>
+            </motion.div>
+
+            <motion.div
+              className="grid md:grid-cols-2 gap-12 items-center"
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              viewport={{ once: true }}
+            >
+              <div>
+                <h3 className="text-2xl font-bold text-white mb-6">
+                  {t('homepage.teamwork.process.title', 'How Teams Work')}
+                </h3>
+                <div className="space-y-4">
+                  <div className="flex items-start space-x-4">
+                    <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white font-bold text-sm">1</div>
+                    <div>
+                      <h4 className="text-white font-semibold">{t('homepage.teamwork.step1', 'Agents Debate')}</h4>
+                      <p className="text-slate-300 text-sm">{t('homepage.teamwork.step1desc', 'Different perspectives emerge')}</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start space-x-4">
+                    <div className="w-8 h-8 bg-purple-500 rounded-full flex items-center justify-center text-white font-bold text-sm">2</div>
+                    <div>
+                      <h4 className="text-white font-semibold">{t('homepage.teamwork.step2', 'Find Solutions')}</h4>
+                      <p className="text-slate-300 text-sm">{t('homepage.teamwork.step2desc', 'Combine expertise and insights')}</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start space-x-4">
+                    <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center text-white font-bold text-sm">3</div>
+                    <div>
+                      <h4 className="text-white font-semibold">{t('homepage.teamwork.step3', 'You Control')}</h4>
+                      <p className="text-slate-300 text-sm">{t('homepage.teamwork.step3desc', 'Guide or join the discussion')}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="text-center">
+                <div className="bg-gradient-to-br from-blue-900/50 to-purple-900/50 p-8 rounded-2xl border border-blue-500/30">
+                  <div className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400 mb-4">
+                    3x
+                  </div>
+                  <p className="text-lg text-white font-semibold mb-2">
+                    {t('homepage.teamwork.faster', 'Faster Solutions')}
+                  </p>
+                  <p className="text-slate-300 text-sm">
+                    {t('homepage.teamwork.fasterDesc', 'Multiple minds, better results')}
+                  </p>
+                  
+                  <div className="mt-6 pt-6 border-t border-slate-600">
+                    <div className="text-3xl font-bold text-green-400 mb-2">90%</div>
+                    <p className="text-slate-300 text-sm">
+                      {t('homepage.teamwork.accuracy', 'Higher accuracy rate')}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+
+            <motion.div
+              className="text-center mt-16"
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.4 }}
+              viewport={{ once: true }}
+            >
+              <Button
+                size="lg"
+                className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-bold px-8 py-4 rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300"
+                onClick={() =>
+                  document
+                    .getElementById('waitlist')
+                    ?.scrollIntoView({ behavior: 'smooth' })
+                }
+              >
+                {t('homepage.teamwork.cta', 'See Teams in Action')}
+                <ArrowRight className="w-5 h-5 ml-2" />
+              </Button>
+            </motion.div>
           </div>
         </section>
 

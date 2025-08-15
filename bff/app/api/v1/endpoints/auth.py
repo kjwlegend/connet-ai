@@ -17,6 +17,10 @@ from app.schemas.auth import (
     TokenVerifyRequest,
     UserResponse,
     PasswordResetRequest,
+    OAuthCallbackRequest,
+    OAuthLoginResponse,
+    OAuthUrlRequest,
+    OAuthUrlResponse,
 )
 from app.services.auth_service import AuthService, get_auth_service
 from app.services.supabase_auth_service import SupabaseAuthService
@@ -294,4 +298,104 @@ async def verify_email(
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Email verification failed"
+        )
+
+
+@router.get("/oauth/url", response_model=OAuthUrlResponse)
+async def get_oauth_url(
+    request: OAuthUrlRequest = Depends(),
+    supabase_auth_service: SupabaseAuthService = Depends(get_supabase_auth_service),
+) -> OAuthUrlResponse:
+    """Generate OAuth authorization URL for the specified provider."""
+    try:
+        # Validate provider
+        if request.provider not in ["google", "github"]:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Unsupported OAuth provider. Supported providers: google, github"
+            )
+        
+        # Generate OAuth URL
+        oauth_data = await supabase_auth_service.get_oauth_url(
+            provider=request.provider,
+            redirect_uri=request.redirect_uri,
+            state=request.state,
+        )
+        
+        logger.info(f"Generated OAuth URL for provider: {request.provider}")
+        
+        return OAuthUrlResponse(
+            url=oauth_data["url"],
+            state=oauth_data["state"]
+        )
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Failed to generate OAuth URL: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to generate OAuth URL"
+        )
+
+
+@router.post("/oauth/callback", response_model=OAuthLoginResponse)
+async def oauth_callback(
+    request: OAuthCallbackRequest,
+    supabase_auth_service: SupabaseAuthService = Depends(get_supabase_auth_service),
+    jwt_manager: JWTManager = Depends(get_jwt_manager),
+) -> OAuthLoginResponse:
+    """Handle OAuth callback and authenticate user."""
+    try:
+        # Validate provider
+        if request.provider not in ["google", "github"]:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Unsupported OAuth provider"
+            )
+        
+        # Exchange code for tokens and user data
+        user, auth_response, is_new_user = await supabase_auth_service.oauth_callback(
+            provider=request.provider,
+            code=request.code,
+            redirect_uri=request.redirect_uri,
+            state=request.state,
+        )
+        
+        if not user:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="OAuth authentication failed"
+            )
+        
+        # Generate our own JWT tokens for consistency with email/password flow
+        access_token = jwt_manager.create_access_token(
+            subject=user.id,
+            scopes=user.permissions or []
+        )
+        refresh_token = jwt_manager.create_refresh_token(subject=user.id)
+        
+        logger.info(f"OAuth authentication successful for user: {user.email} (provider: {request.provider})")
+        
+        return OAuthLoginResponse(
+            access_token=access_token,
+            refresh_token=refresh_token,
+            token_type="bearer",
+            expires_in=jwt_manager.access_token_expire_minutes * 60,
+            user=UserResponse.from_user(user),
+            is_new_user=is_new_user
+        )
+        
+    except HTTPException:
+        raise
+    except ValueError as e:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=str(e)
+        )
+    except Exception as e:
+        logger.error(f"OAuth callback failed: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="OAuth authentication failed"
         )

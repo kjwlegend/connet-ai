@@ -8,6 +8,7 @@ while maintaining local user data in PostgreSQL.
 import json
 import secrets
 import string
+import uuid
 from datetime import datetime
 from typing import Dict, Optional, Tuple
 
@@ -328,6 +329,158 @@ class SupabaseAuthService:
         except Exception as e:
             logger.error(f"Failed to get user from token: {e}")
             return None
+    
+    async def get_oauth_url(
+        self,
+        provider: str,
+        redirect_uri: str,
+        state: Optional[str] = None,
+    ) -> Dict[str, str]:
+        """
+        Generate OAuth authorization URL for the specified provider.
+        
+        Args:
+            provider: OAuth provider (google, github)
+            redirect_uri: Redirect URI for OAuth callback
+            state: Optional state parameter for security
+            
+        Returns:
+            Dictionary containing OAuth URL and state
+        """
+        try:
+            # Generate state if not provided
+            if not state:
+                state = str(uuid.uuid4())
+            
+            # Map provider names to Supabase provider names
+            provider_mapping = {
+                "google": "google",
+                "github": "github"
+            }
+            
+            supabase_provider = provider_mapping.get(provider)
+            if not supabase_provider:
+                raise ValueError(f"Unsupported OAuth provider: {provider}")
+            
+            # Generate OAuth URL using Supabase
+            auth_response = self.supabase.auth.sign_in_with_oauth({
+                "provider": supabase_provider,
+                "options": {
+                    "redirect_to": redirect_uri,
+                    "state": state,
+                }
+            })
+            
+            logger.info(f"Generated OAuth URL for provider: {provider}")
+            
+            return {
+                "url": auth_response.url,
+                "state": state
+            }
+            
+        except Exception as e:
+            logger.error(f"Failed to generate OAuth URL for {provider}: {e}")
+            raise
+    
+    async def oauth_callback(
+        self,
+        provider: str,
+        code: str,
+        redirect_uri: str,
+        state: Optional[str] = None,
+    ) -> Tuple[User, Dict, bool]:
+        """
+        Handle OAuth callback and authenticate user.
+        
+        Args:
+            provider: OAuth provider (google, github)
+            code: OAuth authorization code
+            redirect_uri: Redirect URI used in OAuth flow
+            state: State parameter for security validation
+            
+        Returns:
+            Tuple of (local_user, supabase_auth_response, is_new_user)
+        """
+        try:
+            # Exchange code for session using Supabase
+            auth_response = self.supabase.auth.exchange_code_for_session({
+                "auth_code": code
+            })
+            
+            if auth_response.user is None:
+                raise ValueError("OAuth authentication failed")
+            
+            supabase_user = auth_response.user
+            
+            # Check if user already exists locally
+            existing_user = await self.user_repository.get_by_id(supabase_user.id)
+            is_new_user = existing_user is None
+            
+            # If new user, create local user record
+            if is_new_user:
+                # Extract user information from OAuth provider
+                user_metadata = supabase_user.user_metadata or {}
+                
+                # Generate unique invitation code for new user
+                invitation_code = await self._ensure_unique_invitation_code()
+                
+                # Determine username from OAuth data
+                username = None
+                if provider == "github":
+                    username = user_metadata.get("user_name") or user_metadata.get("preferred_username")
+                elif provider == "google":
+                    # Google doesn't provide username, derive from email
+                    email_prefix = supabase_user.email.split("@")[0] if supabase_user.email else None
+                    if email_prefix:
+                        # Check if email prefix is available as username
+                        existing_username = await self.user_repository.get_by_username(email_prefix)
+                        if not existing_username:
+                            username = email_prefix
+                
+                # Create local user
+                user_data = UserCreate(
+                    id=supabase_user.id,
+                    email=supabase_user.email,
+                    full_name=user_metadata.get("full_name") or user_metadata.get("name", ""),
+                    username=username,
+                    is_active=True,  # OAuth users are immediately active
+                    auth_provider=f"oauth_{provider}",
+                    external_id=supabase_user.id,
+                    invitation_code=invitation_code,
+                    registration_source="oauth",
+                    registration_channel=f"oauth_{provider}",
+                    metadata={
+                        **user_metadata,
+                        "oauth_provider": provider,
+                        "avatar_url": user_metadata.get("avatar_url"),
+                    },
+                )
+                
+                local_user = await self.user_repository.create(user_data)
+                
+                logger.info(f"New OAuth user created: {supabase_user.email} (provider: {provider})")
+            else:
+                # Update existing user
+                local_user = await self._sync_user_from_supabase(supabase_user)
+                
+                # Update last login
+                await self.user_repository.update_last_login(local_user.id)
+                
+                logger.info(f"Existing OAuth user authenticated: {supabase_user.email} (provider: {provider})")
+            
+            return local_user, {
+                "user": supabase_user,
+                "session": auth_response.session
+            }, is_new_user
+            
+        except AuthError as e:
+            logger.error(f"Supabase OAuth error: {e}")
+            raise ValueError(f"OAuth authentication failed: {e.message}")
+        except ValueError:
+            raise
+        except Exception as e:
+            logger.error(f"OAuth callback failed for {provider}: {e}")
+            raise
     
     async def _sync_user_from_supabase(self, supabase_user) -> User:
         """Sync user data from Supabase to local database."""

@@ -23,12 +23,30 @@ cd bff
 python -m venv venv
 source venv/bin/activate  # On Windows: venv\Scripts\activate
 pip install -r requirements.txt
-python -m uvicorn app.main:app --reload  # Start development server (localhost:8000)
+python -m uvicorn app.main:app --reload --host 0.0.0.0 --port 8000  # Start development server
+
+# Alternative development commands
+make dev           # Start with Docker Compose
+make setup         # Setup local environment
+make migrate       # Run database migrations
+make test          # Run tests
+make lint          # Run code quality checks
 ```
 
 ### Testing
-- Frontend uses Jest and React Testing Library (setup needs to be verified)
-- Backend uses Pytest (BFF service implementation in progress)
+```bash
+# Frontend testing
+cd frontend
+pnpm test          # Run Jest tests
+pnpm test:watch    # Run tests in watch mode
+
+# Backend testing  
+cd bff
+pytest             # Run all tests
+pytest tests/unit  # Run unit tests only
+pytest -v          # Verbose output
+make test          # Run tests via Makefile
+```
 
 ## Architecture Overview
 
@@ -39,7 +57,8 @@ python -m uvicorn app.main:app --reload  # Start development server (localhost:8
 - **Authentication**: NextAuth.js (planned integration with FastAPI backend)
 - **Internationalization**: next-international (English/Chinese support)
 - **Theme System**: next-themes with class-based dark mode
-- **Backend**: FastAPI BFF service (in development) + Supabase integration, LangChain/LangGraph for AI
+- **Backend**: FastAPI BFF service + Supabase integration, LangChain/LangGraph for AI
+- **Python Package Management**: pip with requirements.txt and pyproject.toml
 
 ### Frontend Architecture
 
@@ -65,16 +84,18 @@ app/
 
 **Component Organization**:
 - `components/ui/`: shadcn/ui components (Avatar, Badge, Button, Card, etc.)
-- `components/layout/`: Layout components (ThemeProvider, etc.)
-- `components/chat/`: Chat-specific components
-  - `ChatRightPanel/`: Right panel system with participants, files, and conversation memory
-  - `ChatInterface/`: Main chat layout with right panel integration
-  - `ChatHeader/`: Header with right panel toggle functionality
-  - `MessageBubble/`, `ChatInput/`: Core chat components
-- `components/contacts/`: Contact/agent management components
-- `lib/`: Utilities and configurations
-- `store/`: Zustand state management
+- `components/layout/`: Layout components (AppLayout, Sidebar, MiddlePanel, ContentArea)
+- `components/features/`: Feature-specific components organized by domain
+  - `chat/`: Chat interface, message bubbles, conversation management
+  - `contacts/`: Contact/agent management, dialogs, forms
+  - `files/`: File management, upload, preview components
+  - `plugins/`: Plugin marketplace, configuration, cards
+  - `settings/`: Settings pages (Account, LLM, Membership, etc.)
+  - `timeline/`: Social feed, timeline posts
+- `lib/`: Utilities, configurations, and service integrations
+- `store/`: Zustand state management with slices pattern
 - `types/`: TypeScript type definitions
+- `services/`: API clients and data fetching logic
 
 ### Key Features
 1. **AI Agent Social Network**: Treat AI agents as "virtual contacts" with profiles, capabilities, and personalities
@@ -153,14 +174,15 @@ app/
 
 ### ✅ Completed (BFF Service)
 - **Core Architecture**: FastAPI application with DDD structure
-- **Database Models**: 12 comprehensive SQLModel classes supporting human-AI hybrid community:
-  - User system (User, UserInvitation, UserRegistrationSource)
+- **Database Models**: 17+ comprehensive SQLModel classes supporting human-AI hybrid community:
+  - User system (User, UserInvitation, UserRegistrationSource, UserLLMSettings, UserPromptLibrary, UserSubscription)
   - AI agent system (Agent, AgentKnowledgeBase)  
-  - Conversation system (Conversation, ConversationParticipant, ConversationTopic, Message)
+  - Conversation system (Conversation, ConversationParticipant, ConversationTopic, ConversationUserSetting, Message)
   - File system (File, FilePermission)
   - Social system (Contact, TimelinePost, TimelineComment, TimelineLike)
-- **Infrastructure**: Database connection, caching (Redis), security (JWT), external service integration
-- **API Framework**: Basic FastAPI setup with authentication and user management endpoints
+- **Infrastructure**: Database connection, caching (Redis), security (JWT), Supabase integration
+- **API Framework**: Complete FastAPI setup with 12 endpoint modules including AI services
+- **AI Services**: Agent management, chat, documents, tools endpoints with LangChain integration
 
 ### 🚧 In Progress
 - **Database Migrations**: Alembic setup and initial schema deployment
@@ -195,5 +217,6 @@ app/
 - Focus on clean, maintainable code following established patterns
 - The project is in early development with many components being newly added
 - Pay attention to existing coding preferences and maintain consistency
-- always remember to leverage on i18n for globalization
-- "We use UV for python package management"
+- Always remember to leverage i18n for globalization (English/Chinese)
+- Backend uses pip with requirements.txt and pyproject.toml for dependency management
+- Frontend uses pnpm as the package manager (not npm)

@@ -250,7 +250,7 @@
       "successMessage": "We've sent a password reset link to {email}. Please check your email and click the link to reset your password.",
       "didntReceive": "Didn't receive the email?",
       "checkSpam": "Check your spam folder",
-      "correctEmail": "Make sure you entered the correct email address", 
+      "correctEmail": "Make sure you entered the correct email address",
       "waitMinutes": "Wait a few minutes and try again",
       "sendAnother": "Send Another Email"
     },
@@ -259,7 +259,7 @@
       "subtitle": "Join our AI collaboration platform",
       "nameLabel": "Nickname",
       "namePlaceholder": "Enter your nickname",
-      "nicknameLabel": "Nickname", 
+      "nicknameLabel": "Nickname",
       "nicknamePlaceholder": "Enter your nickname (optional)",
       "usernameLabel": "Username",
       "usernamePlaceholder": "Enter a username",
@@ -622,6 +622,126 @@
       "join_waitlist": "Get Early Access",
       "joined": "Welcome!",
       "success_message": "You're on the list! We'll be in touch soon."
+    },
+    "singleagent": {
+      "title": "Each Agent is a Virtual Person, Not Just Code",
+      "subtitle": "Experience AI agents that live, breathe, and connect like real people in your digital world",
+      "humanlike": {
+        "title": "Truly Human-Like",
+        "proactive": "Initiates conversations proactively",
+        "social": "Posts on timeline, likes your content",
+        "personality": "Develops unique personality over time",
+        "relationships": "Builds genuine relationships and memories"
+      },
+      "capabilities": {
+        "title": "Platform-Level Capabilities",
+        "tools": "Flexible tools & knowledge base integration",
+        "mcp": "MCP protocol for universal platform connectivity",
+        "features": "Replaces 90% of existing AI platform features",
+        "context": "Infinite context with smart memory management"
+      },
+      "promise": "No more switching between platforms. No more lifeless chatbots. Just natural, intelligent relationships."
+    },
+    "memory": {
+      "title": "Revolutionary Memory & Collaboration System",
+      "subtitle": "The first AI platform with true memory layers and intelligent collaboration orchestration",
+      "layers": {
+        "title": "Hierarchical Memory Layers",
+        "agent": "Agent-Level Memory",
+        "agentDesc": "Each agent maintains their unique personality, preferences, and relationship history with you",
+        "conversation": "Conversation-Level Memory",
+        "conversationDesc": "Shared context and decisions within each conversation, accessible to all participants",
+        "global": "Global Memory",
+        "globalDesc": "Cross-conversation insights and patterns that improve your entire AI ecosystem"
+      },
+      "collaboration": {
+        "title": "Smart Collaboration Engine",
+        "dynamic": "Dynamic role assignment based on expertise and context",
+        "conflict": "Intelligent conflict resolution and consensus building",
+        "learning": "Collective learning from multi-agent interactions",
+        "handoff": "Seamless task handoffs between specialized agents",
+        "result": "Result: 3x faster problem-solving with 90% accuracy improvement"
+      }
+    },
+    "virtualpeople": {
+      "title": "Virtual People, Not Chatbots",
+      "subtitle": "Experience AI agents with unique personalities, proactive behavior, and genuine relationship-building capabilities",
+      "description": "Each agent is a virtual person with their own personality, memories, and social behaviors - not just a text interface.",
+      "proactive": "Starts Conversations",
+      "proactiveDesc": "They reach out first, just like real friends do",
+      "social": "Social Media Active",
+      "socialDesc": "Posts updates, likes your content, shares thoughts",
+      "memory": "Remembers Everything",
+      "memoryDesc": "Builds on every interaction and grows with you"
+    },
+    "platform": {
+      "title": "One Platform, All AI Features",
+      "subtitle": "Replace 90% of existing AI platforms with one comprehensive solution",
+      "description": "Stop juggling multiple AI tools. Our agents integrate seamlessly across all your workflows and platforms.",
+      "claim": "Replaces 90% of AI Platforms",
+      "features": {
+        "title": "Built-in Capabilities",
+        "tools": "Advanced tool integration",
+        "knowledge": "Knowledge base management",
+        "mcp": "Universal platform connectivity",
+        "memory": "Infinite context memory"
+      },
+      "replacement": "Platform Replacement Rate"
+    },
+    "sharedmemory": {
+      "title": "Agents Share Memory & Context",
+      "subtitle": "Revolutionary 3-layer memory system enables true collaboration",
+      "description": "Agent-level, conversation-level, and global memory layers ensure perfect context sharing and intelligent collaboration.",
+      "agent": "Personal memories & personality",
+      "chat": "Shared context & decisions",
+      "global": "Cross-chat insights",
+      "benefit": "No More Repeating Context"
+    },
+    "teamwork": {
+      "title": "Teams Beat Solo Experts",
+      "subtitle": "Multi-agent collaboration delivers superior results through specialized expertise",
+      "description": "Specialized agents working together solve complex problems faster and more accurately than any single super AI.",
+      "process": {
+        "title": "How Teams Work"
+      },
+      "step1": "Agents Debate",
+      "step1desc": "Different perspectives emerge",
+      "step2": "Find Solutions",
+      "step2desc": "Combine expertise and insights",
+      "step3": "You Control",
+      "step3desc": "Guide or join the discussion",
+      "faster": "Faster Solutions",
+      "fasterDesc": "Multiple minds, better results",
+      "accuracy": "Higher accuracy rate",
+      "cta": "See Teams in Action"
+    },
+    "multiagent": {
+      "title": "Why Multi-Agent Collaboration Beats Super AI",
+      "subtitle": "Experience the power of specialized AI teams working together, not against each other",
+      "modular": {
+        "title": "Modular & Distributed",
+        "description": "Easily add specialized expert agents (like legal compliance) without modifying core systems. Scale with confidence."
+      },
+      "social": {
+        "title": "Social Interaction",
+        "description": "Tasks are completed through negotiation, persuasion, and collaboration - just like real-world problem solving."
+      },
+      "emergent": {
+        "title": "Emergent Solutions",
+        "description": "Constructive conflicts between agents expose blind spots and spark unexpected, robust solutions."
+      },
+      "transparency": {
+        "title": "Total Transparency",
+        "description": "Watch expert-level discussions unfold. See each agent's reasoning, arguments, and decisions - like observing a boardroom meeting.",
+        "benefit": "No more black boxes. Full accountability."
+      },
+      "control": {
+        "title": "You're in Control",
+        "description": "Jump into conversations, pause agents, guide discussions, or take the lead. Seamlessly blend human wisdom with AI capabilities.",
+        "benefit": "Moderator, manager, or collaborator - you choose your role."
+      },
+      "cta_text": "This isn't another \"one-click solution\" tool. It's a transparent, controllable, and scalable AI collaboration platform for professionals who value process transparency and deep customization.",
+      "cta_button": "Experience the Difference"
     },
     "waitlist": {
       "title": "Join the Future of AI Interaction",

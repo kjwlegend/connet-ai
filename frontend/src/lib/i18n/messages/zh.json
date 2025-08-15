@@ -243,7 +243,7 @@
       "subtitle": "加入我们的 AI 协作平台",
       "nameLabel": "昵称",
       "namePlaceholder": "请输入您的昵称",
-      "nicknameLabel": "昵称", 
+      "nicknameLabel": "昵称",
       "nicknamePlaceholder": "请输入您的昵称（可选）",
       "usernameLabel": "用户名",
       "usernamePlaceholder": "请输入用户名",
@@ -614,6 +614,126 @@
       "feature2": "建立自然关系",
       "feature3": "协作完成复杂任务",
       "cta": "加入未来"
+    },
+    "singleagent": {
+      "title": "每个智能体都是虚拟的人，而非代码",
+      "subtitle": "体验在您的数字世界中像真人一样生活、呼吸和连接的AI智能体",
+      "humanlike": {
+        "title": "真正拟人化",
+        "proactive": "主动发起对话",
+        "social": "在朋友圈发帖，为您的内容点赞",
+        "personality": "随时间发展独特个性",
+        "relationships": "建立真诚的关系和记忆"
+      },
+      "capabilities": {
+        "title": "平台级能力",
+        "tools": "灵活的工具和知识库集成",
+        "mcp": "MCP协议实现通用平台连接",
+        "features": "替代现有AI平台90%的功能",
+        "context": "智能记忆管理的无限上下文"
+      },
+      "promise": "无需在平台间切换。告别无生命的聊天机器人。只有自然、智能的关系。"
+    },
+    "memory": {
+      "title": "革命性记忆与协作系统",
+      "subtitle": "首个具备真正记忆分层和智能协作编排的AI平台",
+      "layers": {
+        "title": "分层记忆架构",
+        "agent": "智能体级记忆",
+        "agentDesc": "每个智能体维护其独特的个性、偏好和与您的关系历史",
+        "conversation": "会话级记忆",
+        "conversationDesc": "会话内的共享上下文和决策，所有参与者都可访问",
+        "global": "全局记忆",
+        "globalDesc": "跨会话的洞察和模式，改善您的整个AI生态系统"
+      },
+      "collaboration": {
+        "title": "智能协作引擎",
+        "dynamic": "基于专业知识和上下文的动态角色分配",
+        "conflict": "智能冲突解决和共识建立",
+        "learning": "多智能体交互的集体学习",
+        "handoff": "专业智能体间的无缝任务交接",
+        "result": "结果：问题解决速度提升3倍，准确率提升90%"
+      }
+    },
+    "virtualpeople": {
+      "title": "虚拟人，不是聊天机器人",
+      "subtitle": "体验具有独特个性、主动行为和真正关系建设能力的AI智能体",
+      "description": "每个智能体都是具有独特个性、记忆和社交行为的虚拟人——不仅仅是文本界面。",
+      "proactive": "主动发起对话",
+      "proactiveDesc": "他们会主动联系您，就像真正的朋友一样",
+      "social": "社交媒体活跃",
+      "socialDesc": "发布动态、为您的内容点赞、分享想法",
+      "memory": "记住一切",
+      "memoryDesc": "在每次互动中积累经验，与您一起成长"
+    },
+    "platform": {
+      "title": "一个平台，所有AI功能",
+      "subtitle": "用一个综合解决方案替代90%的现有AI平台",
+      "description": "停止在多个AI工具间切换。我们的智能体无缝集成到您的所有工作流和平台中。",
+      "claim": "替代90%的AI平台",
+      "features": {
+        "title": "内置功能",
+        "tools": "高级工具集成",
+        "knowledge": "知识库管理",
+        "mcp": "通用平台连接",
+        "memory": "无限上下文记忆"
+      },
+      "replacement": "平台替代率"
+    },
+    "sharedmemory": {
+      "title": "智能体共享记忆与上下文",
+      "subtitle": "革命性的3层记忆系统实现真正协作",
+      "description": "智能体级、会话级和全局记忆层确保完美的上下文共享和智能协作。",
+      "agent": "个人记忆与个性",
+      "chat": "共享上下文与决策",
+      "global": "跨对话洞察",
+      "benefit": "不再重复上下文"
+    },
+    "teamwork": {
+      "title": "团队胜过单打独斗的专家",
+      "subtitle": "多智能体协作通过专业知识提供卓越结果",
+      "description": "专业智能体协同工作，比任何单一超级AI更快、更准确地解决复杂问题。",
+      "process": {
+        "title": "团队工作方式"
+      },
+      "step1": "智能体辩论",
+      "step1desc": "不同观点涌现",
+      "step2": "寻找解决方案",
+      "step2desc": "结合专业知识和洞察",
+      "step3": "您来控制",
+      "step3desc": "引导或加入讨论",
+      "faster": "更快解决方案",
+      "fasterDesc": "多重思维，更好结果",
+      "accuracy": "更高准确率",
+      "cta": "查看团队实战"
+    },
+    "multiagent": {
+      "title": "为什么多智能体协作胜过超级AI",
+      "subtitle": "体验专业AI团队协同工作的力量，而非相互对抗",
+      "modular": {
+        "title": "模块化与分布式",
+        "description": "轻松添加专业专家智能体（如法律合规），无需修改核心系统。自信地扩展。"
+      },
+      "social": {
+        "title": "社交化交互",
+        "description": "任务通过协商、说服和协作完成——就像现实世界的问题解决方式。"
+      },
+      "emergent": {
+        "title": "涌现式解决方案",
+        "description": "智能体间的建设性冲突暴露盲点，激发意想不到的强健解决方案。"
+      },
+      "transparency": {
+        "title": "完全透明",
+        "description": "观看专家级讨论展开。看到每个智能体的推理、论据和决策——就像观察董事会会议。",
+        "benefit": "不再有黑盒。完全可追溯。"
+      },
+      "control": {
+        "title": "您掌控一切",
+        "description": "跳入对话、暂停智能体、引导讨论或担任主导。无缝融合人类智慧与AI能力。",
+        "benefit": "主持人、管理者或协作者——您选择角色。"
+      },
+      "cta_text": "这不是另一个\"一键解决\"工具。这是一个透明、可控、可扩展的AI协作平台，专为重视过程透明度和深度定制的专业人士打造。",
+      "cta_button": "体验与众不同"
     },
     "cta": {
       "title": "准备好连接点了吗？",

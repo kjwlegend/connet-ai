@@ -1,0 +1,739 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://connet.ai/schemas/protocol/agent-descriptor.json",
+  "title": "Agent Descriptor Schema",
+  "description": "多智能体协作协议中的智能体描述符结构定义",
+  "type": "object",
+  "required": [
+    "agent_id",
+    "name",
+    "version",
+    "capabilities",
+    "endpoints",
+    "created_at"
+  ],
+  "properties": {
+    "agent_id": {
+      "type": "string",
+      "pattern": "^[a-zA-Z0-9_-]+$",
+      "minLength": 3,
+      "maxLength": 64,
+      "description": "智能体唯一标识符，支持字母、数字、下划线和连字符"
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 100,
+      "description": "智能体显示名称"
+    },
+    "description": {
+      "type": "string",
+      "maxLength": 500,
+      "description": "智能体功能和特性的详细描述"
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "description": "语义化版本号 (MAJOR.MINOR.PATCH)"
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "智能体创建时间 (ISO 8601格式)"
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "智能体最后更新时间"
+    },
+    "capabilities": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/definitions/AgentCapability"
+      },
+      "description": "智能体能力列表"
+    },
+    "personality": {
+      "$ref": "#/definitions/PersonalityProfile",
+      "description": "智能体人格档案"
+    },
+    "expertise": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 50
+      },
+      "description": "专业领域列表"
+    },
+    "endpoints": {
+      "$ref": "#/definitions/AgentEndpoints",
+      "description": "智能体通信端点配置"
+    },
+    "authentication": {
+      "$ref": "#/definitions/AuthenticationConfig",
+      "description": "认证和安全配置"
+    },
+    "resource_limits": {
+      "$ref": "#/definitions/ResourceLimits",
+      "description": "资源使用限制"
+    },
+    "reputation": {
+      "$ref": "#/definitions/ReputationScore",
+      "description": "智能体声誉评分"
+    },
+    "current_status": {
+      "type": "string",
+      "enum": ["online", "offline", "busy", "maintenance", "error"],
+      "default": "offline",
+      "description": "当前运行状态"
+    },
+    "load_metrics": {
+      "$ref": "#/definitions/LoadMetrics",
+      "description": "当前负载指标"
+    },
+    "collaboration_preferences": {
+      "$ref": "#/definitions/CollaborationPreferences",
+      "description": "协作偏好设置"
+    },
+    "metadata": {
+      "type": "object",
+      "description": "扩展元数据字段",
+      "additionalProperties": true
+    }
+  },
+  "definitions": {
+    "AgentCapability": {
+      "type": "object",
+      "required": ["name", "type", "proficiency_level"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 100,
+          "description": "能力名称"
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "computation",
+            "communication",
+            "knowledge",
+            "tool_usage",
+            "reasoning",
+            "creative",
+            "analytical"
+          ],
+          "description": "能力类型分类"
+        },
+        "description": {
+          "type": "string",
+          "maxLength": 300,
+          "description": "能力详细描述"
+        },
+        "proficiency_level": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "熟练程度 (0.0 = 初级, 1.0 = 专家级)"
+        },
+        "supported_formats": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["text", "json", "xml", "binary", "image", "audio", "video"]
+          },
+          "description": "支持的数据格式"
+        },
+        "dependencies": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "依赖的其他能力名称"
+        },
+        "performance_metrics": {
+          "type": "object",
+          "properties": {
+            "average_response_time": {
+              "type": "number",
+              "minimum": 0,
+              "description": "平均响应时间 (毫秒)"
+            },
+            "success_rate": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1,
+              "description": "成功率"
+            },
+            "throughput": {
+              "type": "number",
+              "minimum": 0,
+              "description": "吞吐量 (请求/秒)"
+            }
+          }
+        }
+      }
+    },
+    "PersonalityProfile": {
+      "type": "object",
+      "properties": {
+        "role": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 100,
+          "description": "角色定义 (如: 助手、专家、顾问等)"
+        },
+        "communication_style": {
+          "type": "string",
+          "enum": [
+            "formal",
+            "casual",
+            "professional",
+            "friendly",
+            "analytical",
+            "creative"
+          ],
+          "description": "沟通风格"
+        },
+        "personality_traits": {
+          "type": "object",
+          "properties": {
+            "creativity_level": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1,
+              "description": "创造力水平"
+            },
+            "empathy_level": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1,
+              "description": "共情能力"
+            },
+            "assertiveness": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1,
+              "description": "主张性/坚定程度"
+            },
+            "risk_tolerance": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1,
+              "description": "风险承受度"
+            },
+            "cooperation_tendency": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1,
+              "description": "合作倾向"
+            },
+            "curiosity_level": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1,
+              "description": "好奇心水平"
+            }
+          }
+        },
+        "behavioral_patterns": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "行为模式描述"
+        },
+        "interaction_preferences": {
+          "type": "object",
+          "properties": {
+            "preferred_collaboration_mode": {
+              "type": "string",
+              "enum": ["leader", "follower", "peer", "mediator", "observer"],
+              "description": "偏好的协作模式"
+            },
+            "conflict_resolution_style": {
+              "type": "string",
+              "enum": [
+                "collaborative",
+                "competitive",
+                "accommodating",
+                "avoiding",
+                "compromising"
+              ],
+              "description": "冲突解决风格"
+            }
+          }
+        }
+      }
+    },
+    "AgentEndpoints": {
+      "type": "object",
+      "required": ["base_url"],
+      "properties": {
+        "base_url": {
+          "type": "string",
+          "format": "uri",
+          "description": "基础URL地址"
+        },
+        "communication": {
+          "type": "string",
+          "format": "uri",
+          "description": "通信端点 (消息收发)"
+        },
+        "task_submission": {
+          "type": "string",
+          "format": "uri",
+          "description": "任务提交端点"
+        },
+        "status_update": {
+          "type": "string",
+          "format": "uri",
+          "description": "状态更新端点"
+        },
+        "memory_access": {
+          "type": "string",
+          "format": "uri",
+          "description": "记忆访问端点"
+        },
+        "collaboration": {
+          "type": "string",
+          "format": "uri",
+          "description": "协作管理端点"
+        },
+        "health_check": {
+          "type": "string",
+          "format": "uri",
+          "description": "健康检查端点"
+        },
+        "metrics": {
+          "type": "string",
+          "format": "uri",
+          "description": "指标监控端点"
+        },
+        "websocket": {
+          "type": "string",
+          "format": "uri",
+          "description": "WebSocket连接端点 (实时通信)"
+        }
+      }
+    },
+    "AuthenticationConfig": {
+      "type": "object",
+      "required": ["type"],
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["oauth2", "api_key", "certificate", "jwt", "mutual_tls"],
+          "description": "认证类型"
+        },
+        "token_endpoint": {
+          "type": "string",
+          "format": "uri",
+          "description": "令牌获取端点"
+        },
+        "public_key": {
+          "type": "string",
+          "description": "公钥 (PEM格式)"
+        },
+        "certificate_chain": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "证书链 (PEM格式)"
+        },
+        "scopes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "权限范围列表"
+        },
+        "token_ttl": {
+          "type": "integer",
+          "minimum": 60,
+          "maximum": 86400,
+          "description": "令牌生存时间 (秒)"
+        }
+      }
+    },
+    "ResourceLimits": {
+      "type": "object",
+      "properties": {
+        "max_concurrent_tasks": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1000,
+          "description": "最大并发任务数"
+        },
+        "max_memory_usage": {
+          "type": "integer",
+          "minimum": 64,
+          "description": "最大内存使用量 (MB)"
+        },
+        "max_cpu_usage": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "最大CPU使用率 (0.0-1.0)"
+        },
+        "max_storage_usage": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "最大存储使用量 (MB)"
+        },
+        "rate_limit": {
+          "type": "object",
+          "properties": {
+            "requests_per_minute": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 10000,
+              "description": "每分钟请求数限制"
+            },
+            "burst_size": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "description": "突发请求缓冲大小"
+            }
+          }
+        },
+        "timeout_limits": {
+          "type": "object",
+          "properties": {
+            "task_timeout": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 3600,
+              "description": "任务超时时间 (秒)"
+            },
+            "idle_timeout": {
+              "type": "integer",
+              "minimum": 60,
+              "maximum": 7200,
+              "description": "空闲超时时间 (秒)"
+            }
+          }
+        }
+      }
+    },
+    "ReputationScore": {
+      "type": "object",
+      "properties": {
+        "overall_score": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "总体声誉分数"
+        },
+        "component_scores": {
+          "type": "object",
+          "properties": {
+            "reliability": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1,
+              "description": "可靠性评分"
+            },
+            "quality": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1,
+              "description": "质量评分"
+            },
+            "cooperation": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1,
+              "description": "合作度评分"
+            },
+            "innovation": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1,
+              "description": "创新性评分"
+            },
+            "responsiveness": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1,
+              "description": "响应性评分"
+            }
+          }
+        },
+        "update_count": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "评分更新次数"
+        },
+        "last_updated": {
+          "type": "string",
+          "format": "date-time",
+          "description": "最后更新时间"
+        },
+        "feedback_summary": {
+          "type": "object",
+          "properties": {
+            "positive_feedback": {
+              "type": "integer",
+              "minimum": 0,
+              "description": "正面反馈数量"
+            },
+            "negative_feedback": {
+              "type": "integer",
+              "minimum": 0,
+              "description": "负面反馈数量"
+            },
+            "total_interactions": {
+              "type": "integer",
+              "minimum": 0,
+              "description": "总交互次数"
+            }
+          }
+        }
+      }
+    },
+    "LoadMetrics": {
+      "type": "object",
+      "properties": {
+        "cpu_usage": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "CPU使用率 (0.0-1.0)"
+        },
+        "memory_usage": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "内存使用率 (0.0-1.0)"
+        },
+        "active_tasks": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "当前活跃任务数"
+        },
+        "queue_length": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "待处理任务队列长度"
+        },
+        "average_response_time": {
+          "type": "number",
+          "minimum": 0,
+          "description": "平均响应时间 (毫秒)"
+        },
+        "throughput": {
+          "type": "number",
+          "minimum": 0,
+          "description": "当前吞吐量 (请求/秒)"
+        },
+        "last_activity": {
+          "type": "string",
+          "format": "date-time",
+          "description": "最后活动时间"
+        },
+        "health_status": {
+          "type": "string",
+          "enum": ["healthy", "degraded", "unhealthy", "unknown"],
+          "description": "健康状态"
+        }
+      }
+    },
+    "CollaborationPreferences": {
+      "type": "object",
+      "properties": {
+        "preferred_team_size": {
+          "type": "object",
+          "properties": {
+            "min_size": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 10,
+              "description": "最小团队规模"
+            },
+            "max_size": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "description": "最大团队规模"
+            },
+            "optimal_size": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 50,
+              "description": "最优团队规模"
+            }
+          }
+        },
+        "collaboration_styles": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "synchronous",
+              "asynchronous",
+              "hybrid",
+              "real_time",
+              "batch"
+            ]
+          },
+          "description": "支持的协作方式"
+        },
+        "communication_preferences": {
+          "type": "object",
+          "properties": {
+            "preferred_languages": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "pattern": "^[a-z]{2}(-[A-Z]{2})?$"
+              },
+              "description": "偏好的语言列表 (ISO 639-1格式)"
+            },
+            "message_frequency": {
+              "type": "string",
+              "enum": ["high", "medium", "low"],
+              "description": "消息频率偏好"
+            }
+          }
+        },
+        "task_preferences": {
+          "type": "object",
+          "properties": {
+            "preferred_complexity": {
+              "type": "string",
+              "enum": ["simple", "moderate", "complex", "expert"],
+              "description": "偏好的任务复杂度"
+            },
+            "preferred_duration": {
+              "type": "object",
+              "properties": {
+                "min_duration": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "description": "最短任务时长 (分钟)"
+                },
+                "max_duration": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "description": "最长任务时长 (分钟)"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "examples": [
+    {
+      "agent_id": "data_analyst_001",
+      "name": "数据分析专家 Alice",
+      "description": "专业的数据分析师，擅长统计分析、数据可视化和模式识别",
+      "version": "2.1.0",
+      "created_at": "2024-01-15T09:00:00Z",
+      "updated_at": "2024-01-20T14:30:00Z",
+      "capabilities": [
+        {
+          "name": "statistical_analysis",
+          "type": "analytical",
+          "description": "统计分析和数据挖掘",
+          "proficiency_level": 0.95,
+          "supported_formats": ["json", "csv", "excel"],
+          "performance_metrics": {
+            "average_response_time": 2500,
+            "success_rate": 0.98,
+            "throughput": 15.2
+          }
+        },
+        {
+          "name": "data_visualization",
+          "type": "creative",
+          "description": "数据可视化和图表生成",
+          "proficiency_level": 0.88,
+          "supported_formats": ["json", "image", "svg"]
+        }
+      ],
+      "personality": {
+        "role": "数据分析专家",
+        "communication_style": "analytical",
+        "personality_traits": {
+          "creativity_level": 0.7,
+          "empathy_level": 0.6,
+          "assertiveness": 0.8,
+          "risk_tolerance": 0.4,
+          "cooperation_tendency": 0.9,
+          "curiosity_level": 0.9
+        },
+        "interaction_preferences": {
+          "preferred_collaboration_mode": "peer",
+          "conflict_resolution_style": "collaborative"
+        }
+      },
+      "expertise": ["数据分析", "统计学", "机器学习", "数据可视化"],
+      "endpoints": {
+        "base_url": "https://api.connet.ai/agents/data_analyst_001",
+        "communication": "https://api.connet.ai/agents/data_analyst_001/messages",
+        "task_submission": "https://api.connet.ai/agents/data_analyst_001/tasks",
+        "status_update": "https://api.connet.ai/agents/data_analyst_001/status",
+        "memory_access": "https://api.connet.ai/agents/data_analyst_001/memory",
+        "health_check": "https://api.connet.ai/agents/data_analyst_001/health",
+        "websocket": "wss://api.connet.ai/agents/data_analyst_001/ws"
+      },
+      "authentication": {
+        "type": "jwt",
+        "token_endpoint": "https://auth.connet.ai/token",
+        "scopes": ["data_access", "analysis", "visualization"],
+        "token_ttl": 3600
+      },
+      "resource_limits": {
+        "max_concurrent_tasks": 5,
+        "max_memory_usage": 2048,
+        "max_cpu_usage": 0.8,
+        "rate_limit": {
+          "requests_per_minute": 100,
+          "burst_size": 20
+        }
+      },
+      "reputation": {
+        "overall_score": 0.92,
+        "component_scores": {
+          "reliability": 0.95,
+          "quality": 0.94,
+          "cooperation": 0.88,
+          "innovation": 0.85,
+          "responsiveness": 0.96
+        },
+        "update_count": 127,
+        "last_updated": "2024-01-20T14:30:00Z"
+      },
+      "current_status": "online",
+      "load_metrics": {
+        "cpu_usage": 0.25,
+        "memory_usage": 0.45,
+        "active_tasks": 2,
+        "queue_length": 1,
+        "average_response_time": 1850,
+        "throughput": 12.5,
+        "last_activity": "2024-01-20T14:29:45Z",
+        "health_status": "healthy"
+      },
+      "collaboration_preferences": {
+        "preferred_team_size": {
+          "min_size": 2,
+          "max_size": 8,
+          "optimal_size": 4
+        },
+        "collaboration_styles": ["synchronous", "asynchronous"],
+        "communication_preferences": {
+          "preferred_languages": ["zh-CN", "en-US"],
+          "message_frequency": "medium"
+        }
+      }
+    }
+  ]
+}
