@@ -7,10 +7,10 @@ Uses Pydantic Settings for environment variable management.
 
 import secrets
 from functools import lru_cache
-from typing import List, Optional
+from typing import List, Optional, Union
 
-from pydantic import Field, validator
-from pydantic_settings import BaseSettings
+from pydantic import Field, field_validator
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
@@ -35,29 +35,29 @@ class Settings(BaseSettings):
     refresh_token_expire_days: int = Field(default=7, env="REFRESH_TOKEN_EXPIRE_DAYS")
     
     # Database Configuration (Supabase)
-    supabase_url: str = Field(env="SUPABASE_URL")
-    supabase_anon_key: str = Field(env="SUPABASE_ANON_KEY") 
-    supabase_service_role_key: str = Field(env="SUPABASE_SERVICE_ROLE_KEY")
-    database_url: str = Field(env="DATABASE_URL")
+    supabase_url: Optional[str] = Field(default=None, env="SUPABASE_URL")
+    supabase_anon_key: Optional[str] = Field(default=None, env="SUPABASE_ANON_KEY") 
+    supabase_service_role_key: Optional[str] = Field(default=None, env="SUPABASE_SERVICE_ROLE_KEY")
+    database_url: Optional[str] = Field(default="postgresql+asyncpg://postgres:password@localhost:5432/connet_ai", env="DATABASE_URL")
     
     # Redis Configuration
     redis_url: str = Field(default="redis://localhost:6379/0", env="REDIS_URL")
     redis_password: Optional[str] = Field(default=None, env="REDIS_PASSWORD")
     redis_db: int = Field(default=0, env="REDIS_DB")
     
-    # CORS Configuration
+    # CORS Configuration - validators will convert strings to lists
     cors_origins: List[str] = Field(
-        default=["http://localhost:3000"], 
+        default="http://localhost:3000", 
         env="CORS_ORIGINS"
     )
     cors_methods: List[str] = Field(
-        default=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+        default="GET,POST,PUT,DELETE,OPTIONS",
         env="CORS_METHODS"
     )
-    cors_headers: List[str] = Field(default=["*"], env="CORS_HEADERS")
+    cors_headers: List[str] = Field(default="*", env="CORS_HEADERS")
     
     # AI Service Configuration
-    openai_api_key: str = Field(env="OPENAI_API_KEY")
+    openai_api_key: Optional[str] = Field(default=None, env="OPENAI_API_KEY")
     openai_org_id: Optional[str] = Field(default=None, env="OPENAI_ORG_ID")
     openai_default_model: str = Field(default="gpt-3.5-turbo", env="OPENAI_DEFAULT_MODEL")
     langchain_tracing_v2: bool = Field(default=False, env="LANGCHAIN_TRACING_V2")
@@ -93,28 +93,38 @@ class Settings(BaseSettings):
     # Development/Testing
     test_database_url: Optional[str] = Field(default=None, env="TEST_DATABASE_URL")
     
-    @validator("cors_origins", pre=True)
-    def parse_cors_origins(cls, v):
+    @field_validator("cors_origins", mode="before")
+    @classmethod
+    def parse_cors_origins(cls, v) -> List[str]:
         """Parse CORS origins from string or list."""
         if isinstance(v, str):
-            return [origin.strip() for origin in v.split(",")]
-        return v
+            return [origin.strip() for origin in v.split(",") if origin.strip()]
+        elif isinstance(v, list):
+            return v
+        return ["http://localhost:3000"]  # fallback
     
-    @validator("cors_methods", pre=True)
-    def parse_cors_methods(cls, v):
+    @field_validator("cors_methods", mode="before")
+    @classmethod
+    def parse_cors_methods(cls, v) -> List[str]:
         """Parse CORS methods from string or list."""
         if isinstance(v, str):
-            return [method.strip() for method in v.split(",")]
-        return v
+            return [method.strip() for method in v.split(",") if method.strip()]
+        elif isinstance(v, list):
+            return v
+        return ["GET", "POST", "PUT", "DELETE", "OPTIONS"]  # fallback
     
-    @validator("cors_headers", pre=True)
-    def parse_cors_headers(cls, v):
+    @field_validator("cors_headers", mode="before")
+    @classmethod
+    def parse_cors_headers(cls, v) -> List[str]:
         """Parse CORS headers from string or list."""
         if isinstance(v, str):
-            return [header.strip() for header in v.split(",")]
-        return v
+            return [header.strip() for header in v.split(",") if header.strip()]
+        elif isinstance(v, list):
+            return v
+        return ["*"]  # fallback
     
-    @validator("log_level")
+    @field_validator("log_level")
+    @classmethod
     def validate_log_level(cls, v):
         """Validate log level."""
         valid_levels = ["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"]
@@ -122,7 +132,8 @@ class Settings(BaseSettings):
             raise ValueError(f"Log level must be one of: {valid_levels}")
         return v.upper()
     
-    @validator("app_env")
+    @field_validator("app_env")
+    @classmethod
     def validate_app_env(cls, v):
         """Validate application environment."""
         valid_envs = ["development", "staging", "production"]
@@ -150,11 +161,15 @@ class Settings(BaseSettings):
         """Get max file size in bytes."""
         return self.max_file_size_mb * 1024 * 1024
     
-    class Config:
-        """Pydantic configuration."""
-        env_file = ".env"
-        env_file_encoding = "utf-8"
-        case_sensitive = False
+    model_config = SettingsConfigDict(
+        env_file=".env",
+        env_file_encoding="utf-8",
+        case_sensitive=False,
+        extra="ignore",
+        # Disable automatic JSON parsing for complex types
+        env_parse_none_str=None,
+        env_nested_delimiter=None,
+    )
 
 
 @lru_cache()

@@ -306,7 +306,7 @@ const createAuthSlice: StateCreator<StoreState, [], [], AuthSlice> = (
         );
       } catch (error) {
         const errorMessage =
-          error instanceof APIError
+          error instanceof Error
             ? error.message
             : "Login failed. Please try again.";
         setError(errorMessage);
@@ -325,20 +325,13 @@ const createAuthSlice: StateCreator<StoreState, [], [], AuthSlice> = (
 
         const registerResponse = await AuthAPI.register(data);
 
-        // After successful registration, login automatically
-        const loginResponse = await AuthAPI.login({
-          email: data.email,
-          password: data.password,
-        });
-
-        get().login(
-          loginResponse.user,
-          loginResponse.access_token,
-          loginResponse.refresh_token
-        );
+        // Don't auto-login after registration since email verification is required
+        // The UI will show the email verification flow instead
+        
+        return registerResponse; // Return response for the UI to handle
       } catch (error) {
         const errorMessage =
-          error instanceof APIError
+          error instanceof Error
             ? error.message
             : "Registration failed. Please try again.";
         setError(errorMessage);

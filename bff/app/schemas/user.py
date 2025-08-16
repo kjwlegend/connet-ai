@@ -8,7 +8,7 @@ from datetime import datetime
 from typing import List, Optional
 from uuid import UUID
 
-from pydantic import EmailStr, Field, validator
+from pydantic import EmailStr, Field, field_validator
 
 from .base import BaseSchema, TimestampMixin, UUIDMixin
 
@@ -43,7 +43,8 @@ class UserCreate(UserBase):
     
     metadata: Optional[dict] = Field(None, description="Additional user metadata")
     
-    @validator('password')
+    @field_validator('password')
+    @classmethod
     def validate_password(cls, v):
         """Validate password strength."""
         if v and len(v) < 8:
@@ -64,16 +65,20 @@ class UserResponse(UUIDMixin, UserBase, TimestampMixin):
     last_login_at: Optional[datetime] = Field(None, description="Last login timestamp")
     permissions: Optional[List[str]] = Field(None, description="User permissions")
     roles: Optional[List[str]] = Field(None, description="User roles")
+    is_verified: bool = Field(False, description="Whether user email is verified")
+    
+    model_config = {"from_attributes": True}
     
     @classmethod
     def from_user(cls, user: "User") -> "UserResponse":
         """Create response from user entity."""
         return cls(
-            id=user.id,
+            id=str(user.id),  # Convert UUID to string
             email=user.email,
             full_name=user.full_name,
             username=user.username,
             is_active=user.is_active,
+            is_verified=getattr(user, 'is_verified', False),
             invitation_code=getattr(user, 'invitation_code', None),
             created_at=user.created_at,
             updated_at=user.updated_at,
@@ -95,6 +100,7 @@ class User(UUIDMixin, UserBase, TimestampMixin):
     password_hash: Optional[str] = Field(None, description="Hashed password (optional for OAuth)")
     auth_provider: str = Field("local", description="Authentication provider")
     external_id: Optional[str] = Field(None, description="External provider user ID")
+    is_verified: bool = Field(False, description="Whether user email is verified")
     
     # Invitation system
     invitation_code: Optional[str] = Field(None, description="User's unique invitation code")

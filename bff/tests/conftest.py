@@ -307,8 +307,8 @@ async def create_test_conversation(test_session, sample_conversation_data):
 @pytest.fixture
 def test_app():
     """Create test FastAPI application."""
-    from app.main import app
-    return app
+    from app.main import create_app
+    return create_app()
 
 
 @pytest.fixture

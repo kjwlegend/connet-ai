@@ -51,16 +51,21 @@ export class FormValidator {
   }
 
   static validateFullName(full_name: string): ValidationResult {
-    if (!full_name.trim()) {
-      return { isValid: false, error: 'auth.validation.nameRequired' }
+    // Full name is optional, so return valid if empty
+    if (!full_name || !full_name.trim()) {
+      return { isValid: true }
+    }
+    
+    if (full_name.trim().length < 2) {
+      return { isValid: false, error: 'auth.validation.nameMinLength' }
     }
     
     return { isValid: true }
   }
 
   static validateUsername(username: string): ValidationResult {
-    if (!username) {
-      return { isValid: true } // Username is optional
+    if (!username || !username.trim()) {
+      return { isValid: false, error: 'auth.validation.usernameRequired' }
     }
     
     if (username.length < 3 || username.length > 50) {
@@ -76,11 +81,16 @@ export class FormValidator {
   }
 
   static validateInviteCode(code: string): ValidationResult {
-    if (!code) {
+    if (!code || !code.trim()) {
       return { isValid: true } // Invite code is optional
     }
     
-    const inviteCodeRegex = /^[A-Z]{3}[0-9]{3}$/
+    // More flexible invite code format - allow various alphanumeric patterns
+    if (code.length < 4 || code.length > 20) {
+      return { isValid: false, error: 'auth.validation.inviteCodeLength' }
+    }
+    
+    const inviteCodeRegex = /^[A-Z0-9]+$/
     if (!inviteCodeRegex.test(code)) {
       return { isValid: false, error: 'auth.validation.inviteCodeInvalid' }
     }

@@ -376,7 +376,7 @@ class UserRepositoryImpl(UserRepository):
     def _model_to_entity(self, model: UserModel) -> User:
         """Convert database model to domain entity."""
         return User(
-            id=model.id,
+            id=str(model.id),  # Convert UUID to string
             email=model.email,
             full_name=model.full_name,
             username=model.username,
@@ -397,5 +397,5 @@ class UserRepositoryImpl(UserRepository):
             last_login_at=model.last_login_at,
             permissions=model.permissions or [],
             roles=model.roles or [],
-            metadata=model.metadata,
+            metadata=model.user_metadata or {},  # Use user_metadata field
         )

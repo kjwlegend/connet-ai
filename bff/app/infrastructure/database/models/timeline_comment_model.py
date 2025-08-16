@@ -10,6 +10,7 @@ from typing import List, Optional
 from uuid import UUID, uuid4
 
 from sqlmodel import Column, Field, SQLModel, Text
+from sqlalchemy import Column, JSON
 
 
 class TimelineCommentModel(SQLModel, table=True):
@@ -68,19 +69,28 @@ class TimelineCommentModel(SQLModel, table=True):
     )
     
     # Mentions and tags
-    mentioned_users: List[str] = Field(
-        default=[],
+    mentioned_users: List[str] = Field(default=[],
         description="Mentioned user IDs in this comment"
+    ,
+
+        sa_column=Column(JSON)
+
     )
-    mentioned_agents: List[str] = Field(
-        default=[],
+    mentioned_agents: List[str] = Field(default=[],
         description="Mentioned agent IDs in this comment"
+    ,
+
+        sa_column=Column(JSON)
+
     )
     
     # Attachments
-    attachments: List[str] = Field(
-        default=[],
+    attachments: List[str] = Field(default=[],
         description="Attachment file IDs"
+    ,
+
+        sa_column=Column(JSON)
+
     )
     
     # Timestamps
@@ -105,14 +115,18 @@ class TimelineCommentModel(SQLModel, table=True):
     )
     
     # Metadata
-    metadata: Optional[dict] = Field(
-        default=None,
+    comment_metadata: Optional[dict] = Field(default=None,
         description="Additional comment metadata"
+    ,
+
+        sa_column=Column(JSON)
+
     )
     
-    class Config:
-        """SQLModel configuration."""
-        schema_extra = {
+    model_config = {
+
+    
+        "json_schema_extra": {
             "example": {
                 "content": "This is amazing! @code_assistant how did you implement the similarity search optimization?",
                 "content_type": "text",
@@ -123,4 +137,7 @@ class TimelineCommentModel(SQLModel, table=True):
                 "is_deleted": False,
                 "is_edited": False
             }
+
+    
+    }
         }

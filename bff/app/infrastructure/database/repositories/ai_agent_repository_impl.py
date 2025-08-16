@@ -17,7 +17,7 @@ from app.core.interfaces.repositories.base_repository import BaseRepository
 from app.schemas.ai import AIAgentCreate, AIAgentUpdate, PaginationParams
 
 
-class AIAgentRepositoryImpl(BaseRepository[AIAgentModel]):
+class AIAgentRepositoryImpl(BaseRepository[AIAgentModel, UUID]):
     """AI Agent repository implementation"""
     
     def __init__(self, session: AsyncSession):
@@ -210,7 +210,7 @@ class AIAgentRepositoryImpl(BaseRepository[AIAgentModel]):
         await self.session.commit()
 
 
-class AIAgentVersionRepositoryImpl(BaseRepository[AIAgentVersionModel]):
+class AIAgentVersionRepositoryImpl(BaseRepository[AIAgentVersionModel, UUID]):
     """AI Agent version repository implementation"""
     
     def __init__(self, session: AsyncSession):
@@ -282,7 +282,7 @@ class AIAgentVersionRepositoryImpl(BaseRepository[AIAgentVersionModel]):
         return result.scalar_one_or_none()
 
 
-class AIAgentKnowledgeBaseRepositoryImpl(BaseRepository[AIAgentKnowledgeBaseModel]):
+class AIAgentKnowledgeBaseRepositoryImpl(BaseRepository[AIAgentKnowledgeBaseModel, UUID]):
     """AI Agent knowledge base repository implementation"""
     
     def __init__(self, session: AsyncSession):

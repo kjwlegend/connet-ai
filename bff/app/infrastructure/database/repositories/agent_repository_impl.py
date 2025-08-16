@@ -5,6 +5,7 @@ This module provides the implementation of the agent repository.
 """
 
 from typing import List, Optional, Tuple
+from uuid import UUID
 from sqlmodel import select, and_, or_
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -16,7 +17,7 @@ from app.utils.logging import get_logger
 logger = get_logger(__name__)
 
 
-class AgentRepository(BaseRepository[Agent], BaseRepositoryInterface):
+class AgentRepository(BaseRepository[Agent, UUID], BaseRepositoryInterface):
     """Agent repository implementation."""
     
     def __init__(self, session: AsyncSession):

@@ -15,13 +15,13 @@ from app.schemas.auth import (
     RefreshTokenRequest,
     RegisterRequest,
     TokenVerifyRequest,
-    UserResponse,
     PasswordResetRequest,
     OAuthCallbackRequest,
     OAuthLoginResponse,
     OAuthUrlRequest,
     OAuthUrlResponse,
 )
+from app.schemas.user import UserResponse
 from app.services.auth_service import AuthService, get_auth_service
 from app.services.supabase_auth_service import SupabaseAuthService
 from app.services.user_service import UserService
@@ -90,10 +90,10 @@ async def login(
         # We can either use Supabase session tokens or generate our own JWT
         # For now, let's use our own JWT system for consistency
         access_token = jwt_manager.create_access_token(
-            subject=user.id,
+            subject=str(user.id),
             scopes=user.permissions or []
         )
-        refresh_token = jwt_manager.create_refresh_token(subject=user.id)
+        refresh_token = jwt_manager.create_refresh_token(subject=str(user.id))
         
         logger.info(f"User logged in successfully: {user.email}")
         
@@ -155,10 +155,10 @@ async def refresh_token(
         
         # Generate new tokens
         access_token = jwt_manager.create_access_token(
-            subject=user.id,
+            subject=str(user.id),
             scopes=user.permissions or []
         )
-        new_refresh_token = jwt_manager.create_refresh_token(subject=user.id)
+        new_refresh_token = jwt_manager.create_refresh_token(subject=str(user.id))
         
         logger.info(f"Token refreshed for user: {user.email}")
         
@@ -370,10 +370,10 @@ async def oauth_callback(
         
         # Generate our own JWT tokens for consistency with email/password flow
         access_token = jwt_manager.create_access_token(
-            subject=user.id,
+            subject=str(user.id),
             scopes=user.permissions or []
         )
-        refresh_token = jwt_manager.create_refresh_token(subject=user.id)
+        refresh_token = jwt_manager.create_refresh_token(subject=str(user.id))
         
         logger.info(f"OAuth authentication successful for user: {user.email} (provider: {request.provider})")
         

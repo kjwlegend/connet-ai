@@ -5,11 +5,13 @@ This module contains common response schemas used across the API.
 """
 
 from datetime import datetime
-from typing import Any, Dict, Optional
+from typing import Any, Dict, List, Optional, Generic, TypeVar
 
 from pydantic import Field
 
 from .base import BaseSchema
+
+T = TypeVar('T')
 
 
 class HealthResponse(BaseSchema):
@@ -65,3 +67,19 @@ class RateLimitResponse(BaseSchema):
     error: str = Field("rate_limit_exceeded", description="Error type")
     message: str = Field(..., description="Error message")
     retry_after: int = Field(..., description="Seconds to wait before retrying")
+
+
+class PaginationMeta(BaseSchema):
+    """Pagination metadata."""
+    page: int = Field(..., description="Current page number")
+    per_page: int = Field(..., description="Items per page")
+    total: int = Field(..., description="Total number of items")
+    pages: int = Field(..., description="Total number of pages")
+    has_next: bool = Field(..., description="Whether there is a next page")
+    has_prev: bool = Field(..., description="Whether there is a previous page")
+
+
+class PaginatedResponse(BaseSchema, Generic[T]):
+    """Paginated response schema."""
+    items: List[T] = Field(..., description="List of items")
+    meta: PaginationMeta = Field(..., description="Pagination metadata")

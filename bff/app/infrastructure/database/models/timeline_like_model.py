@@ -10,6 +10,7 @@ from typing import Optional
 from uuid import UUID
 
 from sqlmodel import Field, SQLModel
+from sqlalchemy import Column, JSON
 
 
 class TimelineLikeModel(SQLModel, table=True):
@@ -48,18 +49,25 @@ class TimelineLikeModel(SQLModel, table=True):
     )
     
     # Metadata
-    metadata: Optional[dict] = Field(
-        default=None,
+    like_metadata: Optional[dict] = Field(default=None,
         description="Additional like metadata"
+    ,
+
+        sa_column=Column(JSON)
+
     )
     
-    class Config:
-        """SQLModel configuration."""
-        schema_extra = {
+    model_config = {
+
+    
+        "json_schema_extra": {
             "example": {
                 "user_id": "12345678-1234-5678-9012-123456789012",
                 "target_id": "87654321-4321-8765-2109-876543210987",
                 "target_type": "post",
                 "reaction_type": "love"
             }
+
+    
+    }
         }

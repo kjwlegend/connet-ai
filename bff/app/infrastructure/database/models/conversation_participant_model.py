@@ -9,6 +9,7 @@ from typing import Optional
 from uuid import UUID
 
 from sqlmodel import Field, SQLModel
+from sqlalchemy import Column, JSON
 
 
 class ConversationParticipantModel(SQLModel, table=True):
@@ -68,14 +69,18 @@ class ConversationParticipantModel(SQLModel, table=True):
         default=True,
         description="Whether notifications are enabled"
     )
-    settings: Optional[dict] = Field(
-        default=None,
+    settings: Optional[dict] = Field(default=None,
         description="Participant-specific settings"
+    ,
+
+        sa_column=Column(JSON)
+
     )
     
-    class Config:
-        """SQLModel configuration."""
-        schema_extra = {
+    model_config = {
+
+    
+        "json_schema_extra": {
             "example": {
                 "conversation_id": "12345678-1234-5678-9012-123456789012",
                 "participant_id": "87654321-4321-8765-2109-876543210987",
@@ -88,5 +93,8 @@ class ConversationParticipantModel(SQLModel, table=True):
                     "auto_read": False,
                     "priority_notifications": True
                 }
+
+    
+    }
             }
         }

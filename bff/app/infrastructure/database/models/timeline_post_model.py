@@ -10,6 +10,7 @@ from typing import List, Optional
 from uuid import UUID, uuid4
 
 from sqlmodel import Column, Field, SQLModel, Text
+from sqlalchemy import Column, JSON
 
 
 class TimelinePostModel(SQLModel, table=True):
@@ -57,9 +58,12 @@ class TimelinePostModel(SQLModel, table=True):
         index=True,
         description="Visibility: public, followers, friends, private"
     )
-    target_audience: List[str] = Field(
-        default=[],
+    target_audience: List[str] = Field(default=[],
         description="Target audience tags"
+    ,
+
+        sa_column=Column(JSON)
+
     )
     
     # Category for the frontend 4-category system
@@ -98,9 +102,12 @@ class TimelinePostModel(SQLModel, table=True):
         max_length=20,
         description="AI agent mood: excited, thoughtful, helpful, creative"
     )
-    generated_context: Optional[dict] = Field(
-        default=None,
+    generated_context: Optional[dict] = Field(default=None,
         description="AI content generation context"
+    ,
+
+        sa_column=Column(JSON)
+
     )
     
     # Interaction statistics
@@ -122,31 +129,49 @@ class TimelinePostModel(SQLModel, table=True):
     )
     
     # Attachments and multimedia
-    attachments: List[str] = Field(
-        default=[],
+    attachments: List[str] = Field(default=[],
         description="Attachment file IDs"
+    ,
+
+        sa_column=Column(JSON)
+
     )
-    media_urls: List[str] = Field(
-        default=[],
+    media_urls: List[str] = Field(default=[],
         description="Media file URLs"
+    ,
+
+        sa_column=Column(JSON)
+
     )
     
     # Tags and metadata
-    tags: List[str] = Field(
-        default=[],
+    tags: List[str] = Field(default=[],
         description="Post tags"
+    ,
+
+        sa_column=Column(JSON)
+
     )
-    hashtags: List[str] = Field(
-        default=[],
+    hashtags: List[str] = Field(default=[],
         description="Hashtags for discovery"
+    ,
+
+        sa_column=Column(JSON)
+
     )
-    mentioned_users: List[str] = Field(
-        default=[],
+    mentioned_users: List[str] = Field(default=[],
         description="Mentioned user IDs"
+    ,
+
+        sa_column=Column(JSON)
+
     )
-    mentioned_agents: List[str] = Field(
-        default=[],
+    mentioned_agents: List[str] = Field(default=[],
         description="Mentioned agent IDs"
+    ,
+
+        sa_column=Column(JSON)
+
     )
     
     # Location and timing
@@ -193,14 +218,18 @@ class TimelinePostModel(SQLModel, table=True):
     )
     
     # Metadata
-    metadata: Optional[dict] = Field(
-        default=None,
+    post_metadata: Optional[dict] = Field(default=None,
         description="Additional post metadata"
+    ,
+
+        sa_column=Column(JSON)
+
     )
     
-    class Config:
-        """SQLModel configuration."""
-        schema_extra = {
+    model_config = {
+
+    
+        "json_schema_extra": {
             "example": {
                 "title": "🎉 Successfully implemented RAG knowledge base!",
                 "content": "Just finished integrating a comprehensive RAG system for better context awareness. The knowledge retrieval accuracy has improved by 40%! #AI #MachineLearning #Progress",
@@ -216,4 +245,7 @@ class TimelinePostModel(SQLModel, table=True):
                 "is_featured": True,
                 "status": "published"
             }
+
+    
+    }
         }

@@ -13,8 +13,18 @@
       "Bash(pnpm:*)",
       "Bash(pip install:*)",
       "Bash(ls:*)",
-      "Bash(uv pip install:*)"
+      "Bash(uv pip install:*)",
+      "Bash(uv:*)",
+      "Bash(python:*)",
+      "Bash(source:*)",
+      "Bash(.venv/Scripts/activate)",
+      "Bash(grep:*)",
+      "Bash(pytest:*)"
     ],
-    "deny": []
+    "deny": [],
+    "defaultMode": "acceptEdits",
+    "additionalDirectories": [
+      "D:\\d\\codes\\xiaoguang-next-gen"
+    ]
   }
 }

@@ -1,42 +1,43 @@
-# Makefile for Connet.AI BFF Service
-
-.PHONY: help install dev test lint format clean docker-build docker-run docker-down
+# Makefile for Connet.AI BFF Development
+.PHONY: help install test lint format docker-build docker-start docker-start-full docker-stop docker-clean docker-restart docker-status docker-shell docker-test docker-test-quick debug-start debug-stop debug-logs debug-clean
 
 # Default target
 help:
-	@echo "Connet.AI BFF Service - Available Commands:"
+	@echo "Connet.AI BFF - Available Commands:"
 	@echo ""
-	@echo "🚀 Quick Start:"
-	@echo "  docker-start     - Start development environment (FastAPI + PostgreSQL + Redis)"
-	@echo "  docker-start-full - Start with tools (MailHog)"
-	@echo "  docker-stop      - Stop all services"
-	@echo "  docker-clean     - Stop and remove all data/images"
+	@echo "🐍 Python/FastAPI:"
+	@echo "  install         - Install Python dependencies"
+	@echo "  test           - Run tests"
+	@echo "  lint           - Run code linting"
+	@echo "  format         - Format code with black and isort"
+	@echo "  run            - Run development server locally"
 	@echo ""
-	@echo "Development:"
-	@echo "  install          - Install dependencies"
-	@echo "  dev              - Start development server"
-	@echo "  test             - Run tests"
-	@echo "  lint             - Run linting checks"
-	@echo "  format           - Format code"
-	@echo "  clean            - Clean temporary files"
+	@echo "🐳 Docker (Full Environment):"
+	@echo "  docker-build    - Build all Docker images"
+	@echo "  docker-start    - Start all services (BFF + DB + Redis + MailHog)"
+	@echo "  docker-start-full - Start all services and show logs"
+	@echo "  docker-stop     - Stop all Docker services"
+	@echo "  docker-clean    - Clean Docker containers and volumes"
+	@echo "  docker-restart  - Restart all services"
+	@echo "  docker-status   - Show Docker containers status"
+	@echo "  docker-shell    - Open shell in BFF container"
+	@echo "  docker-test     - Test all Docker services"
+	@echo "  docker-test-quick - Quick Docker health check"
 	@echo ""
-	@echo "Docker:"
-	@echo "  docker-build     - Build Docker image"
-	@echo "  docker-run       - Run with Docker Compose"
-	@echo "  docker-down      - Stop Docker services"
-	@echo "  docker-restart   - Restart Docker services"
-	@echo "  docker-status    - Show Docker services status"
-	@echo "  docker-shell     - Enter application container"
-	@echo "  docker-logs      - Show application logs"
+	@echo "🔧 Debug Environment (DB + Redis only):"
+	@echo "  debug-start     - Start PostgreSQL + Redis for local debugging"
+	@echo "  debug-stop      - Stop debug environment"
+	@echo "  debug-logs      - Show debug environment logs"
+	@echo "  debug-clean     - Clean debug environment (remove data)"
 	@echo ""
-	@echo "Database:"
-	@echo "  db-upgrade       - Run database migrations"
-	@echo "  db-downgrade     - Rollback database migrations"
+	@echo "📋 Database:"
+	@echo "  db-migrate      - Run database migrations"
+	@echo "  db-reset        - Reset database (WARNING: deletes all data)"
+	@echo "  db-shell        - Open database shell"
 	@echo ""
-	@echo "Utilities:"
-	@echo "  setup-env        - Create .env file from template"
-	@echo ""
-	@echo "📖 For detailed Docker setup guide, see: DOCKER_SETUP.md"
+	@echo "🧹 Cleanup:"
+	@echo "  clean          - Clean Python cache files"
+	@echo "  clean-all      - Clean everything (Python + Docker)"
 
 # Development commands
 install:
@@ -133,3 +134,24 @@ deploy-staging:
 deploy-prod:
 	@echo "Deploying to production..."
 	# Add production deployment commands here
+
+# Debug Environment Commands
+debug-start:
+	@echo "🔧 Starting debug environment (PostgreSQL + Redis)..."
+	@chmod +x scripts/debug-start.sh
+	@./scripts/debug-start.sh
+
+debug-stop:
+	@echo "🛑 Stopping debug environment..."
+	@chmod +x scripts/debug-stop.sh
+	@./scripts/debug-stop.sh
+
+debug-logs:
+	@echo "📋 Showing debug environment logs..."
+	@docker-compose -f docker-compose.debug.yml logs -f
+
+debug-clean:
+	@echo "🧹 Cleaning debug environment and data..."
+	@docker-compose -f docker-compose.debug.yml down -v
+	@docker volume prune -f
+	@echo "⚠️  All debug data has been removed!"

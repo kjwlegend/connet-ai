@@ -9,6 +9,7 @@ from typing import Optional
 from uuid import UUID
 
 from sqlmodel import Field, SQLModel
+from sqlalchemy import Column, JSON
 
 
 class FilePermissionModel(SQLModel, table=True):
@@ -54,9 +55,10 @@ class FilePermissionModel(SQLModel, table=True):
         description="Whether permission is active"
     )
     
-    class Config:
-        """SQLModel configuration."""
-        schema_extra = {
+    model_config = {
+
+    
+        "json_schema_extra": {
             "example": {
                 "file_id": "12345678-1234-5678-9012-123456789012",
                 "user_id": "87654321-4321-8765-2109-876543210987",
@@ -65,4 +67,7 @@ class FilePermissionModel(SQLModel, table=True):
                 "expires_at": "2025-12-31T23:59:59Z",
                 "is_active": True
             }
+
+    
+    }
         }

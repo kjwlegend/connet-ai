@@ -9,6 +9,7 @@ from typing import Optional
 from uuid import UUID, uuid4
 
 from sqlmodel import Field, SQLModel
+from sqlalchemy import Column, JSON
 
 
 class UserRegistrationSourceModel(SQLModel, table=True):
@@ -65,9 +66,12 @@ class UserRegistrationSourceModel(SQLModel, table=True):
     )
     
     # Marketing tracking
-    utm_data: Optional[dict] = Field(
-        default=None,
+    utm_data: Optional[dict] = Field(default=None,
         description="Complete UTM parameters"
+    ,
+
+        sa_column=Column(JSON)
+
     )
     referrer_url: Optional[str] = Field(
         default=None,
@@ -105,14 +109,18 @@ class UserRegistrationSourceModel(SQLModel, table=True):
     )
     
     # Additional metadata
-    metadata: Optional[dict] = Field(
-        default=None,
+    registration_metadata: Optional[dict] = Field(default=None,
         description="Additional registration metadata"
+    ,
+
+        sa_column=Column(JSON)
+
     )
     
-    class Config:
-        """SQLModel configuration."""
-        schema_extra = {
+    model_config = {
+
+    
+        "json_schema_extra": {
             "example": {
                 "source_type": "campaign",
                 "source_detail": "google_ads_winter_2024",
@@ -124,7 +132,10 @@ class UserRegistrationSourceModel(SQLModel, table=True):
                     "utm_campaign": "winter_2024",
                     "utm_term": "ai_collaboration",
                     "utm_content": "banner_ad"
-                },
+                }
+
+    
+    },
                 "country": "US",
                 "city": "San Francisco",
                 "timezone": "America/Los_Angeles"

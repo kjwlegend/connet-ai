@@ -9,6 +9,7 @@ from typing import Optional
 from uuid import UUID, uuid4
 
 from sqlmodel import Field, SQLModel
+from sqlalchemy import Column, JSON
 
 
 class UserInvitationModel(SQLModel, table=True):
@@ -63,9 +64,12 @@ class UserInvitationModel(SQLModel, table=True):
         max_length=50,
         description="Type of invitation: standard, premium, beta"
     )
-    reward_config: Optional[dict] = Field(
-        default=None,
+    reward_config: Optional[dict] = Field(default=None,
         description="Reward configuration for this invitation"
+    ,
+
+        sa_column=Column(JSON)
+
     )
     
     # Timestamps
@@ -80,14 +84,18 @@ class UserInvitationModel(SQLModel, table=True):
     )
     
     # Metadata
-    metadata: Optional[dict] = Field(
-        default=None,
+    invitation_metadata: Optional[dict] = Field(default=None,
         description="Additional invitation metadata"
+    ,
+
+        sa_column=Column(JSON)
+
     )
     
-    class Config:
-        """SQLModel configuration."""
-        schema_extra = {
+    model_config = {
+
+    
+        "json_schema_extra": {
             "example": {
                 "code": "INVITE2024ABC",
                 "max_uses": 5,
@@ -98,5 +106,8 @@ class UserInvitationModel(SQLModel, table=True):
                     "inviter_reward": {"type": "credit", "amount": 100},
                     "invitee_reward": {"type": "premium_trial", "days": 30}
                 }
+
+    
+    }
             }
         }

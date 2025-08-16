@@ -2,7 +2,7 @@
 # 使用阿里云镜像源以避免 Docker Hub 访问问题
 
 # 尝试多个可能的基础镜像源
-FROM registry.cn-hangzhou.aliyuncs.com/library/python:3.11-slim
+FROM registry.cn-hangzhou.aliyuncs.com/library/python:3.13.6-trixie
 
 # 设置环境变量
 ENV PYTHONUNBUFFERED=1

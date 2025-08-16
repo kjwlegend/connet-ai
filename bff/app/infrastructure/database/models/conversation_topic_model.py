@@ -9,6 +9,7 @@ from typing import List, Optional
 from uuid import UUID, uuid4
 
 from sqlmodel import Column, Field, SQLModel, Text
+from sqlalchemy import Column, JSON
 
 
 class ConversationTopicModel(SQLModel, table=True):
@@ -110,15 +111,18 @@ class ConversationTopicModel(SQLModel, table=True):
     )
     
     # Tags and classification
-    tags: List[str] = Field(
-        default=[],
+    tags: List[str] = Field(default=[],
         description="Topic tags for organization"
+    ,
+
+        sa_column=Column(JSON)
+
     )
     
     # Metadata
-    metadata: Optional[dict] = Field(
-        default=None,
-        description="Additional topic metadata"
+    topic_metadata: Optional[dict] = Field(default=None,
+        description="Additional topic metadata",
+        sa_column=Column(JSON)
     )
     
     # AI-generated summary
@@ -132,9 +136,8 @@ class ConversationTopicModel(SQLModel, table=True):
         description="Last summary update timestamp"
     )
     
-    class Config:
-        """SQLModel configuration."""
-        schema_extra = {
+    model_config = {
+        "json_schema_extra": {
             "example": {
                 "title": "Backend Architecture Decision",
                 "description": "Discussing the choice between FastAPI vs Django for the backend implementation",
@@ -148,3 +151,4 @@ class ConversationTopicModel(SQLModel, table=True):
                 "ai_summary": "The team is evaluating FastAPI vs Django for the backend. Key considerations include performance, development speed, and team expertise."
             }
         }
+    }

@@ -9,6 +9,7 @@ from typing import List, Optional
 from uuid import UUID, uuid4
 
 from sqlmodel import Column, Field, SQLModel, Text
+from sqlalchemy import Column, JSON
 
 
 class MessageModel(SQLModel, table=True):
@@ -63,13 +64,19 @@ class MessageModel(SQLModel, table=True):
     )
     
     # AI related
-    agent_mentions: List[str] = Field(
-        default=[],
+    agent_mentions: List[str] = Field(default=[],
         description="Mentioned agent names"
+    ,
+
+        sa_column=Column(JSON)
+
     )
-    ai_context: Optional[dict] = Field(
-        default=None,
+    ai_context: Optional[dict] = Field(default=None,
         description="AI processing context"
+    ,
+
+        sa_column=Column(JSON)
+
     )
     tokens_used: Optional[int] = Field(
         default=None,
@@ -106,26 +113,36 @@ class MessageModel(SQLModel, table=True):
     )
     
     # Attachments and multimedia
-    attachments: List[str] = Field(
-        default=[],
+    attachments: List[str] = Field(default=[],
         description="Attachment file IDs"
+    ,
+
+        sa_column=Column(JSON)
+
     )
     
     # Metadata
-    metadata: Optional[dict] = Field(
-        default=None,
+    message_metadata: Optional[dict] = Field(default=None,
         description="Additional message metadata"
+    ,
+
+        sa_column=Column(JSON)
+
     )
     
     # Vector embedding (for semantic search)
-    content_embedding: Optional[List[float]] = Field(
-        default=None,
+    content_embedding: Optional[List[float]] = Field(default=None,
         description="Message content vector embedding"
+    ,
+
+        sa_column=Column(JSON)
+
     )
     
-    class Config:
-        """SQLModel configuration."""
-        schema_extra = {
+    model_config = {
+
+    
+        "json_schema_extra": {
             "example": {
                 "content": "Hey @code_assistant, can you help me debug this Python function?",
                 "message_type": "text",
@@ -134,7 +151,10 @@ class MessageModel(SQLModel, table=True):
                 "ai_context": {
                     "processing_status": "pending",
                     "mentioned_agents": ["code_assistant"]
-                },
+                }
+
+    
+    },
                 "attachments": ["file_12345", "image_67890"],
                 "is_edited": False,
                 "is_deleted": False,

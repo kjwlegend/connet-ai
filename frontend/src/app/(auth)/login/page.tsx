@@ -80,9 +80,17 @@ function LoginForm() {
       return;
     }
 
-    // Skip validation for now - allow any login
-    console.log("Login successful, redirecting to dashboard");
-    router.push("/dashboard");
+    try {
+      await loginWithCredentials(
+        formData.email,
+        formData.password,
+        formData.rememberMe
+      );
+      console.log("Login successful, redirecting to dashboard");
+      router.push("/dashboard");
+    } catch (err) {
+      // Error is handled by the store and displayed via error state
+    }
   };
 
   return (

@@ -137,6 +137,10 @@ def create_app() -> FastAPI:
     return app
 
 
+# Create app instance for direct import (for uvicorn app.main:app)
+app = create_app()
+
+
 def run_dev():
     """Run development server."""
     settings = get_settings()

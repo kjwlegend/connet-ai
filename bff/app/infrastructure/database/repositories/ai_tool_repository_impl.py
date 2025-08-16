@@ -17,7 +17,7 @@ from app.core.interfaces.repositories.base_repository import BaseRepository
 from app.schemas.ai import ToolCreate, PaginationParams
 
 
-class AIToolRepositoryImpl(BaseRepository[AIToolModel]):
+class AIToolRepositoryImpl(BaseRepository[AIToolModel, UUID]):
     """AI Tool repository implementation"""
     
     def __init__(self, session: AsyncSession):
@@ -181,7 +181,7 @@ class AIToolRepositoryImpl(BaseRepository[AIToolModel]):
         return True
 
 
-class AIToolExecutionRepositoryImpl(BaseRepository[AIToolExecutionModel]):
+class AIToolExecutionRepositoryImpl(BaseRepository[AIToolExecutionModel, UUID]):
     """AI Tool execution repository implementation"""
     
     def __init__(self, session: AsyncSession):
@@ -295,7 +295,7 @@ class AIToolExecutionRepositoryImpl(BaseRepository[AIToolExecutionModel]):
         }
 
 
-class AIWebhookRepositoryImpl(BaseRepository[AIWebhookModel]):
+class AIWebhookRepositoryImpl(BaseRepository[AIWebhookModel, UUID]):
     """AI Webhook repository implementation"""
     
     def __init__(self, session: AsyncSession):
@@ -355,7 +355,7 @@ class AIWebhookRepositoryImpl(BaseRepository[AIWebhookModel]):
         await self.session.commit()
 
 
-class AIWebhookTriggerRepositoryImpl(BaseRepository[AIWebhookTriggerModel]):
+class AIWebhookTriggerRepositoryImpl(BaseRepository[AIWebhookTriggerModel, UUID]):
     """AI Webhook trigger repository implementation"""
     
     def __init__(self, session: AsyncSession):

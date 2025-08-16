@@ -16,14 +16,15 @@ T = TypeVar("T")
 class BaseSchema(BaseModel):
     """Base schema with common configuration."""
     
-    class Config:
-        """Pydantic configuration."""
-        from_attributes = True
-        validate_assignment = True
-        use_enum_values = True
-        json_encoders = {
+    model_config = {
+        "from_attributes": True,
+        "validate_assignment": True,
+        "use_enum_values": True,
+        "json_encoders": {
             datetime: lambda v: v.isoformat(),
+            UUID: lambda v: str(v),
         }
+    }
 
 
 class TimestampMixin(BaseModel):
@@ -34,7 +35,7 @@ class TimestampMixin(BaseModel):
 
 class UUIDMixin(BaseModel):
     """Mixin for schemas with UUID primary key."""
-    id: UUID = Field(..., description="Unique identifier")
+    id: str = Field(..., description="Unique identifier")
 
 
 class PaginationParams(BaseModel):

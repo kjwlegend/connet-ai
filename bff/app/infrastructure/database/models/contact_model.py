@@ -10,6 +10,7 @@ from typing import List, Optional
 from uuid import UUID
 
 from sqlmodel import Column, Field, SQLModel, Text
+from sqlalchemy import Column, JSON
 
 
 class ContactModel(SQLModel, table=True):
@@ -51,9 +52,12 @@ class ContactModel(SQLModel, table=True):
         sa_column=Column(Text),
         description="Personal notes about this contact"
     )
-    tags: List[str] = Field(
-        default=[],
+    tags: List[str] = Field(default=[],
         description="Custom tags for organization"
+    ,
+
+        sa_column=Column(JSON)
+
     )
     
     # Status
@@ -114,9 +118,10 @@ class ContactModel(SQLModel, table=True):
         description="Last interaction timestamp"
     )
     
-    class Config:
-        """SQLModel configuration."""
-        schema_extra = {
+    model_config = {
+
+    
+        "json_schema_extra": {
             "example": {
                 "follower_id": "12345678-1234-5678-9012-123456789012",
                 "following_id": "87654321-4321-8765-2109-876543210987",
@@ -129,4 +134,7 @@ class ContactModel(SQLModel, table=True):
                 "is_muted": False,
                 "notification_level": "all"
             }
+
+    
+    }
         }

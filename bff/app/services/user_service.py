@@ -175,3 +175,17 @@ class UserService(BaseRepositoryService):
         # For now, same as get_user_by_id
         # In the future, this might filter sensitive information
         return await self.get_user_by_id(user_id)
+
+
+# Factory function for dependency injection
+async def get_user_service() -> UserService:
+    """Get user service instance."""
+    from app.api.dependencies import get_user_repository, get_cache_manager
+    
+    user_repository = await get_user_repository()
+    cache_manager = await get_cache_manager()
+    
+    return UserService(
+        user_repository=user_repository,
+        cache_manager=cache_manager
+    )

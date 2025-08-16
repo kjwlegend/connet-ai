@@ -9,107 +9,93 @@ from typing import Optional, List
 from uuid import UUID, uuid4
 
 from sqlmodel import Column, Field, SQLModel, Text
+from sqlalchemy import Column, JSON
 
 
 class UserPromptLibraryModel(SQLModel, table=True):
     """User's custom prompt library database model."""
-    
+
     __tablename__ = "user_prompt_library"
-    
+
     # Primary key
     id: Optional[UUID] = Field(
         default_factory=uuid4,
         primary_key=True,
         index=True,
-        description="Unique prompt identifier"
+        description="Unique prompt identifier",
     )
     user_id: UUID = Field(
-        foreign_key="users.id",
-        index=True,
-        description="Owner user ID"
+        foreign_key="users.id", index=True, description="Owner user ID"
     )
-    
+
     # Prompt information
-    title: str = Field(
-        max_length=200,
-        description="Prompt title"
-    )
+    title: str = Field(max_length=200, description="Prompt title")
     description: Optional[str] = Field(
-        default=None,
-        max_length=500,
-        description="Prompt description"
+        default=None, max_length=500, description="Prompt description"
     )
     prompt_text: str = Field(
-        sa_column=Column(Text),
-        description="The actual prompt text"
+        sa_column=Column(Text), description="The actual prompt text"
     )
-    
+
     # Organization
     category: str = Field(
         default="general",
         max_length=50,
         index=True,
-        description="Prompt category: general, coding, writing, analysis, creative"
+        description="Prompt category: general, coding, writing, analysis, creative",
     )
     tags: List[str] = Field(
         default=[],
-        description="Tags for organization and search"
+        description="Tags for organization and search",
+        sa_column=Column(JSON),
     )
-    
+
     # Usage information
     use_count: int = Field(
-        default=0,
-        description="Number of times this prompt was used"
+        default=0, description="Number of times this prompt was used"
     )
     last_used_at: Optional[datetime] = Field(
-        default=None,
-        description="Last usage timestamp"
+        default=None, description="Last usage timestamp"
     )
-    
+
     # Sharing and visibility
     is_public: bool = Field(
-        default=False,
-        description="Whether prompt is shared publicly"
+        default=False, description="Whether prompt is shared publicly"
     )
     is_favorite: bool = Field(
-        default=False,
-        description="Whether prompt is marked as favorite"
+        default=False, description="Whether prompt is marked as favorite"
     )
-    
+
     # Template variables
     variables: List[dict] = Field(
         default=[],
-        description="Template variables and their descriptions"
+        description="Template variables and their descriptions",
+        sa_column=Column(JSON),
     )
-    
+
     # AI model preferences
     preferred_models: List[str] = Field(
         default=[],
-        description="Preferred AI models for this prompt"
+        description="Preferred AI models for this prompt",
+        sa_column=Column(JSON),
     )
     temperature: Optional[float] = Field(
-        default=None,
-        description="Preferred temperature setting"
+        default=None, description="Preferred temperature setting"
     )
     max_tokens: Optional[int] = Field(
-        default=None,
-        description="Preferred max tokens setting"
+        default=None, description="Preferred max tokens setting"
     )
-    
+
     # Timestamps
     created_at: datetime = Field(
-        default_factory=datetime.utcnow,
-        index=True,
-        description="Creation timestamp"
+        default_factory=datetime.utcnow, index=True, description="Creation timestamp"
     )
     updated_at: datetime = Field(
-        default_factory=datetime.utcnow,
-        description="Last update timestamp"
+        default_factory=datetime.utcnow, description="Last update timestamp"
     )
-    
-    class Config:
-        """SQLModel configuration."""
-        schema_extra = {
+
+    model_config = {
+        "json_schema_extra": {
             "example": {
                 "title": "Code Review Assistant",
                 "description": "Helps review code for bugs, performance, and best practices",
@@ -122,16 +108,17 @@ class UserPromptLibraryModel(SQLModel, table=True):
                     {
                         "name": "code",
                         "description": "The code to review",
-                        "required": True
+                        "required": True,
                     },
                     {
                         "name": "language",
                         "description": "Programming language",
-                        "required": True
-                    }
+                        "required": True,
+                    },
                 ],
                 "preferred_models": ["gpt-4", "claude-3-opus"],
                 "temperature": 0.3,
-                "max_tokens": 2000
+                "max_tokens": 2000,
             }
         }
+    }

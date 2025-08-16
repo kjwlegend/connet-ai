@@ -20,11 +20,14 @@ import { getRegistrationTracking } from "@/lib/utils/url";
 import { cn } from "@/lib/utils/cn";
 import { LanguageToggle } from "@/components/ui/LanguageToggle";
 import { OAuthButtonsGroup } from "@/components/auth/OAuthButton";
+import { CheckCircle, Mail, ArrowRight } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 
 export default function RegisterPage() {
   const t = useTranslations();
   const router = useRouter();
   const { registerWithCredentials, isLoading, error } = useStore();
+  const { toast } = useToast();
 
   const [formData, setFormData] = useState<RegisterFormData>({
     full_name: "",
@@ -40,6 +43,8 @@ export default function RegisterPage() {
     Record<string, ValidationResult>
   >({});
   const [touched, setTouched] = useState<Record<string, boolean>>({});
+  const [registrationSuccess, setRegistrationSuccess] = useState(false);
+  const [registeredEmail, setRegisteredEmail] = useState("");
 
   // Auto-fill invite code from URL on component mount
   useEffect(() => {
@@ -129,12 +134,129 @@ export default function RegisterPage() {
 
       await registerWithCredentials(registerData);
 
-      // Redirect to main app
-      router.push("/dashboard");
+      // Show email verification flow instead of redirecting
+      setRegisteredEmail(formData.email);
+      setRegistrationSuccess(true);
+
+      toast({
+        title: "Registration Successful!",
+        description: "Please check your email to verify your account.",
+        duration: 5000,
+      });
     } catch (err) {
-      // Error is handled by the store
+      // Show error toast
+      const errorMessage = err instanceof Error ? err.message : "Registration failed. Please try again.";
+      toast({
+        title: "Registration Failed",
+        description: errorMessage,
+        variant: "destructive",
+        duration: 5000,
+      });
     }
   };
+
+  // Email verification success component
+  const EmailVerificationSuccess = () => (
+    <motion.div
+      className="w-full max-w-lg my-8"
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6 }}
+    >
+      {/* Logo and Branding */}
+      <motion.div
+        className="text-center mb-8"
+        initial={{ opacity: 0, scale: 0.9 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.6, delay: 0.1 }}
+      >
+        <div className="flex justify-center mb-6">
+          <img
+            src="/static/logo-light-vertical.png"
+            alt="Connet.AI"
+            className="w-48"
+          />
+        </div>
+        <div className="flex justify-center mb-4">
+          <CheckCircle className="w-16 h-16 text-green-400" />
+        </div>
+        <h1 className="text-4xl font-bold text-white mb-2">
+          Check Your Email
+        </h1>
+        <p className="text-slate-300 text-lg">
+          We've sent a verification link to your email
+        </p>
+      </motion.div>
+
+      {/* Email Verification Card */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, delay: 0.2 }}
+      >
+        <Card className="bg-slate-800/80 backdrop-blur-md border-slate-700/50 shadow-2xl">
+          <CardContent className="p-8 text-center">
+            <div className="flex justify-center mb-6">
+              <div className="w-20 h-20 bg-purple-600/20 rounded-full flex items-center justify-center">
+                <Mail className="w-10 h-10 text-purple-400" />
+              </div>
+            </div>
+            
+            <h2 className="text-2xl font-bold text-white mb-4">
+              Verify Your Email Address
+            </h2>
+            
+            <p className="text-slate-300 mb-2">
+              We've sent a verification email to:
+            </p>
+            
+            <p className="text-purple-400 font-semibold text-lg mb-6">
+              {registeredEmail}
+            </p>
+            
+            <div className="text-slate-400 text-sm space-y-2 mb-8">
+              <p>Please check your email and click the verification link to activate your account.</p>
+              <p>Can't find the email? Check your spam folder or try again.</p>
+            </div>
+
+            <div className="space-y-4">
+              <Button
+                onClick={() => {
+                  toast({
+                    title: "Verification email sent",
+                    description: "Please check your email inbox again.",
+                    duration: 3000,
+                  });
+                }}
+                variant="outline"
+                className="w-full h-11 rounded-xl bg-slate-700/50 border-slate-600 text-white hover:bg-slate-600/50 hover:border-slate-500"
+              >
+                Resend Verification Email
+              </Button>
+              
+              <Button
+                onClick={() => router.push("/login")}
+                className="w-full h-11 rounded-xl bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white font-semibold"
+              >
+                Continue to Login
+                <ArrowRight className="w-4 h-4 ml-2" />
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      </motion.div>
+
+      {/* Footer */}
+      <motion.div
+        className="text-center mt-8 text-slate-400 text-sm"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.6, delay: 0.4 }}
+      >
+        © 2024 Connet.AI. Connecting the future, one interaction at a time.
+      </motion.div>
+    </motion.div>
+  );
 
   return (
     <div className="h-screen w-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 overflow-hidden fixed inset-0">
@@ -172,6 +294,9 @@ export default function RegisterPage() {
 
       {/* Main Content */}
       <div className="relative z-10 h-full flex items-center justify-center p-6 overflow-y-auto">
+        {registrationSuccess ? (
+          <EmailVerificationSuccess />
+        ) : (
         <motion.div
           className="w-full max-w-lg my-8"
           initial={{ opacity: 0, y: 20 }}
@@ -529,6 +654,7 @@ export default function RegisterPage() {
             © 2024 Connet.AI. Connecting the future, one interaction at a time.
           </motion.div>
         </motion.div>
+        )}
       </div>
     </div>
   );

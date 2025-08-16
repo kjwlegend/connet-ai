@@ -18,11 +18,17 @@ logger = get_logger(__name__)
 _supabase_client: Optional[Client] = None
 
 
-async def init_supabase() -> Client:
+async def init_supabase() -> Optional[Client]:
     """Initialize Supabase client."""
     global _supabase_client
     
     settings = get_settings()
+    
+    # Skip Supabase initialization if URL or key are missing (development mode)
+    if not settings.supabase_url or not settings.supabase_service_role_key:
+        logger.warning("Supabase configuration missing - running in development mode without Supabase")
+        _supabase_client = None
+        return None
     
     _supabase_client = create_client(
         supabase_url=settings.supabase_url,
@@ -40,6 +46,12 @@ def get_supabase_client() -> Optional[Client]:
     
     if _supabase_client is None:
         settings = get_settings()
+        
+        # Skip client creation if configuration is missing
+        if not settings.supabase_url or not settings.supabase_service_role_key:
+            logger.warning("Supabase configuration missing - returning None")
+            return None
+            
         # For sync usage, create a new client
         _supabase_client = create_client(
             supabase_url=settings.supabase_url,

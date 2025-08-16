@@ -5,6 +5,7 @@ This module provides the implementation of the message repository.
 """
 
 from typing import List, Optional, Tuple
+from uuid import UUID
 from sqlmodel import select, and_, or_, desc, asc
 from sqlalchemy.ext.asyncio import AsyncSession
 from datetime import datetime, timezone
@@ -17,7 +18,7 @@ from app.utils.logging import get_logger
 logger = get_logger(__name__)
 
 
-class MessageRepository(BaseRepository[Message], BaseRepositoryInterface):
+class MessageRepository(BaseRepository[Message, UUID], BaseRepositoryInterface):
     """Message repository implementation."""
     
     def __init__(self, session: AsyncSession):

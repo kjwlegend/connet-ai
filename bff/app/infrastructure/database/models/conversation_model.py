@@ -9,6 +9,7 @@ from typing import Optional
 from uuid import UUID, uuid4
 
 from sqlmodel import Field, SQLModel
+from sqlalchemy import Column, JSON
 
 
 class ConversationModel(SQLModel, table=True):
@@ -96,13 +97,16 @@ class ConversationModel(SQLModel, table=True):
     )
     
     # Settings
-    settings: Optional[dict] = Field(
-        default=None,
+    settings: Optional[dict] = Field(default=None,
         description="Conversation settings and preferences"
+    ,
+
+        sa_column=Column(JSON)
+
     )
-    metadata: Optional[dict] = Field(
-        default=None,
-        description="Additional conversation metadata"
+    conversation_metadata: Optional[dict] = Field(default=None,
+        description="Additional conversation metadata",
+        sa_column=Column(JSON)
     )
     
     # Statistics
@@ -119,9 +123,8 @@ class ConversationModel(SQLModel, table=True):
         description="Number of topics/subtopics"
     )
     
-    class Config:
-        """SQLModel configuration."""
-        schema_extra = {
+    model_config = {
+        "json_schema_extra": {
             "example": {
                 "title": "Project Planning Discussion",
                 "conversation_type": "project",
@@ -137,3 +140,4 @@ class ConversationModel(SQLModel, table=True):
                 "topic_count": 3
             }
         }
+    }

@@ -5,6 +5,7 @@ from typing import Dict, List, Optional, Any
 from uuid import UUID, uuid4
 
 from sqlmodel import SQLModel, Field, Column, JSON, Text
+from sqlalchemy import Column, JSON
 from sqlalchemy.dialects.postgresql import JSONB
 
 
@@ -86,7 +87,7 @@ class AIAgentKnowledgeBaseModel(SQLModel, table=True):
     
     # Knowledge content
     content: Dict[str, Any] = Field(sa_column=Column(JSONB))
-    metadata: Dict[str, Any] = Field(default={}, sa_column=Column(JSONB))
+    agent_metadata: Dict[str, Any] = Field(default={}, sa_column=Column(JSONB))
     tags: List[str] = Field(default=[], sa_column=Column(JSONB))
     
     # Embedding and search
@@ -118,7 +119,7 @@ class AIMemoryModel(SQLModel, table=True):
     
     # Memory content
     content: str = Field(sa_column=Column(Text))
-    metadata: Dict[str, Any] = Field(default={}, sa_column=Column(JSONB))
+    agent_metadata: Dict[str, Any] = Field(default={}, sa_column=Column(JSONB))
     context: Dict[str, Any] = Field(default={}, sa_column=Column(JSONB))
     
     # Memory attributes
@@ -234,7 +235,7 @@ class AIToolExecutionModel(SQLModel, table=True):
     
     # Artifacts and outputs
     artifacts: List[str] = Field(default=[], sa_column=Column(JSONB))  # Generated files/resources
-    output_metadata: Dict[str, Any] = Field(default={}, sa_column=Column(JSONB))
+    output_agent_metadata: Dict[str, Any] = Field(default={}, sa_column=Column(JSONB))
     
     started_at: datetime = Field(default_factory=datetime.utcnow)
     completed_at: Optional[datetime] = Field(default=None)
@@ -320,7 +321,7 @@ class AIRAGDocumentModel(SQLModel, table=True):
     
     # Document content
     content: str = Field(sa_column=Column(Text))
-    metadata: Dict[str, Any] = Field(default={}, sa_column=Column(JSONB))
+    agent_metadata: Dict[str, Any] = Field(default={}, sa_column=Column(JSONB))
     
     # Processing information
     processing_status: str = Field(default="pending", max_length=50)  # pending, processing, completed, failed
@@ -347,7 +348,7 @@ class AIRAGDocumentChunkModel(SQLModel, table=True):
     
     # Chunk content
     content: str = Field(sa_column=Column(Text))
-    chunk_metadata: Dict[str, Any] = Field(default={}, sa_column=Column(JSONB))
+    chunk_agent_metadata: Dict[str, Any] = Field(default={}, sa_column=Column(JSONB))
     
     # Position information
     start_position: int = Field(default=0)

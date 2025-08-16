@@ -15,7 +15,7 @@ from app.core.interfaces.repositories.base_repository import BaseRepository
 from app.schemas.ai import DocumentCreate, PaginationParams
 
 
-class AIRAGDocumentRepositoryImpl(BaseRepository[AIRAGDocumentModel]):
+class AIRAGDocumentRepositoryImpl(BaseRepository[AIRAGDocumentModel, UUID]):
     """AI RAG Document repository implementation"""
     
     def __init__(self, session: AsyncSession):
@@ -233,7 +233,7 @@ class AIRAGDocumentRepositoryImpl(BaseRepository[AIRAGDocumentModel]):
         return True
 
 
-class AIRAGDocumentChunkRepositoryImpl(BaseRepository[AIRAGDocumentChunkModel]):
+class AIRAGDocumentChunkRepositoryImpl(BaseRepository[AIRAGDocumentChunkModel, UUID]):
     """AI RAG Document Chunk repository implementation"""
     
     def __init__(self, session: AsyncSession):

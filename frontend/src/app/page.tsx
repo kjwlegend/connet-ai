@@ -156,7 +156,7 @@ export default function HomePage() {
       {/* Main Content */}
       <div className="relative z-10">
         {/* Navigation - Dark theme */}
-        <nav className="bg-slate-900/80 backdrop-blur-lg border-b border-slate-700/50">
+        <nav className="bg-slate-800/80 backdrop-blur-lg border-b border-slate-700/50">
           <div className="max-w-7xl mx-auto px-6 py-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-3">
@@ -450,7 +450,7 @@ export default function HomePage() {
               viewport={{ once: true }}
             >
               {/* Discovery */}
-              <Card className="bg-slate-900 border-slate-700 p-8 text-center hover:bg-slate-800 transition-colors">
+              <Card className="bg-slate-800 border-slate-700 p-8 text-center hover:bg-slate-800 transition-colors">
                 <div className="w-16 h-16 bg-slate-700 rounded-full flex items-center justify-center mx-auto mb-6">
                   <Users className="w-8 h-8 text-white" />
                 </div>
@@ -466,7 +466,7 @@ export default function HomePage() {
               </Card>
 
               {/* Conversation */}
-              <Card className="bg-slate-900 border-slate-700 p-8 text-center hover:bg-slate-800 transition-colors">
+              <Card className="bg-slate-800 border-slate-700 p-8 text-center hover:bg-slate-800 transition-colors">
                 <div className="w-16 h-16 bg-slate-700 rounded-full flex items-center justify-center mx-auto mb-6">
                   <MessageSquare className="w-8 h-8 text-white" />
                 </div>
@@ -482,7 +482,7 @@ export default function HomePage() {
               </Card>
 
               {/* Collaboration */}
-              <Card className="bg-slate-900 border-slate-700 p-8 text-center hover:bg-slate-800 transition-colors">
+              <Card className="bg-slate-800 border-slate-700 p-8 text-center hover:bg-slate-800 transition-colors">
                 <div className="w-16 h-16 bg-slate-700 rounded-full flex items-center justify-center mx-auto mb-6">
                   <Network className="w-8 h-8 text-white" />
                 </div>
@@ -501,7 +501,7 @@ export default function HomePage() {
         </section>
 
         {/* Virtual People, Not Code - Core Value Prop */}
-        <section className="py-20 bg-slate-900">
+        <section className="py-20 bg-slate-800">
           <div className="max-w-6xl mx-auto px-6">
             <motion.div
               className="text-center mb-16"
@@ -536,13 +536,19 @@ export default function HomePage() {
                   <MessageSquare className="w-8 h-8 text-white" />
                 </div>
                 <h3 className="text-xl font-semibold text-white mb-2">
-                  {t('homepage.virtualpeople.proactive', 'Starts Conversations')}
+                  {t(
+                    'homepage.virtualpeople.proactive',
+                    'Starts Conversations'
+                  )}
                 </h3>
                 <p className="text-slate-300">
-                  {t('homepage.virtualpeople.proactiveDesc', 'They reach out first, just like real friends do')}
+                  {t(
+                    'homepage.virtualpeople.proactiveDesc',
+                    'They reach out first, just like real friends do'
+                  )}
                 </p>
               </div>
-              
+
               <div className="text-center">
                 <div className="w-16 h-16 bg-slate-700 rounded-full flex items-center justify-center mx-auto mb-4">
                   <User className="w-8 h-8 text-white" />
@@ -551,10 +557,13 @@ export default function HomePage() {
                   {t('homepage.virtualpeople.social', 'Social Media Active')}
                 </h3>
                 <p className="text-slate-300">
-                  {t('homepage.virtualpeople.socialDesc', 'Posts updates, likes your content, shares thoughts')}
+                  {t(
+                    'homepage.virtualpeople.socialDesc',
+                    'Posts updates, likes your content, shares thoughts'
+                  )}
                 </p>
               </div>
-              
+
               <div className="text-center">
                 <div className="w-16 h-16 bg-slate-700 rounded-full flex items-center justify-center mx-auto mb-4">
                   <CheckCircle className="w-8 h-8 text-white" />
@@ -563,7 +572,10 @@ export default function HomePage() {
                   {t('homepage.virtualpeople.memory', 'Remembers Everything')}
                 </h3>
                 <p className="text-slate-300">
-                  {t('homepage.virtualpeople.memoryDesc', 'Builds on every interaction and grows with you')}
+                  {t(
+                    'homepage.virtualpeople.memoryDesc',
+                    'Builds on every interaction and grows with you'
+                  )}
                 </p>
               </div>
             </motion.div>
@@ -574,9 +586,12 @@ export default function HomePage() {
         <section className="py-20 bg-slate-800 relative overflow-hidden">
           {/* Tech Background Pattern */}
           <div className="absolute inset-0 opacity-10">
-            <div className="absolute inset-0" style={{
-              backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%2364748b' fill-opacity='0.4'%3E%3Cpath d='M30 30c0-11.046-8.954-20-20-20s-20 8.954-20 20 8.954 20 20 20 20-8.954 20-20zm0 0c0 11.046 8.954 20 20 20s20-8.954 20-20-8.954-20-20-20-20 8.954-20 20z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
-            }} />
+            <div
+              className="absolute inset-0"
+              style={{
+                backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%2364748b' fill-opacity='0.4'%3E%3Cpath d='M30 30c0-11.046-8.954-20-20-20s-20 8.954-20 20 8.954 20 20 20 20-8.954 20-20zm0 0c0 11.046 8.954 20 20 20s20-8.954 20-20-8.954-20-20-20-20 8.954-20 20z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+              }}
+            />
           </div>
           {/* Floating Tech Elements */}
           <div className="absolute inset-0 overflow-hidden">
@@ -609,10 +624,7 @@ export default function HomePage() {
               viewport={{ once: true }}
             >
               <h2 className="text-4xl lg:text-5xl font-bold text-white mb-6">
-                {t(
-                  'homepage.platform.title',
-                  'One Platform, All AI Features'
-                )}
+                {t('homepage.platform.title', 'One Platform, All AI Features')}
               </h2>
               <p className="text-xl text-slate-300 max-w-3xl mx-auto mb-8">
                 {t(
@@ -620,7 +632,7 @@ export default function HomePage() {
                   'Stop paying for 5 different AI tools. Get everything in one place.'
                 )}
               </p>
-              
+
               <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-4 rounded-lg text-lg font-semibold inline-block">
                 {t('homepage.platform.claim', 'Replaces 90% of AI Platforms')}
               </div>
@@ -635,34 +647,60 @@ export default function HomePage() {
             >
               <div>
                 <h3 className="text-2xl font-bold text-white mb-6">
-                  {t('homepage.platform.features.title', 'Built-in Capabilities')}
+                  {t(
+                    'homepage.platform.features.title',
+                    'Built-in Capabilities'
+                  )}
                 </h3>
                 <ul className="space-y-4">
                   <li className="flex items-center space-x-3">
                     <CheckCircle className="w-6 h-6 text-green-400 flex-shrink-0" />
-                    <span className="text-slate-300">{t('homepage.platform.features.tools', 'Advanced tool integration')}</span>
+                    <span className="text-slate-300">
+                      {t(
+                        'homepage.platform.features.tools',
+                        'Advanced tool integration'
+                      )}
+                    </span>
                   </li>
                   <li className="flex items-center space-x-3">
                     <CheckCircle className="w-6 h-6 text-green-400 flex-shrink-0" />
-                    <span className="text-slate-300">{t('homepage.platform.features.knowledge', 'Knowledge base management')}</span>
+                    <span className="text-slate-300">
+                      {t(
+                        'homepage.platform.features.knowledge',
+                        'Knowledge base management'
+                      )}
+                    </span>
                   </li>
                   <li className="flex items-center space-x-3">
                     <CheckCircle className="w-6 h-6 text-green-400 flex-shrink-0" />
-                    <span className="text-slate-300">{t('homepage.platform.features.mcp', 'Universal platform connectivity')}</span>
+                    <span className="text-slate-300">
+                      {t(
+                        'homepage.platform.features.mcp',
+                        'Universal platform connectivity'
+                      )}
+                    </span>
                   </li>
                   <li className="flex items-center space-x-3">
                     <CheckCircle className="w-6 h-6 text-green-400 flex-shrink-0" />
-                    <span className="text-slate-300">{t('homepage.platform.features.memory', 'Infinite context memory')}</span>
+                    <span className="text-slate-300">
+                      {t(
+                        'homepage.platform.features.memory',
+                        'Infinite context memory'
+                      )}
+                    </span>
                   </li>
                 </ul>
               </div>
-              
+
               <div className="text-center">
                 <div className="text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400 mb-4">
                   90%
                 </div>
                 <p className="text-xl text-slate-300 font-medium">
-                  {t('homepage.platform.replacement', 'Platform Replacement Rate')}
+                  {t(
+                    'homepage.platform.replacement',
+                    'Platform Replacement Rate'
+                  )}
                 </p>
               </div>
             </motion.div>
@@ -670,26 +708,33 @@ export default function HomePage() {
         </section>
 
         {/* Shared Memory - Technical Advantage */}
-        <section className="py-20 bg-slate-900 relative overflow-hidden">
+        <section className="py-20 bg-slate-800 relative overflow-hidden">
           {/* Neural Network Background */}
           <div className="absolute inset-0 opacity-5">
             <svg className="w-full h-full" viewBox="0 0 1200 800" fill="none">
               <defs>
-                <pattern id="neural-grid" x="0" y="0" width="100" height="100" patternUnits="userSpaceOnUse">
-                  <circle cx="50" cy="50" r="2" fill="#64748b" opacity="0.3"/>
-                  <circle cx="25" cy="25" r="1" fill="#64748b" opacity="0.2"/>
-                  <circle cx="75" cy="75" r="1" fill="#64748b" opacity="0.2"/>
+                <pattern
+                  id="neural-grid"
+                  x="0"
+                  y="0"
+                  width="100"
+                  height="100"
+                  patternUnits="userSpaceOnUse"
+                >
+                  <circle cx="50" cy="50" r="2" fill="#64748b" opacity="0.3" />
+                  <circle cx="25" cy="25" r="1" fill="#64748b" opacity="0.2" />
+                  <circle cx="75" cy="75" r="1" fill="#64748b" opacity="0.2" />
                 </pattern>
               </defs>
-              <rect width="100%" height="100%" fill="url(#neural-grid)"/>
+              <rect width="100%" height="100%" fill="url(#neural-grid)" />
               {/* Neural connections */}
               <g stroke="#3b82f6" strokeWidth="1" opacity="0.1">
-                <line x1="100" y1="100" x2="300" y2="200"/>
-                <line x1="300" y1="200" x2="500" y2="150"/>
-                <line x1="500" y1="150" x2="700" y2="300"/>
-                <line x1="200" y1="400" x2="400" y2="350"/>
-                <line x1="400" y1="350" x2="600" y2="400"/>
-                <line x1="600" y1="400" x2="800" y2="500"/>
+                <line x1="100" y1="100" x2="300" y2="200" />
+                <line x1="300" y1="200" x2="500" y2="150" />
+                <line x1="500" y1="150" x2="700" y2="300" />
+                <line x1="200" y1="400" x2="400" y2="350" />
+                <line x1="400" y1="350" x2="600" y2="400" />
+                <line x1="600" y1="400" x2="800" y2="500" />
               </g>
             </svg>
           </div>
@@ -700,7 +745,7 @@ export default function HomePage() {
                 key={i}
                 className="absolute w-4 h-4 border-2 border-purple-400/30 rounded-full"
                 style={{
-                  left: `${20 + (i * 10)}%`,
+                  left: `${20 + i * 10}%`,
                   top: `${30 + Math.sin(i) * 40}%`,
                 }}
                 animate={{
@@ -747,28 +792,43 @@ export default function HomePage() {
               <div className="bg-gradient-to-br from-purple-900/50 to-blue-900/50 p-10 rounded-2xl border border-purple-500/30">
                 <div className="grid md:grid-cols-3 gap-8 text-center">
                   <div>
-                    <div className="text-3xl font-bold text-purple-400 mb-2">Agent Level</div>
+                    <div className="text-3xl font-bold text-purple-400 mb-2">
+                      Agent Level
+                    </div>
                     <p className="text-slate-300 text-sm">
-                      {t('homepage.sharedmemory.agent', 'Personal memories & personality')}
+                      {t(
+                        'homepage.sharedmemory.agent',
+                        'Personal memories & personality'
+                      )}
                     </p>
                   </div>
                   <div>
-                    <div className="text-3xl font-bold text-blue-400 mb-2">Chat Level</div>
+                    <div className="text-3xl font-bold text-blue-400 mb-2">
+                      Chat Level
+                    </div>
                     <p className="text-slate-300 text-sm">
-                      {t('homepage.sharedmemory.chat', 'Shared context & decisions')}
+                      {t(
+                        'homepage.sharedmemory.chat',
+                        'Shared context & decisions'
+                      )}
                     </p>
                   </div>
                   <div>
-                    <div className="text-3xl font-bold text-cyan-400 mb-2">Global Level</div>
+                    <div className="text-3xl font-bold text-cyan-400 mb-2">
+                      Global Level
+                    </div>
                     <p className="text-slate-300 text-sm">
                       {t('homepage.sharedmemory.global', 'Cross-chat insights')}
                     </p>
                   </div>
                 </div>
-                
+
                 <div className="mt-8 text-center">
                   <div className="bg-green-500 text-white px-6 py-3 rounded-lg text-lg font-semibold inline-block">
-                    {t('homepage.sharedmemory.benefit', 'No More Repeating Context')}
+                    {t(
+                      'homepage.sharedmemory.benefit',
+                      'No More Repeating Context'
+                    )}
                   </div>
                 </div>
               </div>
@@ -783,26 +843,26 @@ export default function HomePage() {
             <svg className="w-full h-full" viewBox="0 0 1200 600" fill="none">
               {/* Network nodes */}
               <g>
-                <circle cx="200" cy="150" r="4" fill="#3b82f6" opacity="0.4"/>
-                <circle cx="400" cy="100" r="4" fill="#8b5cf6" opacity="0.4"/>
-                <circle cx="600" cy="200" r="4" fill="#10b981" opacity="0.4"/>
-                <circle cx="800" cy="120" r="4" fill="#f59e0b" opacity="0.4"/>
-                <circle cx="1000" cy="180" r="4" fill="#ef4444" opacity="0.4"/>
-                <circle cx="300" cy="300" r="4" fill="#06b6d4" opacity="0.4"/>
-                <circle cx="500" cy="350" r="4" fill="#84cc16" opacity="0.4"/>
-                <circle cx="700" cy="280" r="4" fill="#f97316" opacity="0.4"/>
-                <circle cx="900" cy="320" r="4" fill="#ec4899" opacity="0.4"/>
+                <circle cx="200" cy="150" r="4" fill="#3b82f6" opacity="0.4" />
+                <circle cx="400" cy="100" r="4" fill="#8b5cf6" opacity="0.4" />
+                <circle cx="600" cy="200" r="4" fill="#10b981" opacity="0.4" />
+                <circle cx="800" cy="120" r="4" fill="#f59e0b" opacity="0.4" />
+                <circle cx="1000" cy="180" r="4" fill="#ef4444" opacity="0.4" />
+                <circle cx="300" cy="300" r="4" fill="#06b6d4" opacity="0.4" />
+                <circle cx="500" cy="350" r="4" fill="#84cc16" opacity="0.4" />
+                <circle cx="700" cy="280" r="4" fill="#f97316" opacity="0.4" />
+                <circle cx="900" cy="320" r="4" fill="#ec4899" opacity="0.4" />
               </g>
               {/* Connecting lines */}
               <g stroke="#64748b" strokeWidth="1" opacity="0.2">
-                <line x1="200" y1="150" x2="400" y2="100"/>
-                <line x1="400" y1="100" x2="600" y2="200"/>
-                <line x1="600" y1="200" x2="800" y2="120"/>
-                <line x1="300" y1="300" x2="500" y2="350"/>
-                <line x1="500" y1="350" x2="700" y2="280"/>
-                <line x1="200" y1="150" x2="300" y2="300"/>
-                <line x1="600" y1="200" x2="700" y2="280"/>
-                <line x1="800" y1="120" x2="900" y2="320"/>
+                <line x1="200" y1="150" x2="400" y2="100" />
+                <line x1="400" y1="100" x2="600" y2="200" />
+                <line x1="600" y1="200" x2="800" y2="120" />
+                <line x1="300" y1="300" x2="500" y2="350" />
+                <line x1="500" y1="350" x2="700" y2="280" />
+                <line x1="200" y1="150" x2="300" y2="300" />
+                <line x1="600" y1="200" x2="700" y2="280" />
+                <line x1="800" y1="120" x2="900" y2="320" />
               </g>
             </svg>
           </div>
@@ -813,7 +873,7 @@ export default function HomePage() {
                 key={i}
                 className="absolute w-1 h-8 bg-gradient-to-b from-transparent via-blue-400/40 to-transparent"
                 style={{
-                  left: `${15 + (i * 15)}%`,
+                  left: `${15 + i * 15}%`,
                   top: `20%`,
                 }}
                 animate={{
@@ -837,10 +897,7 @@ export default function HomePage() {
               viewport={{ once: true }}
             >
               <h2 className="text-4xl lg:text-5xl font-bold text-white mb-6">
-                {t(
-                  'homepage.teamwork.title',
-                  'Teams Beat Solo Experts'
-                )}
+                {t('homepage.teamwork.title', 'Teams Beat Solo Experts')}
               </h2>
               <p className="text-xl text-slate-300 max-w-3xl mx-auto">
                 {t(
@@ -863,29 +920,56 @@ export default function HomePage() {
                 </h3>
                 <div className="space-y-4">
                   <div className="flex items-start space-x-4">
-                    <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white font-bold text-sm">1</div>
+                    <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white font-bold text-sm">
+                      1
+                    </div>
                     <div>
-                      <h4 className="text-white font-semibold">{t('homepage.teamwork.step1', 'Agents Debate')}</h4>
-                      <p className="text-slate-300 text-sm">{t('homepage.teamwork.step1desc', 'Different perspectives emerge')}</p>
+                      <h4 className="text-white font-semibold">
+                        {t('homepage.teamwork.step1', 'Agents Debate')}
+                      </h4>
+                      <p className="text-slate-300 text-sm">
+                        {t(
+                          'homepage.teamwork.step1desc',
+                          'Different perspectives emerge'
+                        )}
+                      </p>
                     </div>
                   </div>
                   <div className="flex items-start space-x-4">
-                    <div className="w-8 h-8 bg-purple-500 rounded-full flex items-center justify-center text-white font-bold text-sm">2</div>
+                    <div className="w-8 h-8 bg-purple-500 rounded-full flex items-center justify-center text-white font-bold text-sm">
+                      2
+                    </div>
                     <div>
-                      <h4 className="text-white font-semibold">{t('homepage.teamwork.step2', 'Find Solutions')}</h4>
-                      <p className="text-slate-300 text-sm">{t('homepage.teamwork.step2desc', 'Combine expertise and insights')}</p>
+                      <h4 className="text-white font-semibold">
+                        {t('homepage.teamwork.step2', 'Find Solutions')}
+                      </h4>
+                      <p className="text-slate-300 text-sm">
+                        {t(
+                          'homepage.teamwork.step2desc',
+                          'Combine expertise and insights'
+                        )}
+                      </p>
                     </div>
                   </div>
                   <div className="flex items-start space-x-4">
-                    <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center text-white font-bold text-sm">3</div>
+                    <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center text-white font-bold text-sm">
+                      3
+                    </div>
                     <div>
-                      <h4 className="text-white font-semibold">{t('homepage.teamwork.step3', 'You Control')}</h4>
-                      <p className="text-slate-300 text-sm">{t('homepage.teamwork.step3desc', 'Guide or join the discussion')}</p>
+                      <h4 className="text-white font-semibold">
+                        {t('homepage.teamwork.step3', 'You Control')}
+                      </h4>
+                      <p className="text-slate-300 text-sm">
+                        {t(
+                          'homepage.teamwork.step3desc',
+                          'Guide or join the discussion'
+                        )}
+                      </p>
                     </div>
                   </div>
                 </div>
               </div>
-              
+
               <div className="text-center">
                 <div className="bg-gradient-to-br from-blue-900/50 to-purple-900/50 p-8 rounded-2xl border border-blue-500/30">
                   <div className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400 mb-4">
@@ -895,11 +979,16 @@ export default function HomePage() {
                     {t('homepage.teamwork.faster', 'Faster Solutions')}
                   </p>
                   <p className="text-slate-300 text-sm">
-                    {t('homepage.teamwork.fasterDesc', 'Multiple minds, better results')}
+                    {t(
+                      'homepage.teamwork.fasterDesc',
+                      'Multiple minds, better results'
+                    )}
                   </p>
-                  
+
                   <div className="mt-6 pt-6 border-t border-slate-600">
-                    <div className="text-3xl font-bold text-green-400 mb-2">90%</div>
+                    <div className="text-3xl font-bold text-green-400 mb-2">
+                      90%
+                    </div>
                     <p className="text-slate-300 text-sm">
                       {t('homepage.teamwork.accuracy', 'Higher accuracy rate')}
                     </p>
@@ -932,7 +1021,7 @@ export default function HomePage() {
         </section>
 
         {/* Alternative Hero Section - Dark theme with client-side rendering for mathematical calculations */}
-        <section className="py-20 bg-slate-900">
+        <section className="py-20 bg-slate-800">
           <div className="max-w-7xl mx-auto px-6">
             <div className="grid lg:grid-cols-2 gap-16 items-center">
               {/* Left side - Network animation with dark theme */}
@@ -1107,7 +1196,7 @@ export default function HomePage() {
         {/* Waitlist Section - Dark theme with gradient */}
         <section
           id="waitlist"
-          className="py-20 bg-slate-900 bg-gradient-to-r from-blue-900/60 to-purple-900/60 text-white"
+          className="py-20 bg-slate-800 bg-gradient-to-r from-blue-900/60 to-purple-900/60 text-white"
         >
           <div className="max-w-4xl mx-auto px-6 text-center">
             <motion.div
@@ -1195,7 +1284,7 @@ export default function HomePage() {
         </section>
 
         {/* Footer - Dark theme */}
-        <footer className="py-8 bg-slate-900 border-t border-slate-700">
+        <footer className="py-8 bg-slate-800 border-t border-slate-700">
           <div className="max-w-7xl mx-auto px-6">
             <div className="flex flex-col md:flex-row items-center justify-between">
               <div className="flex items-center space-x-3 mb-4 md:mb-0">

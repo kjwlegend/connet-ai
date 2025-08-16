@@ -13,7 +13,7 @@ from sqlmodel.ext.asyncio.session import AsyncSession
 from app.config.settings import get_settings
 from app.core.interfaces.repositories.user_repository import UserRepository
 from app.infrastructure.cache.cache_manager import CacheManager, get_cache_manager
-from app.infrastructure.database.connection import get_session
+from app.infrastructure.database.connection import get_session, async_session_factory
 from app.infrastructure.database.repositories.user_repository_impl import (
     UserRepositoryImpl,
 )
@@ -30,8 +30,27 @@ from app.services.supabase_auth_service import SupabaseAuthService
 security = HTTPBearer(auto_error=False)
 
 
+async def get_db_session():
+    """Get database session dependency."""
+    # Import here to avoid circular imports
+    from app.infrastructure.database.connection import async_session_factory, init_database
+    
+    # Ensure we have initialized the database
+    if not async_session_factory:
+        await init_database()
+    
+    async with async_session_factory() as session:
+        try:
+            yield session
+        except Exception:
+            await session.rollback()
+            raise
+        finally:
+            await session.close()
+
+
 async def get_user_repository(
-    session: AsyncSession = Depends(get_session),
+    session: AsyncSession = Depends(get_db_session),
 ) -> UserRepository:
     """Get user repository dependency."""
     return UserRepositoryImpl(session)
@@ -43,6 +62,13 @@ async def get_user_service(
 ) -> UserService:
     """Get user service dependency."""
     return UserService(user_repository=user_repo, cache_manager=cache_manager)
+
+
+async def get_supabase_auth_service(
+    user_repo: UserRepository = Depends(get_user_repository),
+) -> SupabaseAuthService:
+    """Get Supabase authentication service dependency."""
+    return SupabaseAuthService(user_repository=user_repo)
 
 
 async def get_current_user(
@@ -204,8 +230,3 @@ async def get_settings_dependency():
     return get_settings()
 
 
-async def get_supabase_auth_service(
-    user_repo: UserRepository = Depends(get_user_repository),
-) -> SupabaseAuthService:
-    """Get Supabase authentication service dependency."""
-    return SupabaseAuthService(user_repository=user_repo)

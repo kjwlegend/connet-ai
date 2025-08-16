@@ -15,7 +15,7 @@ from app.core.interfaces.repositories.base_repository import BaseRepository
 from app.schemas.ai import MemoryCreate, MemoryType, MemoryCategory
 
 
-class AIMemoryRepositoryImpl(BaseRepository[AIMemoryModel]):
+class AIMemoryRepositoryImpl(BaseRepository[AIMemoryModel, UUID]):
     """AI Memory repository implementation"""
     
     def __init__(self, session: AsyncSession):
@@ -230,7 +230,7 @@ class AIMemoryRepositoryImpl(BaseRepository[AIMemoryModel]):
         }
 
 
-class AIConversationSummaryRepositoryImpl(BaseRepository[AIConversationSummaryModel]):
+class AIConversationSummaryRepositoryImpl(BaseRepository[AIConversationSummaryModel, UUID]):
     """AI Conversation Summary repository implementation"""
     
     def __init__(self, session: AsyncSession):

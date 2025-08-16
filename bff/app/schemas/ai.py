@@ -320,8 +320,8 @@ class ToolExecutionResponse(BaseModel):
 class WebhookCreate(BaseModel):
     """Create webhook request schema"""
     name: str = Field(..., min_length=1, max_length=255)
-    url: str = Field(..., regex=r'^https?://.+')
-    method: str = Field(default="POST", regex=r'^(GET|POST|PUT|DELETE|PATCH)$')
+    url: str = Field(..., pattern=r'^https?://.+')
+    method: str = Field(default="POST", pattern=r'^(GET|POST|PUT|DELETE|PATCH)$')
     headers: Dict[str, str] = Field(default_factory=dict)
     secret: Optional[str] = Field(default=None, max_length=255)
     timeout_seconds: int = Field(default=30, gt=0)
@@ -386,7 +386,7 @@ class DocumentCreate(BaseModel):
     content: str = Field(..., min_length=1)
     file_type: str = Field(..., max_length=100)
     metadata: Dict[str, Any] = Field(default_factory=dict)
-    visibility: str = Field(default="private", regex=r'^(private|shared|public)$')
+    visibility: str = Field(default="private", pattern=r'^(private|shared|public)$')
     shared_with: List[UUID] = Field(default=[])
 
 
@@ -413,7 +413,7 @@ class DocumentSearchRequest(BaseModel):
     query: str = Field(..., min_length=1)
     top_k: int = Field(default=10, ge=1, le=50)
     filters: Dict[str, Any] = Field(default_factory=dict)
-    search_type: str = Field(default="hybrid", regex=r'^(vector|keyword|hybrid)$')
+    search_type: str = Field(default="hybrid", pattern=r'^(vector|keyword|hybrid)$')
 
 
 class DocumentSearchResult(BaseModel):
@@ -441,7 +441,7 @@ class DocumentSearchResponse(BaseModel):
 
 class ChatMessage(BaseModel):
     """Chat message schema"""
-    role: str = Field(..., regex=r'^(user|assistant|system)$')
+    role: str = Field(..., pattern=r'^(user|assistant|system)$')
     content: str = Field(..., min_length=1)
     metadata: Dict[str, Any] = Field(default_factory=dict)
 
@@ -502,7 +502,7 @@ class PaginationParams(BaseModel):
     page: int = Field(default=1, ge=1)
     size: int = Field(default=20, ge=1, le=100)
     sort_by: Optional[str] = Field(default=None)
-    sort_order: str = Field(default="desc", regex=r'^(asc|desc)$')
+    sort_order: str = Field(default="desc", pattern=r'^(asc|desc)$')
 
 
 class BaseListResponse(BaseModel):

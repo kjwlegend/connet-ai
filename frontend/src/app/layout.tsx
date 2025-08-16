@@ -6,6 +6,7 @@ import { I18nProvider } from '@/lib/i18n/I18nProvider'
 import { AuthProvider } from '@/components/auth/AuthProvider'
 import { generateMetadata } from '@/lib/seo/metadata'
 import { generateJSONLD } from '@/lib/seo/metadata'
+import { Toaster } from '@/components/ui/toaster'
 import Script from 'next/script'
 
 const inter = Inter({
@@ -73,6 +74,7 @@ export default function RootLayout({
               <div className="min-h-screen bg-background text-foreground transition-colors">
                 <div className="flex h-screen bg-background">{children}</div>
               </div>
+              <Toaster />
             </AuthProvider>
           </I18nProvider>
         </ThemeProvider>

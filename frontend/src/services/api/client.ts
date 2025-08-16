@@ -4,8 +4,19 @@
 
 import { ApiResponse, ApiError, ServiceConfig } from '../types'
 
+export interface RouteConfig {
+  // Map service patterns to routing strategy
+  // 'direct' = call BFF directly, 'proxy' = use Next.js API routes
+  serviceRoutes: Record<string, 'direct' | 'proxy'>
+  // Next.js API route prefix (for proxy mode)
+  nextApiPrefix: string
+  // Direct BFF base URL (for direct mode)
+  bffBaseUrl: string
+}
+
 class ApiClient {
   private config: ServiceConfig
+  private routeConfig: RouteConfig
   private cache = new Map<string, any>()
   private getAuthToken: (() => string | null) | null = null
   private interceptors: {
@@ -13,16 +24,34 @@ class ApiClient {
     response: Array<(response: Response) => Response | Promise<Response>>
   } = {
     request: [],
-    response: []
+    response: [],
   }
 
-  constructor(config: Partial<ServiceConfig> = {}) {
+  constructor(
+    config: Partial<ServiceConfig> = {},
+    routeConfig?: Partial<RouteConfig>
+  ) {
     this.config = {
       baseURL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000',
       timeout: 10000,
       retries: 3,
       retryDelay: 1000,
-      ...config
+      ...config,
+    }
+
+    // Default route configuration
+    this.routeConfig = {
+      serviceRoutes: {
+        '/api/v1/auth': 'direct', // Auth directly to BFF
+        '/api/v1/ai': 'direct', // AI services directly to BFF
+        '/api/v1/chat': 'direct', // Chat directly to BFF
+        '/api/webhooks': 'proxy', // Webhooks through Next.js
+        '/api/uploads': 'proxy', // File uploads through Next.js
+        '/api/oauth/callback': 'proxy', // OAuth callbacks through Next.js
+      },
+      nextApiPrefix: '/api',
+      bffBaseUrl: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000',
+      ...routeConfig,
     }
 
     // Add default interceptors
@@ -35,11 +64,40 @@ class ApiClient {
     this.getAuthToken = getter
   }
 
-  addRequestInterceptor(interceptor: (config: RequestInit) => RequestInit | Promise<RequestInit>) {
+  // Update route configuration
+  updateRouteConfig(routeConfig: Partial<RouteConfig>) {
+    this.routeConfig = { ...this.routeConfig, ...routeConfig }
+  }
+
+  // Resolve endpoint URL based on routing strategy
+  private resolveEndpointUrl(endpoint: string): string {
+    // Find matching route pattern
+    const matchingPattern = Object.keys(this.routeConfig.serviceRoutes).find(
+      (pattern) => endpoint.startsWith(pattern)
+    )
+
+    const routingStrategy = matchingPattern
+      ? this.routeConfig.serviceRoutes[matchingPattern]
+      : 'direct' // Default to direct
+
+    if (routingStrategy === 'proxy') {
+      // Use Next.js API routes
+      return `${this.routeConfig.nextApiPrefix}${endpoint}`
+    } else {
+      // Use direct BFF URL
+      return `${this.routeConfig.bffBaseUrl}${endpoint}`
+    }
+  }
+
+  addRequestInterceptor(
+    interceptor: (config: RequestInit) => RequestInit | Promise<RequestInit>
+  ) {
     this.interceptors.request.push(interceptor)
   }
 
-  addResponseInterceptor(interceptor: (response: Response) => Response | Promise<Response>) {
+  addResponseInterceptor(
+    interceptor: (response: Response) => Response | Promise<Response>
+  ) {
     this.interceptors.response.push(interceptor)
   }
 
@@ -51,7 +109,7 @@ class ApiClient {
     } else {
       token = localStorage.getItem('auth_token')
     }
-    
+
     return {
       ...config,
       headers: {
@@ -72,8 +130,15 @@ class ApiClient {
 
       try {
         const errorData = await response.json()
-        error.message = errorData.message || error.message
-        error.details = errorData.details
+        // Handle FastAPI error format: {"detail": "error message"}
+        if (errorData.detail) {
+          error.message = errorData.detail
+        } else if (errorData.message) {
+          error.message = errorData.message
+        } else if (typeof errorData === 'string') {
+          error.message = errorData
+        }
+        error.details = errorData.details || errorData
       } catch {
         // Response is not JSON, use default error
       }
@@ -88,8 +153,8 @@ class ApiClient {
     options: RequestInit = {},
     retryCount = 0
   ): Promise<ApiResponse<T>> {
-    const url = `${this.config.baseURL}${endpoint}`
-    
+    const url = this.resolveEndpointUrl(endpoint)
+
     try {
       // Apply request interceptors
       let config = { ...options }
@@ -99,7 +164,10 @@ class ApiClient {
 
       // Create AbortController for timeout
       const controller = new AbortController()
-      const timeoutId = setTimeout(() => controller.abort(), this.config.timeout)
+      const timeoutId = setTimeout(
+        () => controller.abort(),
+        this.config.timeout
+      )
 
       let response = await fetch(url, {
         ...config,
@@ -114,13 +182,12 @@ class ApiClient {
       }
 
       const data = await response.json()
-      
+
       return {
         data,
         success: true,
         message: 'Request successful',
       }
-
     } catch (error) {
       // Handle network errors and retries
       if (retryCount < this.config.retries && this.shouldRetry(error)) {
@@ -136,7 +203,8 @@ class ApiClient {
       // Handle other errors
       throw {
         code: 'NETWORK_ERROR',
-        message: error instanceof Error ? error.message : 'Network request failed',
+        message:
+          error instanceof Error ? error.message : 'Network request failed',
         timestamp: new Date().toISOString(),
       } as ApiError
     }
@@ -149,12 +217,17 @@ class ApiClient {
   }
 
   private delay(ms: number): Promise<void> {
-    return new Promise(resolve => setTimeout(resolve, ms))
+    return new Promise((resolve) => setTimeout(resolve, ms))
   }
 
   // HTTP Methods
-  async get<T>(endpoint: string, params?: Record<string, any>): Promise<ApiResponse<T>> {
-    const url = params ? `${endpoint}?${new URLSearchParams(params).toString()}` : endpoint
+  async get<T>(
+    endpoint: string,
+    params?: Record<string, any>
+  ): Promise<ApiResponse<T>> {
+    const url = params
+      ? `${endpoint}?${new URLSearchParams(params).toString()}`
+      : endpoint
     return this.request<T>(url, { method: 'GET' })
   }
 
@@ -226,5 +299,5 @@ class ApiClient {
 export const apiClient = new ApiClient()
 
 // Export types
-export type { ApiClient }
+export type { ApiClient, RouteConfig }
 export { ApiClient as ApiClientClass }

@@ -10,6 +10,7 @@ from uuid import UUID, uuid4
 from decimal import Decimal
 
 from sqlmodel import Field, SQLModel
+from sqlalchemy import Column, JSON
 
 
 class UserSubscriptionModel(SQLModel, table=True):
@@ -85,9 +86,12 @@ class UserSubscriptionModel(SQLModel, table=True):
     )
     
     # Features enabled
-    features_enabled: dict = Field(
-        default={},
+    features_enabled: dict = Field(default={},
         description="Dictionary of enabled features"
+    ,
+
+        sa_column=Column(JSON)
+
     )
     
     # Payment information
@@ -132,9 +136,10 @@ class UserSubscriptionModel(SQLModel, table=True):
         description="Last update timestamp"
     )
     
-    class Config:
-        """SQLModel configuration."""
-        schema_extra = {
+    model_config = {
+
+    
+        "json_schema_extra": {
             "example": {
                 "user_id": "12345678-1234-5678-9012-123456789012",
                 "plan_type": "premium",
@@ -153,7 +158,10 @@ class UserSubscriptionModel(SQLModel, table=True):
                     "priority_support": True,
                     "custom_prompts": True,
                     "advanced_ai_models": True
-                },
+                }
+
+    
+    },
                 "payment_method": "stripe",
                 "cancel_at_period_end": False
             }

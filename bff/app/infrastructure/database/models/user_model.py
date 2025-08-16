@@ -9,6 +9,7 @@ from typing import List, Optional
 from uuid import UUID, uuid4
 
 from sqlmodel import Column, Field, SQLModel, Text
+from sqlalchemy import Column, JSON
 
 
 class UserModel(SQLModel, table=True):
@@ -143,19 +144,28 @@ class UserModel(SQLModel, table=True):
     )
     
     # Settings (stored as JSON)
-    preferences: Optional[dict] = Field(
-        default=None,
+    preferences: Optional[dict] = Field(default=None,
         description="User preferences and settings"
+    ,
+
+        sa_column=Column(JSON)
+
     )
     
     # Permissions and roles (simplified for now)
-    permissions: Optional[List[str]] = Field(
-        default=None,
+    permissions: Optional[List[str]] = Field(default=None,
         description="User permissions"
+    ,
+
+        sa_column=Column(JSON)
+
     )
-    roles: Optional[List[str]] = Field(
-        default=None,
+    roles: Optional[List[str]] = Field(default=None,
         description="User roles"
+    ,
+
+        sa_column=Column(JSON)
+
     )
     
     # Online status for contacts feature
@@ -207,14 +217,18 @@ class UserModel(SQLModel, table=True):
     )
     
     # Metadata
-    metadata: Optional[dict] = Field(
-        default=None,
+    user_metadata: Optional[dict] = Field(default=None,
         description="Additional user metadata"
+    ,
+
+        sa_column=Column(JSON)
+
     )
     
-    class Config:
-        """SQLModel configuration."""
-        schema_extra = {
+    model_config = {
+
+    
+        "json_schema_extra": {
             "example": {
                 "email": "user@example.com",
                 "full_name": "John Doe",
@@ -229,5 +243,8 @@ class UserModel(SQLModel, table=True):
                     "language": "en",
                     "notifications": True
                 }
+
+    
+    }
             }
         }

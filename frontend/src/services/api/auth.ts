@@ -1,109 +1,146 @@
-import { apiClient } from "./client";
+import { apiClient } from './client'
 
 export interface LoginRequest {
-  email: string;
-  password: string;
+  email: string
+  password: string
 }
 
 export interface RegisterRequest {
-  email: string;
-  password: string;
-  name?: string;
+  email: string
+  password: string
+  full_name: string
+  username?: string
+  invited_by_code?: string
+  registration_source?: string
+  registration_channel?: string
+  utm_source?: string
+  utm_medium?: string
+  utm_campaign?: string
 }
 
 export interface RefreshTokenRequest {
-  refresh_token: string;
+  refresh_token: string
 }
 
 export interface PasswordResetRequest {
-  email: string;
+  email: string
 }
 
 export interface VerifyTokenRequest {
-  token: string;
+  token: string
 }
 
 export interface LoginResponse {
-  access_token: string;
-  refresh_token: string;
-  user: User;
+  access_token: string
+  refresh_token: string
+  token_type: string
+  expires_in: number
+  user: User
 }
 
 export interface RegisterResponse {
-  access_token: string;
-  refresh_token: string;
-  user: User;
+  user: User
+  message: string
 }
 
 export interface RefreshTokenResponse {
-  access_token: string;
-  refresh_token: string;
+  access_token: string
+  refresh_token: string
+  token_type: string
+  expires_in: number
+  user: User
 }
 
 export interface User {
-  id: string;
-  email: string;
-  name?: string;
-  avatar?: string;
-  created_at: string;
+  id: string
+  email: string
+  full_name: string
+  username?: string
+  is_active: boolean
+  is_verified?: boolean
+  invitation_code?: string
+  created_at: string
+  updated_at: string
+  last_login_at?: string
+  permissions: string[]
+  roles: string[]
+  avatar?: string
 }
 
 export interface VerifyTokenResponse {
-  valid: boolean;
-  user?: User;
+  valid: boolean
+  user?: User
 }
 
 export interface MessageResponse {
-  message: string;
+  message: string
 }
 
 export interface OAuthUrlRequest {
-  provider: "google" | "github";
-  redirect_uri: string;
-  state?: string;
+  provider: 'google' | 'github'
+  redirect_uri: string
+  state?: string
 }
 
 export interface OAuthUrlResponse {
-  url: string;
-  state: string;
+  url: string
+  state: string
 }
 
 export interface OAuthCallbackRequest {
-  provider: "google" | "github";
-  code: string;
-  state?: string;
-  redirect_uri: string;
+  provider: 'google' | 'github'
+  code: string
+  state?: string
+  redirect_uri: string
 }
 
 export interface OAuthLoginResponse {
-  access_token: string;
-  refresh_token: string;
-  token_type: string;
-  expires_in: number;
-  user: User;
-  is_new_user: boolean;
+  access_token: string
+  refresh_token: string
+  token_type: string
+  expires_in: number
+  user: User
+  is_new_user: boolean
 }
 
 export class AuthAPI {
-  private static client = apiClient;
+  private static client = apiClient
 
   /**
    * 用户注册
    */
   static async register(data: RegisterRequest): Promise<RegisterResponse> {
-    const response = await this.client.post<RegisterResponse>(
-      "/auth/register",
-      data
-    );
-    return response.data;
-  }
+    try {
+      const response = await this.client.post<UserResponse>(
+        '/api/v1/auth/register',
+        data
+      )
+      // BFF returns UserResponse directly, wrap it in RegisterResponse format
+      return {
+        user: response.data,
+        message: 'User registered successfully'
+      }
+    } catch (error: any) {
+      // Re-throw with proper error message for toast display
+      const errorMessage = error?.message || 'Registration failed. Please try again.'
+      throw new Error(errorMessage)
+    }
+  } 
 
   /**
    * 用户登录
    */
   static async login(data: LoginRequest): Promise<LoginResponse> {
-    const response = await this.client.post<LoginResponse>("/auth/login", data);
-    return response.data;
+    try {
+      const response = await this.client.post<LoginResponse>(
+        '/api/v1/auth/login',
+        data
+      )
+      return response.data
+    } catch (error: any) {
+      const errorMessage = error?.message || 'Login failed. Please try again.'
+      throw new Error(errorMessage)
+    }
   }
 
   /**
@@ -112,19 +149,26 @@ export class AuthAPI {
   static async refreshToken(
     data: RefreshTokenRequest
   ): Promise<RefreshTokenResponse> {
-    const response = await this.client.post<RefreshTokenResponse>(
-      "/auth/refresh",
+    const response = await this.client.post<LoginResponse>(
+      '/api/v1/auth/refresh',
       data
-    );
-    return response.data;
+    )
+    // BFF returns LoginResponse, map to RefreshTokenResponse
+    return {
+      access_token: response.data.access_token,
+      refresh_token: response.data.refresh_token,
+      token_type: response.data.token_type,
+      expires_in: response.data.expires_in,
+      user: response.data.user
+    }
   }
 
   /**
    * 获取当前用户信息
    */
   static async getCurrentUser(): Promise<User> {
-    const response = await this.client.get<User>("/auth/me");
-    return response.data;
+    const response = await this.client.get<UserResponse>('/api/v1/auth/me')
+    return response.data
   }
 
   /**
@@ -132,10 +176,10 @@ export class AuthAPI {
    */
   static async logout(): Promise<MessageResponse> {
     const response = await this.client.post<MessageResponse>(
-      "/auth/logout",
+      '/api/v1/auth/logout',
       {}
-    );
-    return response.data;
+    )
+    return response.data
   }
 
   /**
@@ -145,10 +189,10 @@ export class AuthAPI {
     data: PasswordResetRequest
   ): Promise<MessageResponse> {
     const response = await this.client.post<MessageResponse>(
-      "/auth/password-reset",
+      '/api/v1/auth/password-reset',
       data
-    );
-    return response.data;
+    )
+    return response.data
   }
 
   /**
@@ -159,12 +203,12 @@ export class AuthAPI {
     email: string
   ): Promise<MessageResponse> {
     const response = await this.client.post<MessageResponse>(
-      `/auth/verify-email?token=${encodeURIComponent(
+      `/api/v1/auth/verify-email?token=${encodeURIComponent(
         token
       )}&email=${encodeURIComponent(email)}`,
       {}
-    );
-    return response.data;
+    )
+    return response.data
   }
 
   /**
@@ -173,11 +217,15 @@ export class AuthAPI {
   static async verifyToken(
     data: VerifyTokenRequest
   ): Promise<VerifyTokenResponse> {
-    const response = await this.client.post<VerifyTokenResponse>(
-      "/auth/verify",
+    const response = await this.client.post<any>(
+      '/api/v1/auth/verify',
       data
-    );
-    return response.data;
+    )
+    // BFF returns { valid: boolean, payload?: any, error?: string }
+    return {
+      valid: response.data.valid,
+      user: response.data.payload ? undefined : undefined // BFF doesn't return user in verify
+    }
   }
 
   /**
@@ -185,12 +233,10 @@ export class AuthAPI {
    */
   static async getOAuthUrl(data: OAuthUrlRequest): Promise<OAuthUrlResponse> {
     const response = await this.client.get<OAuthUrlResponse>(
-      "/auth/oauth/url",
-      {
-        params: data,
-      }
-    );
-    return response.data;
+      '/api/v1/auth/oauth/url',
+      data
+    )
+    return response.data
   }
 
   /**
@@ -200,12 +246,12 @@ export class AuthAPI {
     data: OAuthCallbackRequest
   ): Promise<OAuthLoginResponse> {
     const response = await this.client.post<OAuthLoginResponse>(
-      "/auth/oauth/callback",
+      '/api/v1/auth/oauth/callback',
       data
-    );
-    return response.data;
+    )
+    return response.data
   }
 }
 
 // Export the class
-export { AuthAPI as default };
+export { AuthAPI as default }
