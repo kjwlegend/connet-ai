@@ -19,7 +19,8 @@
       "Bash(source:*)",
       "Bash(.venv/Scripts/activate)",
       "Bash(grep:*)",
-      "Bash(pytest:*)"
+      "Bash(pytest:*)",
+      "Bash(alembic upgrade:*)"
     ],
     "deny": [],
     "defaultMode": "acceptEdits",

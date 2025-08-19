@@ -7,15 +7,15 @@ from uuid import UUID
 from sqlalchemy import select, update, delete, and_, or_, func, desc
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.infrastructure.database.models.ai_agent_model import (
+from app.infrastructure.database.models.agent_model import (
     AIMemoryModel,
     AIConversationSummaryModel
 )
-from app.core.interfaces.repositories.base_repository import BaseRepository
+from app.infrastructure.database.repositories.base_repository import BaseRepository
 from app.schemas.ai import MemoryCreate, MemoryType, MemoryCategory
 
 
-class AIMemoryRepositoryImpl(BaseRepository[AIMemoryModel, UUID]):
+class AIMemoryRepositoryImpl(BaseRepository[AIMemoryModel]):
     """AI Memory repository implementation"""
     
     def __init__(self, session: AsyncSession):
@@ -230,7 +230,7 @@ class AIMemoryRepositoryImpl(BaseRepository[AIMemoryModel, UUID]):
         }
 
 
-class AIConversationSummaryRepositoryImpl(BaseRepository[AIConversationSummaryModel, UUID]):
+class AIConversationSummaryRepositoryImpl(BaseRepository[AIConversationSummaryModel]):
     """AI Conversation Summary repository implementation"""
     
     def __init__(self, session: AsyncSession):

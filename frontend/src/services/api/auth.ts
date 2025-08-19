@@ -38,6 +38,23 @@ export interface LoginResponse {
   user: User
 }
 
+// 用于注册和获取用户信息的响应类型
+export interface UserResponse {
+  id: string
+  email: string
+  full_name: string
+  username?: string
+  is_active: boolean
+  is_verified?: boolean
+  invitation_code?: string
+  created_at: string
+  updated_at: string
+  last_login_at?: string
+  permissions: string[]
+  roles: string[]
+  avatar?: string
+}
+
 export interface RegisterResponse {
   user: User
   message: string
@@ -118,14 +135,15 @@ export class AuthAPI {
       // BFF returns UserResponse directly, wrap it in RegisterResponse format
       return {
         user: response.data,
-        message: 'User registered successfully'
+        message: 'User registered successfully',
       }
     } catch (error: any) {
       // Re-throw with proper error message for toast display
-      const errorMessage = error?.message || 'Registration failed. Please try again.'
+      const errorMessage =
+        error?.message || 'Registration failed. Please try again.'
       throw new Error(errorMessage)
     }
-  } 
+  }
 
   /**
    * 用户登录
@@ -159,7 +177,7 @@ export class AuthAPI {
       refresh_token: response.data.refresh_token,
       token_type: response.data.token_type,
       expires_in: response.data.expires_in,
-      user: response.data.user
+      user: response.data.user,
     }
   }
 
@@ -217,14 +235,11 @@ export class AuthAPI {
   static async verifyToken(
     data: VerifyTokenRequest
   ): Promise<VerifyTokenResponse> {
-    const response = await this.client.post<any>(
-      '/api/v1/auth/verify',
-      data
-    )
+    const response = await this.client.post<any>('/api/v1/auth/verify', data)
     // BFF returns { valid: boolean, payload?: any, error?: string }
     return {
       valid: response.data.valid,
-      user: response.data.payload ? undefined : undefined // BFF doesn't return user in verify
+      user: response.data.payload ? undefined : undefined, // BFF doesn't return user in verify
     }
   }
 

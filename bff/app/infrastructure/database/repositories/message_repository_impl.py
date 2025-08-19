@@ -10,7 +10,6 @@ from sqlmodel import select, and_, or_, desc, asc
 from sqlalchemy.ext.asyncio import AsyncSession
 from datetime import datetime, timezone
 
-from app.core.interfaces.repositories.base_repository import BaseRepository as BaseRepositoryInterface
 from app.infrastructure.database.models.message_model import Message
 from app.infrastructure.database.repositories.base_repository import BaseRepository
 from app.utils.logging import get_logger
@@ -18,7 +17,7 @@ from app.utils.logging import get_logger
 logger = get_logger(__name__)
 
 
-class MessageRepository(BaseRepository[Message, UUID], BaseRepositoryInterface):
+class MessageRepository(BaseRepository[Message]):
     """Message repository implementation."""
     
     def __init__(self, session: AsyncSession):

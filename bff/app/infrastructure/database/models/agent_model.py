@@ -10,123 +10,189 @@ from sqlalchemy.dialects.postgresql import JSONB
 
 
 class AIAgentModel(SQLModel, table=True):
-	"""AI Agent model (统一后的主模型)
+    """AI Agent model (统一后的主模型)"""
 
-	"""
+    __tablename__ = "agents"
 
-	__tablename__ = "agents"
+    # 1) Identity & Lifecycle
 
-	# 1) Identity & Lifecycle
-    
-	id: UUID = Field(default_factory=uuid4, primary_key=True, index=True, description="Unique Agent identifier")
-	name: str = Field(unique=True, index=True, max_length=50, description="Agent name for mentions (@code_assistant)")
-	display_name: str = Field(max_length=100, description="Display name (e.g., 'Code Assistant')")
-	description: str = Field(max_length=500, description="Agent description and capabilities")
-	agent_type: str = Field(max_length=100, description="Agent type: system/custom/specialized")
-	version: str = Field(default="1.0.0", max_length=50, description="Semantic version of the agent")
-	status: str = Field(default="active", max_length=50, description="Lifecycle status: active/inactive/deprecated")
-    
+    id: UUID = Field(
+        default_factory=uuid4,
+        primary_key=True,
+        index=True,
+        description="Unique Agent identifier",
+    )
+    name: str = Field(
+        unique=True,
+        index=True,
+        max_length=50,
+        description="Agent name for mentions (@code_assistant)",
+    )
+    display_name: str = Field(
+        max_length=100, description="Display name (e.g., 'Code Assistant')"
+    )
+    description: str = Field(
+        max_length=500, description="Agent description and capabilities"
+    )
+    agent_type: str = Field(
+        max_length=100, description="Agent type: system/custom/specialized"
+    )
+    version: str = Field(
+        default="1.0.0", max_length=50, description="Semantic version of the agent"
+    )
+    status: str = Field(
+        default="active",
+        max_length=50,
+        description="Lifecycle status: active/inactive/deprecated",
+    )
 
-	# 2) Visibility & Ownership
-	is_public: bool = Field(default=True, description="Whether agent is publicly discoverable")
-	is_active: bool = Field(default=True, description="Whether agent is active (compat with legacy)")
+    # 2) Visibility & Ownership
+    is_public: bool = Field(
+        default=True, description="Whether agent is publicly discoverable"
+    )
+    is_active: bool = Field(
+        default=True, description="Whether agent is active (compat with legacy)"
+    )
 
-	# 3) UI & Presentation
-	avatar_url: Optional[str] = Field(default=None, max_length=500, description="Agent avatar image URL")
-	avatar_style: Optional[str] = Field(default="default", max_length=20, description="Avatar style: default/anime/realistic/abstract")
-	color_theme: Optional[str] = Field(default=None, max_length=7, description="Theme color (hex format: #RRGGBB)")
-	conversation_style: str = Field(default="professional", max_length=100, description="Conversation style: professional/casual/humorous")
+    # 3) UI & Presentation
+    avatar_url: Optional[str] = Field(
+        default=None, max_length=500, description="Agent avatar image URL"
+    )
+    avatar_style: Optional[str] = Field(
+        default="default",
+        max_length=20,
+        description="Avatar style: default/anime/realistic/abstract",
+    )
+    color_theme: Optional[str] = Field(
+        default=None, max_length=7, description="Theme color (hex format: #RRGGBB)"
+    )
+    conversation_style: str = Field(
+        default="professional",
+        max_length=100,
+        description="Conversation style: professional/casual/humorous",
+    )
 
-	# 4) Core Configuration
-	system_prompt: str = Field(sa_column=Column(Text), description="System prompt for the agent")
-	personality_config: Dict[str, Any] = Field(default={}, sa_column=Column(JSONB), description="Structured personality profile")
-	model_preferences: Dict[str, Any] = Field(default={}, sa_column=Column(JSONB), description="Model selection & defaults")
+    # 4) Core Configuration
+    system_prompt: str = Field(
+        sa_column=Column(Text), description="System prompt for the agent"
+    )
+    personality_config: Dict[str, Any] = Field(
+        default={},
+        sa_column=Column(JSONB),
+        description="Structured personality profile",
+    )
+    model_preferences: Dict[str, Any] = Field(
+        default={}, sa_column=Column(JSONB), description="Model selection & defaults"
+    )
 
-	# 6) Capabilities & Permissions
-	capabilities: List[str] = Field(default=[], sa_column=Column(JSONB), description="High-level capabilities tags")
-	required_permissions: List[str] = Field(default=[], sa_column=Column(JSONB), description="Required permissions for sensitive ops")
-	enabled_tools: List[str] = Field(default=[], sa_column=Column(JSONB), description="Enabled tool names")
+    # 6) Capabilities & Permissions
+    capabilities: List[str] = Field(
+        default=[], sa_column=Column(JSONB), description="High-level capabilities tags"
+    )
+    required_permissions: List[str] = Field(
+        default=[],
+        sa_column=Column(JSONB),
+        description="Required permissions for sensitive ops",
+    )
+    # NOTE: Tools are now managed per-contact via ContactToolLink
 
-	# 7) Categorization & Discovery
-	tags: List[str] = Field(default=[], sa_column=Column(JSONB), description="Categorization tags")
-	category: Optional[str] = Field(default=None, index=True, max_length=50, description="Primary category")
+    # 7) Categorization & Discovery
+    tags: List[str] = Field(
+        default=[], sa_column=Column(JSONB), description="Categorization tags"
+    )
+    category: Optional[str] = Field(
+        default=None, index=True, max_length=50, description="Primary category"
+    )
 
-	# 8) Usage & Metrics
-	usage_count: int = Field(default=0, description="Total usage count")
-	follower_count: int = Field(default=0, description="Number of followers")
-    
-	# 9) Extensions & Embeddings
-	agent_metadata: Optional[Dict[str, Any]] = Field(default=None, sa_column=Column(JSONB), description="Additional agent metadata")
-	description_embedding: Optional[List[float]] = Field(default=None, sa_column=Column(JSONB), description="Embedding of description")
-	capabilities_embedding: Optional[List[float]] = Field(default=None, sa_column=Column(JSONB), description="Embedding of capabilities")
+    # 8) Usage & Metrics
+    usage_count: int = Field(default=0, description="Total usage count")
+    follower_count: int = Field(default=0, description="Number of followers")
 
-	# 11) Timestamps
-	created_by: UUID = Field(foreign_key="users.id", description="Creator user ID")
-	created_at: datetime = Field(default_factory=datetime.utcnow, description="Creation timestamp")
-	updated_at: datetime = Field(default_factory=datetime.utcnow, description="Last update timestamp")
-	last_used_at: Optional[datetime] = Field(default=None, description="Last used timestamp")
+    # 9) Extensions & Embeddings
+    agent_metadata: Optional[Dict[str, Any]] = Field(
+        default=None, sa_column=Column(JSONB), description="Additional agent metadata"
+    )
+    description_embedding: Optional[List[float]] = Field(
+        default=None, sa_column=Column(JSONB), description="Embedding of description"
+    )
+    capabilities_embedding: Optional[List[float]] = Field(
+        default=None, sa_column=Column(JSONB), description="Embedding of capabilities"
+    )
 
-	# OpenAPI 文档示例
-	model_config = {
-		"json_schema_extra": {
-			"example": {
-				"name": "code_assistant",
-				"display_name": "Code Assistant",
-				"description": "Expert AI assistant for code generation, debugging, and guidance",
-				"agent_type": "custom",
-				"version": "1.0.0",
-				"status": "active",
-				"is_public": True,
-				"is_active": True,
-				"avatar_url": "https://example.com/avatar.png",
-				"avatar_style": "default",
-				"color_theme": "#4F46E5",
-				"conversation_style": "professional",
-				"system_prompt": "You are a helpful coding assistant...",
-				"personality_config": {
-					"role": "Developer Assistant",
-					"expertise": ["Python", "SQL", "System Design"],
-					"communication_style": "professional"
-				},
-				"model_preferences": {
-					"default_model": "gpt-4.1-mini",
-					"fallback_models": ["gpt-4o", "claude-3.5"],
-					"temperature": 0.7,
-					"max_tokens": 8000,
+    # 11) Timestamps
+    created_by: UUID = Field(foreign_key="users.id", description="Creator user ID")
+    created_at: datetime = Field(
+        default_factory=datetime.utcnow, description="Creation timestamp"
+    )
+    updated_at: datetime = Field(
+        default_factory=datetime.utcnow, description="Last update timestamp"
+    )
+    last_used_at: Optional[datetime] = Field(
+        default=None, description="Last used timestamp"
+    )
+
+    # OpenAPI 文档示例
+    model_config = {
+        "json_schema_extra": {
+            "example": {
+                "name": "code_assistant",
+                "display_name": "Code Assistant",
+                "description": "Expert AI assistant for code generation, debugging, and guidance",
+                "agent_type": "custom",
+                "version": "1.0.0",
+                "status": "active",
+                "is_public": True,
+                "is_active": True,
+                "avatar_url": "https://example.com/avatar.png",
+                "avatar_style": "default",
+                "color_theme": "#4F46E5",
+                "conversation_style": "professional",
+                "system_prompt": "You are a helpful coding assistant...",
+                "personality_config": {
+                    "role": "Developer Assistant",
+                    "expertise": ["Python", "SQL", "System Design"],
+                    "communication_style": "professional",
+                },
+                "model_preferences": {
+                    "default_model": "gpt-4.1-mini",
+                    "fallback_models": ["gpt-4o", "claude-3.5"],
+                    "temperature": 0.7,
+                    "max_tokens": 8000,
                     "top_p": 1.0,
-					"presence_penalty": 0.0,
-					"frequency_penalty": 0.0
-				},
-				"enabled_tools": ["python_executor", "file_reader", "web_search"],
-				"capabilities": ["code_generation", "debugging", "code_review"],
-				"required_permissions": [],
-				"max_context_length": 4000,
-				"tags": ["coding", "assistant", "technical"],
-				"category": "development",
-				"usage_count": 120,
-				"follower_count": 36,
-				"agent_metadata": {"lang": "en"},
-				"description_embedding": None,
-				"capabilities_embedding": None
+                    "presence_penalty": 0.0,
+                    "frequency_penalty": 0.0,
+                },
+                # "enabled_tools": ["python_executor", "file_reader", "web_search"], # Moved to contact-level
+                "capabilities": ["code_generation", "debugging", "code_review"],
+                "required_permissions": [],
+                "max_context_length": 4000,
+                "tags": ["coding", "assistant", "technical"],
+                "category": "development",
+                "usage_count": 120,
+                "follower_count": 36,
+                "agent_metadata": {"lang": "en"},
+                "description_embedding": None,
+                "capabilities_embedding": None,
+            }
+        }
+    }
 
-			}
-		}
-	}
 
 class AIAgentVersionModel(SQLModel, table=True):
     """AI Agent version history model"""
+
     __tablename__ = "ai_agent_versions"
-    
+
     id: UUID = Field(default_factory=uuid4, primary_key=True)
-    agent_id: UUID = Field(foreign_key="ai_agents.id", index=True)
+    agent_id: UUID = Field(foreign_key="agents.id", index=True)
     version_number: str = Field(max_length=50)
     previous_version: Optional[str] = Field(default=None, max_length=50)
-    
+
     # Version data
     agent_snapshot: Dict[str, Any] = Field(sa_column=Column(JSONB))
     changes: Dict[str, Any] = Field(default={}, sa_column=Column(JSONB))
     change_description: Optional[str] = Field(default=None, sa_column=Column(Text))
-    
+
     # Metadata
     created_by: UUID = Field(foreign_key="users.id")
     created_at: datetime = Field(default_factory=datetime.utcnow)
@@ -135,33 +201,36 @@ class AIAgentVersionModel(SQLModel, table=True):
 
 class AIMemoryModel(SQLModel, table=True):
     """AI Memory storage model for three-tier memory system"""
+
     __tablename__ = "ai_memories"
-    
+
     id: UUID = Field(default_factory=uuid4, primary_key=True)
     conversation_id: UUID = Field(foreign_key="conversations.id", index=True)
-    agent_id: Optional[UUID] = Field(foreign_key="ai_agents.id", index=True)
+    agent_id: Optional[UUID] = Field(foreign_key="agents.id", index=True)
     user_id: UUID = Field(foreign_key="users.id", index=True)
-    
+
     # Memory classification
     memory_type: str = Field(max_length=50)  # short_term, medium_term, long_term
-    memory_category: str = Field(max_length=100)  # conversation, user_preference, knowledge, pattern
-    
+    memory_category: str = Field(
+        max_length=100
+    )  # conversation, user_preference, knowledge, pattern
+
     # Memory content
     content: str = Field(sa_column=Column(Text))
     agent_metadata: Dict[str, Any] = Field(default={}, sa_column=Column(JSONB))
     context: Dict[str, Any] = Field(default={}, sa_column=Column(JSONB))
-    
+
     # Memory attributes
     importance_score: float = Field(default=0.5)  # 0.0 to 1.0
     confidence_score: float = Field(default=1.0)  # 0.0 to 1.0
     emotional_valence: float = Field(default=0.0)  # -1.0 to 1.0
-    
+
     # Lifecycle management
     created_at: datetime = Field(default_factory=datetime.utcnow)
     expires_at: Optional[datetime] = Field(default=None)
     last_accessed_at: datetime = Field(default_factory=datetime.utcnow)
     access_count: int = Field(default=0)
-    
+
     # Embedding for semantic search
     embedding_model: Optional[str] = Field(default=None, max_length=100)
     # Note: actual embedding vectors will be stored in a separate table or vector database
@@ -169,121 +238,30 @@ class AIMemoryModel(SQLModel, table=True):
 
 class AIConversationSummaryModel(SQLModel, table=True):
     """AI conversation summary for medium-term memory"""
+
     __tablename__ = "ai_conversation_summaries"
-    
+
     id: UUID = Field(default_factory=uuid4, primary_key=True)
     conversation_id: UUID = Field(foreign_key="conversations.id", index=True)
-    agent_id: Optional[UUID] = Field(foreign_key="ai_agents.id", index=True)
-    
+    agent_id: Optional[UUID] = Field(foreign_key="agents.id", index=True)
+
     # Summary content
     summary_text: str = Field(sa_column=Column(Text))
     key_points: List[str] = Field(default=[], sa_column=Column(JSONB))
     entities: List[Dict[str, Any]] = Field(default=[], sa_column=Column(JSONB))
     topics: List[str] = Field(default=[], sa_column=Column(JSONB))
     sentiment: str = Field(default="neutral", max_length=50)
-    
+
     # Context information
     time_range_start: datetime
     time_range_end: datetime
     message_count: int = Field(default=0)
     participant_count: int = Field(default=0)
-    
+
     # Quality metrics
     summary_quality_score: float = Field(default=1.0)
     completeness_score: float = Field(default=1.0)
-    
+
     created_at: datetime = Field(default_factory=datetime.utcnow)
     processed_at: Optional[datetime] = Field(default=None)
     is_processed: bool = Field(default=False)
-
-
-class AIToolExecutionModel(SQLModel, table=True):
-    """AI Tool execution history model"""
-    __tablename__ = "ai_tool_executions"
-    
-    id: UUID = Field(default_factory=uuid4, primary_key=True)
-    tool_id: UUID = Field(foreign_key="ai_tools.id", index=True)
-    agent_id: Optional[UUID] = Field(foreign_key="ai_agents.id", index=True)
-    conversation_id: UUID = Field(foreign_key="conversations.id", index=True)
-    user_id: UUID = Field(foreign_key="users.id", index=True)
-    
-    # Execution details
-    execution_id: str = Field(max_length=255, index=True)
-    parameters: Dict[str, Any] = Field(sa_column=Column(JSONB))
-    result: Optional[Dict[str, Any]] = Field(default=None, sa_column=Column(JSONB))
-    
-    # Execution status
-    status: str = Field(max_length=50)  # pending, running, completed, failed, timeout
-    success: bool = Field(default=False)
-    error_message: Optional[str] = Field(default=None, sa_column=Column(Text))
-    
-    # Performance metrics
-    execution_time: float = Field(default=0.0)
-    resource_usage: Dict[str, Any] = Field(default={}, sa_column=Column(JSONB))
-    
-    # Artifacts and outputs
-    artifacts: List[str] = Field(default=[], sa_column=Column(JSONB))  # Generated files/resources
-    output_agent_metadata: Dict[str, Any] = Field(default={}, sa_column=Column(JSONB))
-    
-    started_at: datetime = Field(default_factory=datetime.utcnow)
-    completed_at: Optional[datetime] = Field(default=None)
-
-
-
-class AIRAGDocumentModel(SQLModel, table=True):
-    """AI RAG document model for knowledge base"""
-    __tablename__ = "ai_rag_documents"
-    
-    id: UUID = Field(default_factory=uuid4, primary_key=True)
-    name: str = Field(max_length=255)
-    file_path: Optional[str] = Field(default=None, max_length=1000)
-    file_type: str = Field(max_length=100)  # pdf, docx, txt, md, html, etc.
-    file_size: int = Field(default=0)
-    
-    # Document content
-    content: str = Field(sa_column=Column(Text))
-    agent_metadata: Dict[str, Any] = Field(default={}, sa_column=Column(JSONB))
-    
-    # Processing information
-    processing_status: str = Field(default="pending", max_length=50)  # pending, processing, completed, failed
-    chunk_count: int = Field(default=0)
-    quality_score: float = Field(default=1.0)
-    
-    # Access control
-    owner_id: UUID = Field(foreign_key="users.id")
-    visibility: str = Field(default="private", max_length=50)  # private, shared, public
-    shared_with: List[UUID] = Field(default=[], sa_column=Column(JSONB))
-    
-    created_at: datetime = Field(default_factory=datetime.utcnow)
-    updated_at: datetime = Field(default_factory=datetime.utcnow)
-    processed_at: Optional[datetime] = Field(default=None)
-
-
-class AIRAGDocumentChunkModel(SQLModel, table=True):
-    """AI RAG document chunk model for semantic search"""
-    __tablename__ = "ai_rag_document_chunks"
-    
-    id: UUID = Field(default_factory=uuid4, primary_key=True)
-    document_id: UUID = Field(foreign_key="ai_rag_documents.id", index=True)
-    chunk_index: int = Field(index=True)
-    
-    # Chunk content
-    content: str = Field(sa_column=Column(Text))
-    chunk_agent_metadata: Dict[str, Any] = Field(default={}, sa_column=Column(JSONB))
-    
-    # Position information
-    start_position: int = Field(default=0)
-    end_position: int = Field(default=0)
-    page_number: Optional[int] = Field(default=None)
-    section_title: Optional[str] = Field(default=None, max_length=255)
-    
-    # Embedding information
-    embedding_model: str = Field(max_length=100)
-    embedding_dimension: int = Field(default=1536)
-    # Note: actual embedding vectors stored in vector database
-    
-    # Quality and relevance
-    quality_score: float = Field(default=1.0)
-    token_count: int = Field(default=0)
-    
-    created_at: datetime = Field(default_factory=datetime.utcnow)

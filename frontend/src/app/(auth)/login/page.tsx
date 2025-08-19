@@ -1,83 +1,83 @@
-"use client";
+'use client'
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import Link from "next/link";
-import { motion } from "framer-motion";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Card, CardContent } from "@/components/ui/card";
-import { Checkbox } from "@/components/ui/checkbox";
-import { useTranslations } from "@/lib/i18n/client";
-import useStore from "@/store";
+import { useState } from 'react'
+import { useRouter } from 'next/navigation'
+import Link from 'next/link'
+import { motion } from 'framer-motion'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Card, CardContent } from '@/components/ui/card'
+import { Checkbox } from '@/components/ui/checkbox'
+import { useTranslations } from '@/lib/i18n/client'
+import useStore from '@/store'
 import {
   LoginFormData,
   validateLoginForm,
   ValidationResult,
-} from "@/lib/utils/validation";
-import { cn } from "@/lib/utils/cn";
-import { LanguageToggle } from "@/components/ui/LanguageToggle";
-import { OAuthButtonsGroup } from "@/components/auth/OAuthButton";
+} from '@/lib/utils/validation'
+import { cn } from '@/lib/utils/cn'
+import { LanguageToggle } from '@/components/ui/LanguageToggle'
+import { OAuthButtonsGroup } from '@/components/auth/OAuthButton'
 
 function LoginForm() {
-  const t = useTranslations();
-  const router = useRouter();
-  const { loginWithCredentials, isLoading, error } = useStore();
+  const t = useTranslations()
+  const router = useRouter()
+  const { loginWithCredentials, isLoading, error } = useStore()
 
   const [formData, setFormData] = useState<LoginFormData>({
-    email: "",
-    password: "",
+    email: '',
+    password: '',
     rememberMe: false,
-  });
+  })
 
   const [fieldErrors, setFieldErrors] = useState<
     Record<string, ValidationResult>
-  >({});
-  const [touched, setTouched] = useState<Record<string, boolean>>({});
+  >({})
+  const [touched, setTouched] = useState<Record<string, boolean>>({})
 
   const handleInputChange = (
     field: keyof LoginFormData,
     value: string | boolean
   ) => {
-    setFormData((prev) => ({ ...prev, [field]: value }));
+    setFormData((prev) => ({ ...prev, [field]: value }))
 
     // Clear field error when user starts typing
     if (fieldErrors[field] && !fieldErrors[field].isValid) {
-      setFieldErrors((prev) => ({ ...prev, [field]: { isValid: true } }));
+      setFieldErrors((prev) => ({ ...prev, [field]: { isValid: true } }))
     }
-  };
+  }
 
   const handleBlur = (field: keyof LoginFormData) => {
-    setTouched((prev) => ({ ...prev, [field]: true }));
+    setTouched((prev) => ({ ...prev, [field]: true }))
 
     // Validate single field on blur
-    const validation = validateLoginForm(formData);
+    const validation = validateLoginForm(formData)
     if (validation[field]) {
-      setFieldErrors((prev) => ({ ...prev, [field]: validation[field] }));
+      setFieldErrors((prev) => ({ ...prev, [field]: validation[field] }))
     }
-  };
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+    e.preventDefault()
 
     // Mark all fields as touched
     setTouched({
       email: true,
       password: true,
-    });
+    })
 
     // Validate form
-    const validation = validateLoginForm(formData);
-    setFieldErrors(validation);
+    const validation = validateLoginForm(formData)
+    setFieldErrors(validation)
 
     // Check if form is valid
     const isFormValid = Object.values(validation).every(
       (result) => result.isValid
-    );
+    )
 
     if (!isFormValid) {
-      return;
+      return
     }
 
     try {
@@ -85,13 +85,13 @@ function LoginForm() {
         formData.email,
         formData.password,
         formData.rememberMe
-      );
-      console.log("Login successful, redirecting to dashboard");
-      router.push("/dashboard");
+      )
+      console.log('Login successful, redirecting to dashboard')
+      router.push('/chat')
     } catch (err) {
       // Error is handled by the store and displayed via error state
     }
-  };
+  }
 
   return (
     <div className="h-screen w-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 overflow-hidden fixed inset-0">
@@ -189,25 +189,25 @@ function LoginForm() {
                         htmlFor="email"
                         className="text-sm font-medium text-slate-200"
                       >
-                        {t("auth.login.emailLabel")}
+                        {t('auth.login.emailLabel')}
                       </Label>
                       <Input
                         id="email"
                         type="email"
-                        placeholder={t("auth.login.emailPlaceholder")}
+                        placeholder={t('auth.login.emailPlaceholder')}
                         value={formData.email}
                         onChange={(e) =>
-                          handleInputChange("email", e.target.value)
+                          handleInputChange('email', e.target.value)
                         }
-                        onBlur={() => handleBlur("email")}
+                        onBlur={() => handleBlur('email')}
                         className={cn(
-                          "h-12 rounded-xl bg-slate-900/50 border-slate-600/50 text-white placeholder:text-slate-400",
-                          "focus:border-blue-500/50 focus:ring-4 focus:ring-blue-500/20",
-                          "hover:border-slate-500/70 transition-all duration-200",
+                          'h-12 rounded-xl bg-slate-900/50 border-slate-600/50 text-white placeholder:text-slate-400',
+                          'focus:border-blue-500/50 focus:ring-4 focus:ring-blue-500/20',
+                          'hover:border-slate-500/70 transition-all duration-200',
                           touched.email &&
                             fieldErrors.email &&
                             !fieldErrors.email.isValid &&
-                            "border-red-500/50 focus:border-red-500/50 focus:ring-red-500/20"
+                            'border-red-500/50 focus:border-red-500/50 focus:ring-red-500/20'
                         )}
                         disabled={isLoading}
                       />
@@ -225,25 +225,25 @@ function LoginForm() {
                         htmlFor="password"
                         className="text-sm font-medium text-slate-200"
                       >
-                        {t("auth.login.passwordLabel")}
+                        {t('auth.login.passwordLabel')}
                       </Label>
                       <Input
                         id="password"
                         type="password"
-                        placeholder={t("auth.login.passwordPlaceholder")}
+                        placeholder={t('auth.login.passwordPlaceholder')}
                         value={formData.password}
                         onChange={(e) =>
-                          handleInputChange("password", e.target.value)
+                          handleInputChange('password', e.target.value)
                         }
-                        onBlur={() => handleBlur("password")}
+                        onBlur={() => handleBlur('password')}
                         className={cn(
-                          "h-12 rounded-xl bg-slate-900/50 border-slate-600/50 text-white placeholder:text-slate-400",
-                          "focus:border-blue-500/50 focus:ring-4 focus:ring-blue-500/20",
-                          "hover:border-slate-500/70 transition-all duration-200",
+                          'h-12 rounded-xl bg-slate-900/50 border-slate-600/50 text-white placeholder:text-slate-400',
+                          'focus:border-blue-500/50 focus:ring-4 focus:ring-blue-500/20',
+                          'hover:border-slate-500/70 transition-all duration-200',
                           touched.password &&
                             fieldErrors.password &&
                             !fieldErrors.password.isValid &&
-                            "border-red-500/50 focus:border-red-500/50 focus:ring-red-500/20"
+                            'border-red-500/50 focus:border-red-500/50 focus:ring-red-500/20'
                         )}
                         disabled={isLoading}
                       />
@@ -263,7 +263,7 @@ function LoginForm() {
                         id="rememberMe"
                         checked={formData.rememberMe}
                         onCheckedChange={(checked) =>
-                          handleInputChange("rememberMe", !!checked)
+                          handleInputChange('rememberMe', !!checked)
                         }
                         disabled={isLoading}
                         className="border-slate-600 data-[state=checked]:bg-blue-600 data-[state=checked]:border-blue-600"
@@ -272,7 +272,7 @@ function LoginForm() {
                         htmlFor="rememberMe"
                         className="text-sm text-slate-300 font-medium cursor-pointer"
                       >
-                        {t("auth.login.rememberMe")}
+                        {t('auth.login.rememberMe')}
                       </Label>
                     </div>
 
@@ -280,7 +280,7 @@ function LoginForm() {
                       href="/forgot-password"
                       className="text-sm text-blue-400 hover:text-blue-300 transition-colors"
                     >
-                      {t("auth.login.forgotPassword")}
+                      {t('auth.login.forgotPassword')}
                     </Link>
                   </div>
 
@@ -295,19 +295,19 @@ function LoginForm() {
                         <span>Signing in...</span>
                       </div>
                     ) : (
-                      t("auth.login.loginButton")
+                      t('auth.login.loginButton')
                     )}
                   </Button>
 
                   <div className="text-center text-sm">
                     <span className="text-slate-400">
-                      {t("auth.login.noAccount")}{" "}
+                      {t('auth.login.noAccount')}{' '}
                     </span>
                     <Link
                       href="/register"
                       className="text-blue-400 hover:text-blue-300 font-medium transition-colors"
                     >
-                      {t("auth.login.signUp")}
+                      {t('auth.login.signUp')}
                     </Link>
                   </div>
                 </form>
@@ -327,9 +327,9 @@ function LoginForm() {
         </motion.div>
       </div>
     </div>
-  );
+  )
 }
 
 export default function LoginPage() {
-  return <LoginForm />;
+  return <LoginForm />
 }

@@ -1,4 +1,14 @@
-"""AI RAG service for document processing and semantic search."""
+"""RAG service for document processing and semantic search.
+
+This service handles:
+- Document content processing and chunking
+- Embedding generation and vector storage
+- Semantic search and retrieval
+- Document quality scoring
+
+Note: This service works with knowledge bases that are managed at the contact level,
+not directly attached to agents.
+"""
 
 import asyncio
 import json
@@ -7,28 +17,25 @@ from datetime import datetime
 from typing import List, Optional, Dict, Any, Tuple
 from uuid import UUID, uuid4
 
-from app.infrastructure.database.repositories.ai_rag_repository_impl import (
-    AIRAGDocumentRepositoryImpl,
-    AIRAGDocumentChunkRepositoryImpl
+from app.infrastructure.database.repositories.knowledge_repository_impl import (
+    KnowledgeRepository,
+    RAGDocumentRepository
 )
-from app.schemas.ai import (
-    DocumentCreate,
-    DocumentResponse,
-    DocumentSearchRequest,
-    DocumentSearchResult,
-    DocumentSearchResponse,
-    PaginationParams
+from app.schemas.knowledge import (
+    RAGDocumentResponse,
+    RAGDocumentCreate
 )
 from app.services.base import BaseService
 
 
-class AIRAGService(BaseService):
-    """AI RAG service for document processing and search"""
+class RAGService(BaseService):
+    """RAG service for document processing and search"""
     
-    def __init__(self, session):
-        super().__init__(session)
-        self.document_repo = AIRAGDocumentRepositoryImpl(session)
-        self.chunk_repo = AIRAGDocumentChunkRepositoryImpl(session)
+    def __init__(
+        self,
+        rag_document_repository: RAGDocumentRepository
+    ):
+        self.rag_document_repository = rag_document_repository
         
         # Document processors
         self.document_processors = {
@@ -45,108 +52,75 @@ class AIRAGService(BaseService):
         # Vector store (placeholder)
         self.vector_store = VectorStore()
     
-    async def create_document(self, document_data: DocumentCreate, user_id: UUID) -> DocumentResponse:
-        """Create and process a new document"""
+    async def process_document(self, document_id: UUID) -> bool:
+        """Process a RAG document for chunking and embedding generation"""
         
-        # Create document record
-        document = await self.document_repo.create_document(document_data, user_id)
+        # Get document
+        document = await self.rag_document_repository.get_by_id(document_id)
+        if not document:
+            return False
         
         # Process document asynchronously
-        asyncio.create_task(self._process_document_async(document.id))
-        
-        return DocumentResponse.model_validate(document)
+        asyncio.create_task(self._process_document_async(document_id))
+        return True
     
-    async def get_document(self, document_id: UUID, user_id: UUID) -> Optional[DocumentResponse]:
-        """Get document by ID"""
-        
-        document = await self.document_repo.get_document_by_id(document_id, user_id)
-        if not document:
-            return None
-        
-        return DocumentResponse.model_validate(document)
-    
-    async def list_documents(
+    async def semantic_search(
         self,
-        user_id: UUID,
-        file_type: Optional[str] = None,
-        processing_status: Optional[str] = None,
-        search: Optional[str] = None,
-        visibility: Optional[str] = None,
-        pagination: Optional[PaginationParams] = None
-    ) -> tuple[List[DocumentResponse], int]:
-        """List documents with filtering"""
+        query: str,
+        document_ids: Optional[List[UUID]] = None,
+        top_k: int = 10,
+        search_type: str = "hybrid"
+    ) -> List[Dict[str, Any]]:
+        """Perform semantic search across RAG documents
         
-        documents, total = await self.document_repo.list_documents(
-            user_id=user_id,
-            file_type=file_type,
-            processing_status=processing_status,
-            search=search,
-            visibility=visibility,
-            pagination=pagination
-        )
-        
-        document_responses = [DocumentResponse.model_validate(doc) for doc in documents]
-        return document_responses, total
-    
-    async def search_documents(
-        self,
-        request: DocumentSearchRequest,
-        user_id: UUID
-    ) -> DocumentSearchResponse:
-        """Search documents using various methods"""
+        Args:
+            query: Search query
+            document_ids: Optional list of document IDs to restrict search to
+            top_k: Number of results to return
+            search_type: "vector", "keyword", or "hybrid"
+        """
         
         start_time = time.time()
         
-        if request.search_type == "vector":
-            results = await self._vector_search(request, user_id)
-        elif request.search_type == "keyword":
-            results = await self._keyword_search(request, user_id)
+        if search_type == "vector":
+            results = await self._vector_search(query, document_ids, top_k)
+        elif search_type == "keyword":
+            results = await self._keyword_search(query, document_ids, top_k)
         else:  # hybrid
-            results = await self._hybrid_search(request, user_id)
+            results = await self._hybrid_search(query, document_ids, top_k)
         
         search_time = time.time() - start_time
         
-        return DocumentSearchResponse(
-            query=request.query,
-            results=results,
-            total_results=len(results),
-            search_time=search_time,
-            search_type=request.search_type
-        )
+        # Add search metadata to results
+        for result in results:
+            result.update({
+                "search_time": search_time,
+                "search_type": search_type
+            })
+        
+        return results
     
-    async def delete_document(self, document_id: UUID, user_id: UUID) -> bool:
-        """Delete a document and its chunks"""
+    async def delete_document_embeddings(self, document_id: UUID) -> bool:
+        """Delete document embeddings from vector store"""
         
-        # Delete from vector store first
-        await self._delete_document_from_vector_store(document_id)
-        
-        # Delete from database
-        return await self.document_repo.delete_document(document_id, user_id)
-    
-    async def share_document(
-        self,
-        document_id: UUID,
-        user_id: UUID,
-        shared_with: List[UUID]
-    ) -> bool:
-        """Share document with specified users"""
-        
-        return await self.document_repo.share_document(document_id, user_id, shared_with)
+        try:
+            await self._delete_document_from_vector_store(document_id)
+            return True
+        except Exception as e:
+            print(f"Error deleting document embeddings for {document_id}: {str(e)}")
+            return False
     
     async def get_document_chunks(
         self,
         document_id: UUID,
-        user_id: UUID,
         limit: Optional[int] = None
     ) -> List[Dict[str, Any]]:
-        """Get chunks for a document"""
+        """Get chunks for a RAG document"""
         
-        # Verify document access
-        document = await self.document_repo.get_document_by_id(document_id, user_id)
-        if not document:
-            return []
+        chunks = await self.rag_document_repository.get_document_chunks(document_id)
         
-        chunks = await self.chunk_repo.get_document_chunks(document_id, limit)
+        if limit:
+            chunks = chunks[:limit]
         
         return [
             {
@@ -162,34 +136,31 @@ class AIRAGService(BaseService):
             for chunk in chunks
         ]
     
-    async def get_processing_status(self) -> Dict[str, Any]:
-        """Get document processing status overview"""
+    async def get_document_processing_status(self, document_id: UUID) -> Optional[Dict[str, Any]]:
+        """Get processing status for a specific document"""
         
-        pending_docs = await self.document_repo.get_documents_for_processing()
+        document = await self.rag_document_repository.get_by_id(document_id)
+        if not document:
+            return None
         
         return {
-            'pending_documents': len(pending_docs),
-            'processing_queue': [
-                {
-                    'id': doc.id,
-                    'name': doc.name,
-                    'file_type': doc.file_type,
-                    'created_at': doc.created_at
-                }
-                for doc in pending_docs[:10]  # Show first 10
-            ]
+            'document_id': document.id,
+            'processing_status': document.processing_status,
+            'chunk_count': document.chunk_count,
+            'quality_score': document.quality_score,
+            'processed_at': document.processed_at
         }
     
-    async def reprocess_document(self, document_id: UUID, user_id: UUID) -> bool:
-        """Reprocess a document"""
+    async def reprocess_document(self, document_id: UUID) -> bool:
+        """Reprocess a RAG document"""
         
-        # Verify ownership
-        document = await self.document_repo.get_document_by_id(document_id, user_id)
+        # Get document
+        document = await self.rag_document_repository.get_by_id(document_id)
         if not document:
             return False
         
         # Reset processing status
-        await self.document_repo.update_processing_status(document_id, "pending")
+        await self.rag_document_repository.update_processing_status(document_id, "pending")
         
         # Process asynchronously
         asyncio.create_task(self._process_document_async(document_id))
@@ -201,23 +172,23 @@ class AIRAGService(BaseService):
         
         try:
             # Update status to processing
-            await self.document_repo.update_processing_status(document_id, "processing")
+            await self.rag_document_repository.update_processing_status(document_id, "processing")
             
             # Get document
-            document = await self.document_repo.get_document_by_id(document_id)
+            document = await self.rag_document_repository.get_by_id(document_id)
             if not document:
                 return
             
             # Get processor for file type
             processor = self.document_processors.get(document.file_type)
             if not processor:
-                await self.document_repo.update_processing_status(
+                await self.rag_document_repository.update_processing_status(
                     document_id, "failed"
                 )
                 return
             
             # Process document content
-            processed_content = await processor.process(document.content, document.metadata)
+            processed_content = await processor.process(document.content, document.agent_metadata)
             
             # Split into chunks
             chunks = await self._split_document_into_chunks(document, processed_content)
@@ -245,7 +216,7 @@ class AIRAGService(BaseService):
                 }
                 chunk_records.append(chunk_data)
             
-            stored_chunks = await self.chunk_repo.create_chunks(chunk_records)
+            stored_chunks = await self.rag_document_repository.create_chunks(chunk_records)
             
             # Store embeddings in vector store
             await self._store_chunks_in_vector_store(stored_chunks, embedded_chunks)
@@ -254,7 +225,7 @@ class AIRAGService(BaseService):
             avg_quality = sum(chunk['quality_score'] for chunk in embedded_chunks) / len(embedded_chunks)
             
             # Update document status
-            await self.document_repo.update_processing_status(
+            await self.rag_document_repository.update_processing_status(
                 document_id,
                 "completed",
                 chunk_count=len(chunks),
@@ -263,7 +234,7 @@ class AIRAGService(BaseService):
             
         except Exception as e:
             # Update status to failed
-            await self.document_repo.update_processing_status(document_id, "failed")
+            await self.rag_document_repository.update_processing_status(document_id, "failed")
             # Log error (in production, use proper logging)
             print(f"Document processing failed for {document_id}: {str(e)}")
     
@@ -373,24 +344,30 @@ class AIRAGService(BaseService):
     
     async def _vector_search(
         self,
-        request: DocumentSearchRequest,
-        user_id: UUID
-    ) -> List[DocumentSearchResult]:
+        query: str,
+        document_ids: Optional[List[UUID]] = None,
+        top_k: int = 10
+    ) -> List[Dict[str, Any]]:
         """Perform vector similarity search"""
         
         # Generate query embedding
-        query_embedding = await self.embedding_service.embed_text(request.query)
+        query_embedding = await self.embedding_service.embed_text(query)
+        
+        # Build filters for document restriction
+        filters = {}
+        if document_ids:
+            filters['document_id'] = [str(doc_id) for doc_id in document_ids]
         
         # Search in vector store
         vector_results = await self.vector_store.search(
             query_vector=query_embedding,
-            top_k=request.top_k,
-            filters=request.filters
+            top_k=top_k,
+            filters=filters
         )
         
         # Get chunk details from database
         chunk_ids = [UUID(result['id']) for result in vector_results]
-        chunks = await self.chunk_repo.get_chunks_by_ids(chunk_ids)
+        chunks = await self.rag_document_repository.get_chunks_by_ids(chunk_ids)
         
         # Convert to search results
         results = []
@@ -400,109 +377,105 @@ class AIRAGService(BaseService):
             relevance_score = vector_result['score'] if vector_result else 0.0
             
             # Get document info
-            document = await self.document_repo.get_document_by_id(chunk.document_id, user_id)
+            document = await self.rag_document_repository.get_by_id(chunk.document_id)
             if not document:
                 continue
             
-            result = DocumentSearchResult(
-                chunk_id=chunk.id,
-                document_id=chunk.document_id,
-                content=chunk.content,
-                metadata=chunk.chunk_metadata,
-                relevance_score=relevance_score,
-                document_name=document.name,
-                section_title=chunk.section_title,
-                page_number=chunk.page_number
-            )
+            result = {
+                'chunk_id': chunk.id,
+                'document_id': chunk.document_id,
+                'content': chunk.content,
+                'metadata': chunk.chunk_metadata,
+                'relevance_score': relevance_score,
+                'document_name': document.name,
+                'section_title': chunk.section_title,
+                'page_number': chunk.page_number
+            }
             results.append(result)
         
         return results
     
     async def _keyword_search(
         self,
-        request: DocumentSearchRequest,
-        user_id: UUID
-    ) -> List[DocumentSearchResult]:
+        query: str,
+        document_ids: Optional[List[UUID]] = None,
+        top_k: int = 10
+    ) -> List[Dict[str, Any]]:
         """Perform keyword-based search"""
         
-        # Get accessible document IDs for user
-        documents, _ = await self.document_repo.list_documents(user_id=user_id)
-        document_ids = [doc.id for doc in documents]
-        
-        if not document_ids:
-            return []
-        
         # Search chunks by text
-        chunks = await self.chunk_repo.search_chunks_by_text(
-            query=request.query,
+        chunks = await self.rag_document_repository.search_chunks_by_text(
+            query=query,
             document_ids=document_ids,
-            limit=request.top_k
+            limit=top_k
         )
         
         results = []
         for chunk in chunks:
-            document = await self.document_repo.get_document_by_id(chunk.document_id, user_id)
+            document = await self.rag_document_repository.get_by_id(chunk.document_id)
             if not document:
                 continue
             
             # Calculate relevance score (simple keyword matching)
-            relevance_score = self._calculate_keyword_relevance(request.query, chunk.content)
+            relevance_score = self._calculate_keyword_relevance(query, chunk.content)
             
-            result = DocumentSearchResult(
-                chunk_id=chunk.id,
-                document_id=chunk.document_id,
-                content=chunk.content,
-                metadata=chunk.chunk_metadata,
-                relevance_score=relevance_score,
-                document_name=document.name,
-                section_title=chunk.section_title,
-                page_number=chunk.page_number
-            )
+            result = {
+                'chunk_id': chunk.id,
+                'document_id': chunk.document_id,
+                'content': chunk.content,
+                'metadata': chunk.chunk_metadata,
+                'relevance_score': relevance_score,
+                'document_name': document.name,
+                'section_title': chunk.section_title,
+                'page_number': chunk.page_number
+            }
             results.append(result)
         
         # Sort by relevance
-        results.sort(key=lambda x: x.relevance_score, reverse=True)
+        results.sort(key=lambda x: x['relevance_score'], reverse=True)
         
         return results
     
     async def _hybrid_search(
         self,
-        request: DocumentSearchRequest,
-        user_id: UUID
-    ) -> List[DocumentSearchResult]:
+        query: str,
+        document_ids: Optional[List[UUID]] = None,
+        top_k: int = 10
+    ) -> List[Dict[str, Any]]:
         """Perform hybrid search combining vector and keyword search"""
         
         # Perform both searches
-        vector_results = await self._vector_search(request, user_id)
-        keyword_results = await self._keyword_search(request, user_id)
+        vector_results = await self._vector_search(query, document_ids, top_k)
+        keyword_results = await self._keyword_search(query, document_ids, top_k)
         
         # Combine and deduplicate results
         combined_results = {}
         
         # Add vector results with weight
         for result in vector_results:
-            combined_results[result.chunk_id] = result
-            combined_results[result.chunk_id].relevance_score *= 0.7  # Vector weight
+            combined_results[result['chunk_id']] = result.copy()
+            combined_results[result['chunk_id']]['relevance_score'] *= 0.7  # Vector weight
         
         # Add keyword results with weight
         for result in keyword_results:
-            if result.chunk_id in combined_results:
+            if result['chunk_id'] in combined_results:
                 # Combine scores
-                combined_results[result.chunk_id].relevance_score += result.relevance_score * 0.3
+                combined_results[result['chunk_id']]['relevance_score'] += result['relevance_score'] * 0.3
             else:
-                result.relevance_score *= 0.3  # Keyword weight
-                combined_results[result.chunk_id] = result
+                result_copy = result.copy()
+                result_copy['relevance_score'] *= 0.3  # Keyword weight
+                combined_results[result['chunk_id']] = result_copy
         
         # Sort by combined score
         final_results = list(combined_results.values())
-        final_results.sort(key=lambda x: x.relevance_score, reverse=True)
+        final_results.sort(key=lambda x: x['relevance_score'], reverse=True)
         
-        return final_results[:request.top_k]
+        return final_results[:top_k]
     
     async def _delete_document_from_vector_store(self, document_id: UUID):
         """Delete document chunks from vector store"""
         
-        chunks = await self.chunk_repo.get_document_chunks(document_id)
+        chunks = await self.rag_document_repository.get_document_chunks(document_id)
         chunk_ids = [str(chunk.id) for chunk in chunks]
         
         if chunk_ids:

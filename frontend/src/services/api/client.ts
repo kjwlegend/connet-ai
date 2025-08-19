@@ -102,11 +102,15 @@ class ApiClient {
   }
 
   private async addAuthHeader(config: RequestInit): Promise<RequestInit> {
-    // Get token from auth token getter or fallback to localStorage
+    // Get token from auth token getter first, then fallback to localStorage
     let token = null
+    
     if (this.getAuthToken) {
       token = this.getAuthToken()
-    } else {
+    }
+    
+    // If no token from getter or getter not set, fallback to localStorage
+    if (!token) {
       token = localStorage.getItem('auth_token')
     }
 

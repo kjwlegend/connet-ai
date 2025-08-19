@@ -13,6 +13,8 @@ from sqlmodel.ext.asyncio.session import AsyncSession
 from app.config.settings import get_settings
 from app.core.interfaces.repositories.user_repository import UserRepository
 from app.infrastructure.database.repositories.contacts_repository_impl import ContactRepository
+from app.infrastructure.database.repositories.knowledge_repository_impl import KnowledgeRepository
+from app.infrastructure.database.repositories.tools_repository_impl import ToolRepository
 
 from app.infrastructure.cache.cache_manager import CacheManager, get_cache_manager
 from app.infrastructure.database.connection import get_session, async_session_factory
@@ -26,7 +28,11 @@ from app.infrastructure.security.permissions import (
 )
 from app.schemas.user import User
 from app.services.user_service import UserService
+from app.services.contact_service import ContactService
 from app.services.supabase_auth_service import SupabaseAuthService
+from app.utils.logging import get_logger
+
+logger = get_logger(__name__)
 
 # Security scheme
 security = HTTPBearer(auto_error=False)
@@ -63,12 +69,49 @@ async def get_contact_repository(
     """Get contact repository dependency."""
     return ContactRepository(session)
 
+
+async def get_knowledge_repository(
+    session: AsyncSession = Depends(get_db_session),
+) -> KnowledgeRepository:
+    """Get knowledge repository dependency."""
+    return KnowledgeRepository(session)
+
+
+async def get_tool_repository(
+    session: AsyncSession = Depends(get_db_session),
+) -> ToolRepository:
+    """Get tool repository dependency."""
+    return ToolRepository(session)
+
 async def get_user_service(
     user_repo: UserRepository = Depends(get_user_repository),
     cache_manager: CacheManager = Depends(get_cache_manager),
 ) -> UserService:
     """Get user service dependency."""
     return UserService(user_repository=user_repo, cache_manager=cache_manager)
+
+
+async def get_contact_service(
+    contact_repo: ContactRepository = Depends(get_contact_repository),
+    knowledge_repo: KnowledgeRepository = Depends(get_knowledge_repository),
+    tool_repo: ToolRepository = Depends(get_tool_repository),
+    user_service: UserService = Depends(get_user_service),
+    session: AsyncSession = Depends(get_db_session),
+) -> ContactService:
+    """Get contact service dependency."""
+    # Import here to avoid circular imports
+    from app.services.ai_agent_service import AIAgentService
+    
+    # Create AI agent service
+    ai_agent_service = AIAgentService(session)
+    
+    return ContactService(
+        contact_repository=contact_repo,
+        knowledge_repository=knowledge_repo,
+        tool_repository=tool_repo,
+        user_service=user_service,
+        ai_agent_service=ai_agent_service
+    )
 
 
 async def get_supabase_auth_service(
@@ -93,6 +136,10 @@ async def get_current_user(
         )
     
     try:
+        # Log the token for debugging (first 20 chars only for security)
+        token_preview = credentials.credentials[:20] + "..." if len(credentials.credentials) > 20 else credentials.credentials
+        logger.debug(f"Attempting to verify JWT token: {token_preview}")
+        
         # Try to verify as our own JWT token first
         try:
             payload = jwt_manager.verify_token(credentials.credentials)
@@ -117,9 +164,11 @@ async def get_current_user(
                     detail="User account is inactive",
                 )
             
+            logger.debug(f"Successfully authenticated user via JWT: {user.email}")
             return user
             
-        except ValueError:
+        except ValueError as e:
+            logger.warning(f"JWT verification failed: {e}")
             # If our JWT verification fails, try Supabase token
             user = await supabase_auth_service.get_user_from_token(credentials.credentials)
             if not user:

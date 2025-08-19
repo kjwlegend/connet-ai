@@ -11,12 +11,10 @@ from app.api.v1.endpoints import (
     health,
     users,
     # conversations,
-    # agents,
     # files,
     ai_agents,
     ai_chat,
-    ai_tools,
-    ai_documents,
+    contacts,
 )
 
 # Create main API router
@@ -28,12 +26,12 @@ api_router.include_router(auth.router, prefix="/auth", tags=["authentication"])
 api_router.include_router(users.router, prefix="/users", tags=["users"])
 
 # AI Service endpoints
-api_router.include_router(ai_agents.router)
+api_router.include_router(ai_agents.router, tags=["AI Agents"])
 api_router.include_router(ai_chat.router)
-api_router.include_router(ai_tools.router)
-api_router.include_router(ai_documents.router)
+
+# contacts
+api_router.include_router(contacts.router, tags=["Contacts"])
 
 # TODO: Uncomment as endpoints are implemented
 # api_router.include_router(conversations.router, prefix="/conversations", tags=["conversations"])
-# api_router.include_router(agents.router, prefix="/agents", tags=["agents"])
 # api_router.include_router(files.router, prefix="/files", tags=["files"])

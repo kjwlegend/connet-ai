@@ -95,6 +95,16 @@ async def login(
         )
         refresh_token = jwt_manager.create_refresh_token(subject=str(user.id))
         
+        # Log token generation for debugging
+        logger.debug(f"Generated access token for user {user.email}: {access_token[:20]}...")
+        
+        # Verify the token we just created
+        try:
+            test_payload = jwt_manager.verify_token(access_token)
+            logger.debug(f"Token verification test successful: {test_payload.get('sub')}")
+        except Exception as e:
+            logger.error(f"Generated token failed verification: {e}")
+        
         logger.info(f"User logged in successfully: {user.email}")
         
         return LoginResponse(

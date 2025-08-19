@@ -167,7 +167,7 @@ class MemoryCreate(BaseModel):
     memory_type: MemoryType
     memory_category: MemoryCategory
     content: str = Field(..., min_length=1)
-    metadata: Dict[str, Any] = Field(default_factory=dict)
+    memory_metadata: Dict[str, Any] = Field(default_factory=dict)
     importance_score: float = Field(default=0.5, ge=0.0, le=1.0)
     confidence_score: float = Field(default=1.0, ge=0.0, le=1.0)
     emotional_valence: float = Field(default=0.0, ge=-1.0, le=1.0)
@@ -181,7 +181,7 @@ class MemoryResponse(BaseModel):
     memory_type: str
     memory_category: str
     content: str
-    metadata: Dict[str, Any]
+    memory_metadata: Dict[str, Any]
     importance_score: float
     confidence_score: float
     emotional_valence: float

@@ -14,220 +14,171 @@ from sqlalchemy import Column, JSON
 
 class UserModel(SQLModel, table=True):
     """User database model."""
-    
+
     __tablename__ = "users"
-    
+
     # Primary key
     id: Optional[UUID] = Field(
         default_factory=uuid4,
         primary_key=True,
         index=True,
-        description="Unique user identifier"
+        description="Unique user identifier",
     )
-    
+
     # Basic information
     email: str = Field(
-        unique=True,
-        index=True,
-        max_length=255,
-        description="User email address"
+        unique=True, index=True, max_length=255, description="User email address"
     )
-    full_name: str = Field(
-        max_length=100,
-        description="User full name"
-    )
+    full_name: str = Field(max_length=100, description="User full name")
     username: Optional[str] = Field(
         default=None,
         unique=True,
         index=True,
         max_length=50,
-        description="Unique username"
+        description="Unique username",
     )
-    
+
     # Authentication
     password_hash: Optional[str] = Field(
         default=None,
         max_length=255,
-        description="Hashed password (optional for OAuth users)"
+        description="Hashed password (optional for OAuth users)",
     )
     auth_provider: str = Field(
         default="local",
         max_length=50,
-        description="Authentication provider: local, supabase, google, github, etc."
+        description="Authentication provider: local, supabase, google, github, etc.",
     )
     external_id: Optional[str] = Field(
-        default=None,
-        max_length=100,
-        description="External provider user ID"
+        default=None, max_length=100, description="External provider user ID"
     )
-    
+
     # Status
-    is_active: bool = Field(
-        default=True,
-        description="Whether user account is active"
-    )
-    
+    is_active: bool = Field(default=True, description="Whether user account is active")
+
     # Invitation system
     invitation_code: Optional[str] = Field(
         default=None,
         unique=True,
         index=True,
         max_length=20,
-        description="User's unique invitation code"
+        description="User's unique invitation code",
     )
     invited_by_code: Optional[str] = Field(
         default=None,
         index=True,
         max_length=20,
-        description="Invitation code used during registration"
+        description="Invitation code used during registration",
     )
     invited_by_user_id: Optional[UUID] = Field(
         default=None,
         foreign_key="users.id",
-        description="ID of the user who invited this user"
+        description="ID of the user who invited this user",
     )
-    
+
     # Registration channel information
     registration_source: Optional[str] = Field(
         default=None,
         index=True,
         max_length=50,
-        description="Registration source: web, mobile, api, admin"
+        description="Registration source: web, mobile, api, admin",
     )
     registration_channel: Optional[str] = Field(
         default=None,
         index=True,
         max_length=50,
-        description="Registration channel: organic, invite, social, campaign"
+        description="Registration channel: organic, invite, social, campaign",
     )
     utm_source: Optional[str] = Field(
-        default=None,
-        max_length=100,
-        description="UTM source parameter"
+        default=None, max_length=100, description="UTM source parameter"
     )
     utm_medium: Optional[str] = Field(
-        default=None,
-        max_length=100,
-        description="UTM medium parameter"
+        default=None, max_length=100, description="UTM medium parameter"
     )
     utm_campaign: Optional[str] = Field(
-        default=None,
-        max_length=100,
-        description="UTM campaign parameter"
+        default=None, max_length=100, description="UTM campaign parameter"
     )
-    
+
     # Timestamps
     created_at: datetime = Field(
         default_factory=datetime.utcnow,
         index=True,
-        description="Account creation timestamp"
+        description="Account creation timestamp",
     )
     updated_at: datetime = Field(
-        default_factory=datetime.utcnow,
-        description="Last update timestamp"
+        default_factory=datetime.utcnow, description="Last update timestamp"
     )
     last_login_at: Optional[datetime] = Field(
-        default=None,
-        description="Last login timestamp"
+        default=None, description="Last login timestamp"
     )
-    
+
     # Profile information
     bio: Optional[str] = Field(
-        default=None,
-        sa_column=Column(Text),
-        description="User biography"
+        default=None, sa_column=Column(Text), description="User biography"
     )
     avatar_url: Optional[str] = Field(
-        default=None,
-        max_length=500,
-        description="Avatar image URL"
+        default=None, max_length=500, description="Avatar image URL"
     )
-    
+
     # Settings (stored as JSON)
-    preferences: Optional[dict] = Field(default=None,
-        description="User preferences and settings"
-    ,
-
-        sa_column=Column(JSON)
-
+    preferences: Optional[dict] = Field(
+        default=None,
+        description="User preferences and settings",
+        sa_column=Column(JSON),
     )
-    
+
     # Permissions and roles (simplified for now)
-    permissions: Optional[List[str]] = Field(default=None,
-        description="User permissions"
-    ,
-
-        sa_column=Column(JSON)
-
+    permissions: Optional[List[str]] = Field(
+        default=None, description="User permissions", sa_column=Column(JSON)
     )
-    roles: Optional[List[str]] = Field(default=None,
-        description="User roles"
-    ,
-
-        sa_column=Column(JSON)
-
+    roles: Optional[List[str]] = Field(
+        default=None, description="User roles", sa_column=Column(JSON)
     )
-    
+
     # Online status for contacts feature
     online_status: str = Field(
         default="offline",
         max_length=20,
-        description="Current online status: online, offline, away, busy"
+        description="Current online status: online, offline, away, busy",
     )
     last_seen_at: Optional[datetime] = Field(
-        default=None,
-        description="Last seen timestamp"
+        default=None, description="Last seen timestamp"
     )
-    
+
     # QR code for contact sharing
     qr_code_url: Optional[str] = Field(
         default=None,
         max_length=500,
-        description="Generated QR code URL for contact sharing"
+        description="Generated QR code URL for contact sharing",
     )
     qr_code_enabled: bool = Field(
-        default=True,
-        description="Whether QR code sharing is enabled"
+        default=True, description="Whether QR code sharing is enabled"
     )
-    
+
     # Statistics
     invitation_count: int = Field(
-        default=0,
-        description="Number of successful invitations"
+        default=0, description="Number of successful invitations"
     )
     invitation_rewards_earned: int = Field(
-        default=0,
-        description="Total rewards earned from invitations (in cents)"
+        default=0, description="Total rewards earned from invitations (in cents)"
     )
     total_conversations: int = Field(
-        default=0,
-        description="Total number of conversations"
+        default=0, description="Total number of conversations"
     )
-    total_messages: int = Field(
-        default=0,
-        description="Total number of messages sent"
-    )
+    total_messages: int = Field(default=0, description="Total number of messages sent")
     total_ai_interactions: int = Field(
-        default=0,
-        description="Total number of AI agent interactions"
+        default=0, description="Total number of AI agent interactions"
     )
     total_posts_created: int = Field(
-        default=0,
-        description="Total number of timeline posts created"
+        default=0, description="Total number of timeline posts created"
     )
-    
+
     # Metadata
-    user_metadata: Optional[dict] = Field(default=None,
-        description="Additional user metadata"
-    ,
-
-        sa_column=Column(JSON)
-
+    user_metadata: Optional[dict] = Field(
+        default=None, description="Additional user metadata", sa_column=Column(JSON)
     )
-    
-    model_config = {
 
-    
+    model_config = {
         "json_schema_extra": {
             "example": {
                 "email": "user@example.com",
@@ -241,10 +192,8 @@ class UserModel(SQLModel, table=True):
                 "preferences": {
                     "theme": "dark",
                     "language": "en",
-                    "notifications": True
-                }
-
-    
-    }
+                    "notifications": True,
+                },
             }
         }
+    }
