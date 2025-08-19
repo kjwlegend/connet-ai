@@ -7,7 +7,7 @@ from uuid import UUID
 from sqlalchemy import select, update, delete, and_, or_, func
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.infrastructure.database.models.ai_agent_model import (
+from bff.app.infrastructure.database.models.agent_model import (
     AIToolModel,
     AIToolExecutionModel,
     AIWebhookModel,

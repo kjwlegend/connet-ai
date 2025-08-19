@@ -10,7 +10,7 @@ from sqlmodel import select, and_, or_
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.interfaces.repositories.base_repository import BaseRepository as BaseRepositoryInterface
-from app.infrastructure.database.models.agent_model import Agent
+from app.infrastructure.database.models.agent_model import AIAgentModel as Agent
 from app.infrastructure.database.repositories.base_repository import BaseRepository
 from app.utils.logging import get_logger
 

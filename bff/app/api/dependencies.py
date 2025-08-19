@@ -12,6 +12,8 @@ from sqlmodel.ext.asyncio.session import AsyncSession
 
 from app.config.settings import get_settings
 from app.core.interfaces.repositories.user_repository import UserRepository
+from app.infrastructure.database.repositories.contacts_repository_impl import ContactRepository
+
 from app.infrastructure.cache.cache_manager import CacheManager, get_cache_manager
 from app.infrastructure.database.connection import get_session, async_session_factory
 from app.infrastructure.database.repositories.user_repository_impl import (
@@ -55,6 +57,11 @@ async def get_user_repository(
     """Get user repository dependency."""
     return UserRepositoryImpl(session)
 
+async def get_contact_repository(
+    session: AsyncSession = Depends(get_db_session),
+) -> ContactRepository:
+    """Get contact repository dependency."""
+    return ContactRepository(session)
 
 async def get_user_service(
     user_repo: UserRepository = Depends(get_user_repository),
