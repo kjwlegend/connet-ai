@@ -66,7 +66,7 @@ const generateToastId = (): string => {
 
 // Slice creator
 const createNotificationSlice: StateCreator<
-  UIState,
+  NotificationSlice,
   [],
   [],
   NotificationSlice

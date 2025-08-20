@@ -114,14 +114,14 @@ export namespace StoreTypes {
     export type Navigation = NavigationState
     export type Notifications = NotificationState
     export type Modals = ModalState
-    export type Toast = Toast
-    export type Modal = Modal
+    export type ToastItem = Toast
+    export type ModalItem = Modal
   }
 
   export namespace Chat {
-    export type Message = Message
-    export type Conversation = Conversation
-    export type Participant = Participant
+    export type MessageItem = Message
+    export type ConversationItem = Conversation
+    export type ParticipantItem = Participant
     export type Thread = MessageThread
     export type Draft = MessageDraft
     export type SearchQuery = MessageSearchQuery

@@ -20,7 +20,10 @@
       "Bash(.venv/Scripts/activate)",
       "Bash(grep:*)",
       "Bash(pytest:*)",
-      "Bash(alembic upgrade:*)"
+      "Bash(alembic upgrade:*)",
+      "Bash(cp:*)",
+      "Bash(npx tsc:*)",
+      "Bash(timeout 15 pnpm dev)"
     ],
     "deny": [],
     "defaultMode": "acceptEdits",

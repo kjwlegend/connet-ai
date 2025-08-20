@@ -80,7 +80,7 @@ export type PreferencesSlice = PreferencesState & PreferencesActions
 
 // Slice creator
 const createPreferencesSlice: StateCreator<
-  UIState,
+  PreferencesSlice,
   [],
   [],
   PreferencesSlice

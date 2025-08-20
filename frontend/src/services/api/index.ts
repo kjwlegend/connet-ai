@@ -1,19 +1,24 @@
 /**
  * API Services exports
+ * Centralized export point for all API services and utilities
  */
 
+// Core API client
 export { apiClient, ApiClientClass } from './client'
+export type { RouteConfig } from './client'
+
+// Services (new structure matching BFF endpoints)
+export * from './services'
+
+// Legacy services (to be migrated)
 export { conversationService, ConversationService } from './conversationService'
-export { AuthAPI } from './auth'
-export { API_ENDPOINTS } from './endpoints'
 export { waitlistService, WaitlistService } from './waitlistService'
 
-// Import other services as they are created
-// export { contactService, ContactService } from './contactService'
-// export { fileService, FileService } from './fileService'
+// Endpoints config (deprecated - endpoints now defined within services)
+export { API_ENDPOINTS } from './endpoints'
 
-// Export common types
-export type { ApiResponse, ApiError } from '../types'
+// Types
+export * from './types'
 
 // For backward compatibility with old lib/api imports
 export const APIError = class extends Error {

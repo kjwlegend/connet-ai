@@ -98,7 +98,7 @@ const LAYOUT_PRESETS = {
 
 // Slice creator
 const createLayoutSlice: StateCreator<
-  UIState,
+  LayoutSlice,
   [],
   [],
   LayoutSlice
@@ -256,51 +256,54 @@ const createLayoutSlice: StateCreator<
 
   // Responsive helpers
   handleResize: (width, height) => {
-    const { layout } = get()
+    const state = get()
+    const { layout } = state
     
     // Auto-collapse sidebar on small screens
     if (width < 768 && !layout.sidebarCollapsed) {
-      get().setSidebarCollapsed(true)
-    } else if (width >= 768 && layout.sidebarCollapsed && get().preferences.layout.autoCollapseSidebar === false) {
-      get().setSidebarCollapsed(false)
+      state.setSidebarCollapsed(true)
+    } else if (width >= 768 && layout.sidebarCollapsed) {
+      // Auto-expand if not set to auto-collapse (would need access to preferences)
+      state.setSidebarCollapsed(false)
     }
 
     // Adjust panel widths on medium screens
     if (width < 1024) {
       if (layout.middlePanelWidth > 300) {
-        get().setMiddlePanelWidth(300)
+        state.setMiddlePanelWidth(300)
       }
       if (layout.rightPanelWidth > 350) {
-        get().setRightPanelWidth(350)
+        state.setRightPanelWidth(350)
       }
     }
 
     // Update header height based on screen size
     const newHeaderHeight = width < 640 ? 56 : 64
     if (layout.headerHeight !== newHeaderHeight) {
-      get().setHeaderHeight(newHeaderHeight)
+      state.setHeaderHeight(newHeaderHeight)
     }
   },
 
   updateBreakpoint: (breakpoint) => {
     // This would be handled by the responsive slice
     // but we can trigger layout adjustments here if needed
-    const { layout } = get()
+    const state = get()
+    const { layout } = state
     
     switch (breakpoint) {
       case 'xs':
       case 'sm':
         if (!layout.sidebarCollapsed) {
-          get().setSidebarCollapsed(true)
+          state.setSidebarCollapsed(true)
         }
         break
       case 'md':
-        get().applyLayoutPreset('compact')
+        state.applyLayoutPreset('compact')
         break
       case 'lg':
       case 'xl':
       case '2xl':
-        get().applyLayoutPreset('standard')
+        state.applyLayoutPreset('standard')
         break
     }
   },

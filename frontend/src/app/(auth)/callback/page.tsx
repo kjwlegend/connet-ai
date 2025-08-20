@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useTranslations } from "@/lib/i18n/client";
-import useStore from "@/store";
+import { useAuth } from "@/store";
 import { CheckCircle, AlertCircle, ArrowLeft } from "lucide-react";
 import Link from "next/link";
 
@@ -20,7 +20,8 @@ export default function OAuthCallbackPage() {
   const t = useTranslations();
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { handleOAuthCallback, isLoading } = useStore();
+  const { handleOAuthCallback, ui } = useAuth();
+  const isLoading = ui.isLoading;
 
   const [status, setStatus] = useState<"loading" | "success" | "error">(
     "loading"
@@ -83,7 +84,7 @@ export default function OAuthCallbackPage() {
           redirectUri
         );
 
-        setIsNewUser(result?.isNewUser || false);
+        setIsNewUser(result.isNewUser);
         setStatus("success");
 
         // Redirect to dashboard after a brief success display

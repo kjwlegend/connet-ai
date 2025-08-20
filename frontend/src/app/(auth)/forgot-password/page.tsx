@@ -9,18 +9,17 @@ import { Label } from '@/components/ui/label'
 import { Card, CardContent } from '@/components/ui/card'
 import { useTranslations } from '@/lib/i18n/client'
 import { FormValidator } from '@/lib/utils/validation'
-import { AuthAPI } from '@/services/api/auth'
-import { APIError } from '@/services/api'
+import { useAuth } from '@/store'
 import { cn } from '@/lib/utils/cn'
 import { LanguageToggle } from '@/components/ui/LanguageToggle'
 import { CheckCircle, ArrowLeft } from 'lucide-react'
 
 export default function ForgotPasswordPage() {
   const t = useTranslations()
+  const { requestPasswordReset, ui, error } = useAuth()
+  const isLoading = ui.isLoading
   
   const [email, setEmail] = useState('')
-  const [isLoading, setIsLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
   const [success, setSuccess] = useState(false)
   const [emailError, setEmailError] = useState<string | null>(null)
   const [touched, setTouched] = useState(false)
@@ -52,19 +51,10 @@ export default function ForgotPasswordPage() {
     }
 
     try {
-      setIsLoading(true)
-      setError(null)
-      
-      await AuthAPI.requestPasswordReset({ email })
+      await requestPasswordReset(email)
       setSuccess(true)
-      
     } catch (err) {
-      const errorMessage = err instanceof APIError 
-        ? err.message 
-        : 'Failed to send reset email. Please try again.'
-      setError(errorMessage)
-    } finally {
-      setIsLoading(false)
+      // Error is handled by the store and displayed via error state
     }
   }
 
@@ -273,13 +263,13 @@ export default function ForgotPasswordPage() {
             <Card className="bg-slate-800/80 backdrop-blur-md border-slate-700/50 shadow-2xl">
               <CardContent className="p-8">
                 <form onSubmit={handleSubmit} className="space-y-6">
-                  {error && (
+                  {error.current && (
                     <motion.div 
                       className="p-4 text-sm text-red-300 bg-red-900/30 rounded-xl border border-red-700/30"
                       initial={{ opacity: 0, scale: 0.95 }}
                       animate={{ opacity: 1, scale: 1 }}
                     >
-                      {error}
+                      {error.current}
                     </motion.div>
                   )}
                   

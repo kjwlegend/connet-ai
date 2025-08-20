@@ -3,7 +3,7 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import { MoreVertical } from "lucide-react"
-import type { Conversation } from "@/store/slices/chatSlice"
+import type { Conversation } from "@/store/types/chat"
 
 interface ChatHeaderProps {
   conversation: Conversation

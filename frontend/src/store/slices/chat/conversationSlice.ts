@@ -20,7 +20,7 @@ export interface ConversationSliceState {
   // UI state
   isLoading: boolean
   isCreating: boolean
-  error: string | null
+  conversationError: string | null
   
   // Sync state
   lastSyncTime: number
@@ -63,8 +63,8 @@ export interface ConversationActions {
   exportAllConversations: () => Promise<string>
   
   // Error handling
-  setError: (error: string | null) => void
-  clearError: () => void
+  setConversationError: (conversationError: string | null) => void
+  clearConversationError: () => void
 }
 
 // Complete slice type
@@ -154,7 +154,7 @@ const createMockConversations = (): Conversation[] => [
 
 // Slice creator
 const createConversationSlice: StateCreator<
-  any, // Will be the combined chat state
+  ConversationSlice,
   [],
   [],
   ConversationSlice
@@ -169,7 +169,7 @@ const createConversationSlice: StateCreator<
   },
   isLoading: false,
   isCreating: false,
-  error: null,
+  conversationError: null,
   lastSyncTime: 0,
   hasPendingChanges: false,
 
@@ -183,7 +183,7 @@ const createConversationSlice: StateCreator<
     }
 
     try {
-      set({ isLoading: true, error: null })
+      set({ isLoading: true, conversationError: null })
       
       // TODO: Replace with actual API call
       // const conversations = await ConversationAPI.getConversations()
@@ -200,7 +200,7 @@ const createConversationSlice: StateCreator<
       })
     } catch (error) {
       set({
-        error: error instanceof Error ? error.message : 'Failed to load conversations',
+        conversationError: error instanceof Error ? error.message : 'Failed to load conversations',
         isLoading: false,
       })
     }
@@ -209,7 +209,7 @@ const createConversationSlice: StateCreator<
   // Create new conversation
   createConversation: async (payload) => {
     try {
-      set({ isCreating: true, error: null })
+      set({ isCreating: true, conversationError: null })
       
       // TODO: Replace with actual API call
       // const conversation = await ConversationAPI.createConversation(payload)
@@ -251,7 +251,7 @@ const createConversationSlice: StateCreator<
       return newConversation.id
     } catch (error) {
       set({
-        error: error instanceof Error ? error.message : 'Failed to create conversation',
+        conversationError: error instanceof Error ? error.message : 'Failed to create conversation',
         isCreating: false,
       })
       throw error
@@ -261,7 +261,7 @@ const createConversationSlice: StateCreator<
   // Update conversation
   updateConversation: async (payload) => {
     try {
-      set({ error: null })
+      set({ conversationError: null })
       
       // TODO: Replace with actual API call
       // await ConversationAPI.updateConversation(payload.conversationId, payload)
@@ -285,7 +285,7 @@ const createConversationSlice: StateCreator<
       })
     } catch (error) {
       set({
-        error: error instanceof Error ? error.message : 'Failed to update conversation',
+        conversationError: error instanceof Error ? error.message : 'Failed to update conversation',
       })
       throw error
     }
@@ -294,7 +294,7 @@ const createConversationSlice: StateCreator<
   // Delete conversation
   deleteConversation: async (conversationId) => {
     try {
-      set({ error: null })
+      set({ conversationError: null })
       
       // TODO: Replace with actual API call
       // await ConversationAPI.deleteConversation(conversationId)
@@ -312,7 +312,7 @@ const createConversationSlice: StateCreator<
       })
     } catch (error) {
       set({
-        error: error instanceof Error ? error.message : 'Failed to delete conversation',
+        conversationError: error instanceof Error ? error.message : 'Failed to delete conversation',
       })
       throw error
     }
@@ -477,8 +477,8 @@ const createConversationSlice: StateCreator<
   },
 
   // Error handling
-  setError: (error) => set({ error }),
-  clearError: () => set({ error: null }),
+  setConversationError: (conversationError) => set({ conversationError }),
+  clearConversationError: () => set({ conversationError: null }),
 })
 
 export default createConversationSlice

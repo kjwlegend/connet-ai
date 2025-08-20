@@ -10,7 +10,7 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useTranslations } from "@/lib/i18n/client";
-import useStore from "@/store";
+import { useAuth } from "@/store";
 import {
   LoginFormData,
   validateLoginForm,
@@ -23,7 +23,8 @@ import { OAuthButtonsGroup } from "@/components/auth/OAuthButton";
 function LoginForm() {
   const t = useTranslations();
   const router = useRouter();
-  const { loginWithCredentials, isLoading, error } = useStore();
+  const { loginWithCredentials, ui, error } = useAuth();
+  const isLoading = ui.isLoading;
 
   const [formData, setFormData] = useState<LoginFormData>({
     email: "",
@@ -162,13 +163,13 @@ function LoginForm() {
           >
             <Card className="bg-slate-800/80 backdrop-blur-md border-slate-700/50 shadow-2xl">
               <CardContent className="">
-                {error && (
+                {error.current && (
                   <motion.div
                     className="p-4 text-sm text-red-300 bg-red-900/30 rounded-xl border border-red-700/30 mb-6"
                     initial={{ opacity: 0, scale: 0.95 }}
                     animate={{ opacity: 1, scale: 1 }}
                   >
-                    {error}
+                    {error.current}
                   </motion.div>
                 )}
 

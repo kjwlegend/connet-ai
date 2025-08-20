@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Users, Plus } from "lucide-react"
 import { useTranslations } from "@/lib/i18n/client"
-import type { Conversation } from "@/store/slices/chatSlice"
+import type { Conversation } from "@/store/types/chat"
 import { AddContactDialog } from "./AddContactDialog"
 
 interface ParticipantsSectionProps {

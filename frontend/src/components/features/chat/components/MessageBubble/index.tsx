@@ -11,7 +11,7 @@ import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 import { Copy, Check } from "lucide-react"
 import { useState } from "react"
-import type { Message } from "@/store/slices/chatSlice"
+import type { Message } from "@/store/types/chat"
 
 interface MessageBubbleProps {
   message: Message

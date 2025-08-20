@@ -170,7 +170,7 @@ export const createPersistOptions = <T extends Record<string, any>>(
   return {
     name,
     storage: {
-      getItem: (name: string) => enhancedStorage.getItem(name),
+      getItem: (name: string) => enhancedStorage.getItem(name) as string | null | Promise<string | null>,
       setItem: (name: string, value: string) => enhancedStorage.setItem(name, value, category),
       removeItem: (name: string) => enhancedStorage.removeItem(name),
     },
@@ -183,7 +183,7 @@ export const createPersistOptions = <T extends Record<string, any>>(
             result[key] = state[key]
           }
         })
-        return result
+        return result as T
       }
 
       if (exclude) {
@@ -191,7 +191,7 @@ export const createPersistOptions = <T extends Record<string, any>>(
         exclude.forEach(key => {
           delete result[key]
         })
-        return result
+        return result as T
       }
 
       return state
@@ -225,32 +225,32 @@ export const createPersistOptions = <T extends Record<string, any>>(
  */
 export const PERSIST_CONFIGS = {
   // UI preferences - permanent storage
-  UI_PREFERENCES: <T>(name: string) => createPersistOptions<T>(name, {
+  UI_PREFERENCES: <T extends Record<string, any>>(name: string) => createPersistOptions<T>(name, {
     category: STORAGE_CATEGORIES.PERMANENT,
     version: 1,
   }),
 
   // Layout state - persistent but can be reset
-  LAYOUT_STATE: <T>(name: string) => createPersistOptions<T>(name, {
+  LAYOUT_STATE: <T extends Record<string, any>>(name: string) => createPersistOptions<T>(name, {
     category: STORAGE_CATEGORIES.PERMANENT,
     version: 1,
   }),
 
   // Chat cache - temporary storage with TTL
-  CHAT_CACHE: <T>(name: string, include?: (keyof T)[]) => createPersistOptions<T>(name, {
+  CHAT_CACHE: <T extends Record<string, any>>(name: string, include?: (keyof T)[]) => createPersistOptions<T>(name, {
     category: STORAGE_CATEGORIES.CACHE,
     include,
     version: 1,
   }),
 
   // Session data - cleared on browser close
-  SESSION_DATA: <T>(name: string) => createPersistOptions<T>(name, {
+  SESSION_DATA: <T extends Record<string, any>>(name: string) => createPersistOptions<T>(name, {
     category: STORAGE_CATEGORIES.SESSION,
     version: 1,
   }),
 
   // Temporary cache - short-lived
-  TEMP_CACHE: <T>(name: string) => createPersistOptions<T>(name, {
+  TEMP_CACHE: <T extends Record<string, any>>(name: string) => createPersistOptions<T>(name, {
     category: STORAGE_CATEGORIES.TEMPORARY,
     version: 1,
   }),

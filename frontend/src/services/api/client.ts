@@ -110,17 +110,23 @@ class ApiClient {
     }
     
     // If no token from getter or getter not set, fallback to localStorage
-    if (!token) {
+    if (!token && typeof window !== 'undefined') {
       token = localStorage.getItem('auth_token')
+    }
+
+    const headers: Record<string, string> = {
+      'Content-Type': 'application/json',
+      ...config.headers as Record<string, string>,
+    }
+
+    // Add Authorization header if token exists
+    if (token) {
+      headers.Authorization = `Bearer ${token}`
     }
 
     return {
       ...config,
-      headers: {
-        'Content-Type': 'application/json',
-        ...(token && { Authorization: `Bearer ${token}` }),
-        ...config.headers,
-      },
+      headers,
     }
   }
 

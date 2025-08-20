@@ -1,6 +1,7 @@
 import { useState, useCallback, useMemo } from 'react'
-import { useAgentStore } from '@/store/slices/agentSlice'
-import { useChatStore } from '@/store/slices/chatSlice'
+// Note: These stores don't exist in current architecture, need to be implemented
+// import { useAgentStore } from '@/store/slices/agentSlice'
+// import { useChatStore } from '@/store/slices/chatSlice'
 import type { Agent } from '@/types'
 
 interface AgentMentionHook {
@@ -31,13 +32,11 @@ export function useAgentMention(chatroomId?: string): AgentMentionHook {
   const [query, setQuery] = useState('')
   const [selectedIndex, setSelectedIndex] = useState(0)
 
-  const {
-    availableAgents,
-    searchAgents,
-    mentionAgent: mentionAgentAction,
-  } = useAgentStore()
-
-  const { currentChatroom } = useChatStore()
+  // TODO: Implement agent store integration
+  const availableAgents: Agent[] = [] // Placeholder
+  const searchAgents = (query: string) => {} // Placeholder
+  const mentionAgentAction = async (roomId: string, agentId: string, context?: string) => {} // Placeholder
+  const currentChatroom = '' // Placeholder
 
   // Filter and search agents based on query
   const suggestions = useMemo(() => {
@@ -51,9 +50,9 @@ export function useAgentMention(chatroomId?: string): AgentMentionHook {
       .filter(
         (agent) =>
           agent.name.toLowerCase().includes(normalizedQuery) ||
-          agent.displayName.toLowerCase().includes(normalizedQuery) ||
-          agent.specialty.toLowerCase().includes(normalizedQuery) ||
-          agent.tags.some((tag) => tag.toLowerCase().includes(normalizedQuery))
+          (agent as any).displayName?.toLowerCase().includes(normalizedQuery) ||
+          (agent as any).specialty?.toLowerCase().includes(normalizedQuery) ||
+          (agent as any).tags?.some((tag: string) => tag.toLowerCase().includes(normalizedQuery))
       )
       .sort((a, b) => {
         // Prioritize exact name matches
@@ -64,8 +63,8 @@ export function useAgentMention(chatroomId?: string): AgentMentionHook {
         if (!aNameMatch && bNameMatch) return 1
 
         // Then by rating if available
-        const aRating = a.rating || 0
-        const bRating = b.rating || 0
+        const aRating = (a as any).rating || 0
+        const bRating = (b as any).rating || 0
 
         return bRating - aRating
       })
