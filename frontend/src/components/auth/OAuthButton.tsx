@@ -159,13 +159,7 @@ export function OAuthButtonsGroup({
   disabled = false,
 }: OAuthButtonsGroupProps) {
   return (
-    <div className={`space-y-3 ${className}`}>
-      {/* OAuth Buttons */}
-      <div className="grid grid-cols-1 gap-3">
-        <OAuthButton provider="google" variant={variant} disabled={disabled} />
-        <OAuthButton provider="github" variant={variant} disabled={disabled} />
-      </div>
-
+    <div className={`space-y-2 ${className}`}>
       {/* Divider with "or" text */}
       <div className="relative flex items-center my-6">
         <div className="flex-grow border-t border-slate-600/50"></div>
@@ -173,6 +167,11 @@ export function OAuthButtonsGroup({
           or
         </span>
         <div className="flex-grow border-t border-slate-600/50"></div>
+      </div>
+      {/* OAuth Buttons */}
+      <div className="grid grid-cols-2 gap-3">
+        <OAuthButton provider="google" variant={variant} disabled={disabled} />
+        <OAuthButton provider="github" variant={variant} disabled={disabled} />
       </div>
     </div>
   );
