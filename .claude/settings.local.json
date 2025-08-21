@@ -28,7 +28,8 @@
     "deny": [],
     "defaultMode": "acceptEdits",
     "additionalDirectories": [
-      "D:\\d\\codes\\xiaoguang-next-gen"
+      "D:\\d\\codes\\xiaoguang-next-gen",
+      "d:\\codes\\xiaoguang-next-gen"
     ]
   }
 }
