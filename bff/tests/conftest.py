@@ -12,7 +12,10 @@ from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.orm import sessionmaker
 from sqlmodel import SQLModel
 
-from app.infrastructure.database.models import *
+from app.infrastructure.database.models import (
+    UserModel, AIAgentModel, ContactModel, ConversationModel, 
+    ConversationParticipantModel, MessageModel
+)
 from app.infrastructure.cache.cache_manager import CacheManager
 
 
@@ -281,7 +284,7 @@ async def create_test_agent(test_session, sample_agent_data):
         data = {**sample_agent_data, **kwargs}
         if created_by:
             data["created_by"] = created_by
-        agent = AgentModel(**data)
+        agent = AIAgentModel(**data)
         test_session.add(agent)
         await test_session.commit()
         await test_session.refresh(agent)

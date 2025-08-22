@@ -40,7 +40,7 @@ class AIAgentService(BaseService):
             raise ValueError(f"Agent with name '{agent_data.name}' already exists")
 
         # Create agent
-        agent = await self.agent_repo.create_agent(agent_data, user_id)
+        agent = await self.agent_repo.create_agent(agent_data.model_dump(), user_id)
 
         # Create initial version
         await self._create_initial_version(agent, user_id)
@@ -70,7 +70,7 @@ class AIAgentService(BaseService):
 
         # Update agent
         updated_agent = await self.agent_repo.update_agent(
-            agent_id, agent_data, user_id
+            agent_id, agent_data.model_dump(exclude_unset=True), user_id
         )
         if not updated_agent:
             return None
@@ -93,12 +93,20 @@ class AIAgentService(BaseService):
     ) -> AIAgentListResponse:
         """List agents with filtering"""
 
+        # Convert pagination to offset/limit
+        offset = 0
+        limit = 100
+        if pagination:
+            offset = (pagination.page - 1) * pagination.size
+            limit = pagination.size
+
         agents, total = await self.agent_repo.list_agents(
             user_id=user_id,
             agent_type=agent_type,
             status=status,
             search=search,
-            pagination=pagination,
+            offset=offset,
+            limit=limit,
         )
 
         agent_responses = [AIAgentResponse.model_validate(agent) for agent in agents]
@@ -130,7 +138,7 @@ class AIAgentService(BaseService):
         # TODO: Implement actual deployment logic
         # For now, just mark as deployed
         await self.agent_repo.update_agent(
-            agent_id, AIAgentUpdate(deployment_status="deployed"), user_id
+            agent_id, {"deployment_status": "deployed"}, user_id
         )
 
         return True
@@ -183,6 +191,10 @@ class AIAgentService(BaseService):
         update_data = AIAgentUpdate(
             display_name=agent_snapshot.get("display_name"),
             description=agent_snapshot.get("description"),
+            introduction=agent_snapshot.get("introduction"),
+            avatar_url=agent_snapshot.get("avatar_url"),
+            avatar_style=agent_snapshot.get("avatar_style"),
+            conversation_style=agent_snapshot.get("conversation_style"),
             system_prompt=agent_snapshot.get("system_prompt"),
             personality_config=PersonalityProfile.model_validate(
                 agent_snapshot.get("personality_config", {})
@@ -190,16 +202,17 @@ class AIAgentService(BaseService):
             model_preferences=ModelPreferences.model_validate(
                 agent_snapshot.get("model_preferences", {})
             ),
-            enabled_tools=agent_snapshot.get("enabled_tools", []),
-            behavior_rules=agent_snapshot.get("behavior_rules", []),
-            conversation_style=agent_snapshot.get("conversation_style"),
-            max_context_length=agent_snapshot.get("max_context_length"),
-            timeout_seconds=agent_snapshot.get("timeout_seconds"),
+            capabilities=agent_snapshot.get("capabilities", []),
+            required_permissions=agent_snapshot.get("required_permissions", []),
+            tags=agent_snapshot.get("tags", []),
+            category=agent_snapshot.get("category"),
+            is_public=agent_snapshot.get("is_public"),
+            is_active=agent_snapshot.get("is_active"),
         )
 
         # Update agent
         updated_agent = await self.agent_repo.update_agent(
-            agent_id, update_data, user_id
+            agent_id, update_data.model_dump(exclude_unset=True), user_id
         )
         if not updated_agent:
             return None
@@ -288,8 +301,8 @@ class AIAgentService(BaseService):
             "system_prompt",
             "personality_config",
             "model_preferences",
-            "enabled_tools",
-            "behavior_rules",
+            "capabilities",
+            "required_permissions",
         ]
 
         return any(
@@ -303,17 +316,21 @@ class AIAgentService(BaseService):
             "name": agent.name,
             "display_name": agent.display_name,
             "description": agent.description,
+            "introduction": agent.introduction,
             "agent_type": agent.agent_type,
+            "version": agent.version,
+            "avatar_url": agent.avatar_url,
+            "avatar_style": agent.avatar_style,
+            "conversation_style": agent.conversation_style,
             "system_prompt": agent.system_prompt,
             "personality_config": agent.personality_config,
             "model_preferences": agent.model_preferences,
-            "enabled_tools": agent.enabled_tools,
-            "behavior_rules": agent.behavior_rules,
-            "conversation_style": agent.conversation_style,
             "capabilities": agent.capabilities,
-            "max_context_length": agent.max_context_length,
-            "timeout_seconds": agent.timeout_seconds,
             "required_permissions": agent.required_permissions,
+            "tags": agent.tags,
+            "category": agent.category,
+            "is_public": agent.is_public,
+            "is_active": agent.is_active,
         }
 
     def _increment_version(self, current_version: str) -> str:
@@ -333,12 +350,17 @@ class AIAgentService(BaseService):
         fields_to_check = [
             "display_name",
             "description",
+            "introduction",
+            "avatar_url",
+            "avatar_style",
+            "conversation_style",
             "system_prompt",
             "personality_config",
             "model_preferences",
-            "enabled_tools",
-            "behavior_rules",
-            "conversation_style",
+            "capabilities",
+            "required_permissions",
+            "tags",
+            "category",
         ]
 
         for field in fields_to_check:

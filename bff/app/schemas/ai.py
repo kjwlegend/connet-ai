@@ -62,23 +62,31 @@ class AIAgentCreate(BaseModel):
     name: str = Field(..., min_length=1, max_length=255)
     display_name: str = Field(..., min_length=1, max_length=255)
     description: Optional[str] = Field(default=None)
+    introduction: Optional[str] = Field(default=None)
     agent_type: AIAgentType = Field(default=AIAgentType.CUSTOM)
+    version: str = Field(default="1.0.0")
+    
+    # UI & Presentation
+    avatar_url: Optional[str] = Field(default=None)
+    avatar_style: Optional[str] = Field(default="default")
+    conversation_style: str = Field(default="professional")
     
     # Configuration
     system_prompt: str = Field(..., min_length=1)
     personality_config: PersonalityProfile = Field(default_factory=PersonalityProfile)
     model_preferences: ModelPreferences = Field(default_factory=ModelPreferences)
     
-    # Capabilities
-    enabled_tools: List[str] = Field(default=[])
-    behavior_rules: List[str] = Field(default=[])
-    conversation_style: str = Field(default="professional")
+    # Capabilities & Permissions
     capabilities: List[str] = Field(default=[])
-    
-    # Limits and permissions
-    max_context_length: int = Field(default=4000, gt=0)
-    timeout_seconds: int = Field(default=30, gt=0)
     required_permissions: List[str] = Field(default=[])
+    
+    # Categorization & Discovery
+    tags: List[str] = Field(default=[])
+    category: Optional[str] = Field(default=None)
+    
+    # Visibility
+    is_public: bool = Field(default=True)
+    is_active: bool = Field(default=True)
 
     @validator('name')
     def validate_name(cls, v):
@@ -91,15 +99,20 @@ class AIAgentUpdate(BaseModel):
     """Update AI Agent request schema"""
     display_name: Optional[str] = Field(default=None, min_length=1, max_length=255)
     description: Optional[str] = Field(default=None)
+    introduction: Optional[str] = Field(default=None)
+    avatar_url: Optional[str] = Field(default=None)
+    avatar_style: Optional[str] = Field(default=None)
+    conversation_style: Optional[str] = Field(default=None)
     system_prompt: Optional[str] = Field(default=None, min_length=1)
     personality_config: Optional[PersonalityProfile] = Field(default=None)
     model_preferences: Optional[ModelPreferences] = Field(default=None)
-    enabled_tools: Optional[List[str]] = Field(default=None)
-    behavior_rules: Optional[List[str]] = Field(default=None)
-    conversation_style: Optional[str] = Field(default=None)
-    max_context_length: Optional[int] = Field(default=None, gt=0)
-    timeout_seconds: Optional[int] = Field(default=None, gt=0)
+    capabilities: Optional[List[str]] = Field(default=None)
+    required_permissions: Optional[List[str]] = Field(default=None)
+    tags: Optional[List[str]] = Field(default=None)
+    category: Optional[str] = Field(default=None)
     status: Optional[AIAgentStatus] = Field(default=None)
+    is_public: Optional[bool] = Field(default=None)
+    is_active: Optional[bool] = Field(default=None)
 
 
 class AIAgentResponse(BaseModel):
@@ -108,15 +121,29 @@ class AIAgentResponse(BaseModel):
     name: str
     display_name: str
     description: Optional[str]
+    introduction: Optional[str]
     agent_type: str
     version: str
     status: str
     
+    # Visibility & Ownership
+    is_public: bool
+    is_active: bool
+    
+    # UI & Presentation
+    avatar_url: Optional[str]
+    avatar_style: Optional[str]
+    conversation_style: str
+    
     # Configuration (simplified for API response)
     personality_config: Dict[str, Any]
     model_preferences: Dict[str, Any]
-    enabled_tools: List[str]
     capabilities: List[str]
+    required_permissions: List[str]
+    
+    # Categorization & Discovery
+    tags: List[str]
+    category: Optional[str]
     
     # Metadata
     created_by: UUID
@@ -126,9 +153,12 @@ class AIAgentResponse(BaseModel):
     
     # Statistics
     usage_count: int
-    success_rate: float
-    avg_response_time: float
-    deployment_status: str
+    follower_count: int
+    
+    # Optional calculated fields
+    success_rate: Optional[float] = Field(default=None)
+    avg_response_time: Optional[float] = Field(default=None)
+    deployment_status: Optional[str] = Field(default=None)
 
     class Config:
         from_attributes = True

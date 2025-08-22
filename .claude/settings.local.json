@@ -23,7 +23,10 @@
       "Bash(alembic upgrade:*)",
       "Bash(cp:*)",
       "Bash(npx tsc:*)",
-      "Bash(timeout 15 pnpm dev)"
+      "Bash(timeout 15 pnpm dev)",
+      "Bash(alembic current:*)",
+      "Bash(.pathScriptsactivate)",
+      "Bash(pip show:*)"
     ],
     "deny": [],
     "defaultMode": "acceptEdits",

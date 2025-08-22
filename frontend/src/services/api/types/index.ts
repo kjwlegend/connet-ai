@@ -6,6 +6,12 @@
 // Auth types
 export * from './auth'
 
+// Agents types
+export * from './agents'
+
+// Contacts types
+export * from './contacts'
+
 // Common API response types
 export interface ApiResponse<T = any> {
   data: T

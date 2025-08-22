@@ -63,6 +63,8 @@ dependencies = [
     "opentelemetry-sdk>=1.21.0",
     "opentelemetry-instrumentation-fastapi>=0.42b0",
     "httpx>=0.28.1",
+    "pypinyin>=0.55.0",
+    "psycopg2-binary>=2.9.10",
 ]
 
 [project.optional-dependencies]

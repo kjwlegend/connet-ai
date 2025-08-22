@@ -16,11 +16,11 @@ from app.services.base import BaseRepositoryService
 from app.infrastructure.database.models import (
     ConversationModel,
     ConversationParticipantModel, 
-    ConversationUserSettingModel,
     MessageModel,
     UserModel,
-    AgentModel
+    AIAgentModel
 )
+# ConversationUserSettingModel not yet enabled
 from app.schemas.conversation import (
     ConversationCreate,
     ConversationUpdate,

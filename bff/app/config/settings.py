@@ -58,12 +58,20 @@ class Settings(BaseSettings):
     
     # AI Service Configuration
     openai_api_key: Optional[str] = Field(default=None, env="OPENAI_API_KEY")
+    openai_base_url: Optional[str] = Field(default=None, env="OPENAI_BASE_URL")
     openai_org_id: Optional[str] = Field(default=None, env="OPENAI_ORG_ID")
-    openai_default_model: str = Field(default="gpt-3.5-turbo", env="OPENAI_DEFAULT_MODEL")
+    openai_default_model: str = Field(default="gpt-4o-mini", env="OPENAI_DEFAULT_MODEL")
+    
+    # LangSmith Tracing Configuration
+    langsmith_tracing: bool = Field(default=False, env="LANGSMITH_TRACING")
+    langsmith_endpoint: str = Field(default="https://api.smith.langchain.com", env="LANGSMITH_ENDPOINT")
+    langsmith_api_key: Optional[str] = Field(default=None, env="LANGSMITH_API_KEY")
+    langsmith_project: str = Field(default="connet-ai-dev", env="LANGSMITH_PROJECT")
+    
+    # Legacy support
     langchain_tracing_v2: bool = Field(default=False, env="LANGCHAIN_TRACING_V2")
     langchain_endpoint: Optional[str] = Field(default=None, env="LANGCHAIN_ENDPOINT")
     langchain_api_key: Optional[str] = Field(default=None, env="LANGCHAIN_API_KEY")
-    langsmith_api_key: Optional[str] = Field(default=None, env="LANGSMITH_API_KEY")
     
     # Vector Database
     vector_dimension: int = Field(default=1536, env="VECTOR_DIMENSION")

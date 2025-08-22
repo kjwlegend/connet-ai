@@ -497,7 +497,7 @@ models/node_execution_model.py            # 节点执行模型
 agents/base_agent.py                      # 基础智能体类
 ```
 
-### 智能LLM路由系统
+### 智能 LLM 路由系统
 
 #### 动态模型选择
 
@@ -547,7 +547,7 @@ repositories/analytics_repository.py      # 分析数据仓库
 - **[架构概览](architecture-overview.md)** - 整体系统架构设计
 - **[数据库设计](database-design.md)** - 详细数据模型和关系
 - **[LangGraph 集成](langgraph-architecture.md)** - 工作流引擎架构
-- **[智能LLM路由](intelligent-llm-routing.md)** - 智能模型选择和成本优化策略
+- **[智能 LLM 路由](intelligent-llm-routing.md)** - 智能模型选择和成本优化策略
 
 ### 业务设计文档
 

@@ -4,7 +4,7 @@ from datetime import datetime
 from typing import Dict, List, Optional, Any
 from uuid import UUID, uuid4
 
-from sqlmodel import SQLModel, Field, Column, JSON, Text
+from sqlmodel import SQLModel, Field, Column, JSON, Text, null
 from sqlalchemy import Column, JSON
 from sqlalchemy.dialects.postgresql import JSONB
 
@@ -25,14 +25,17 @@ class AIAgentModel(SQLModel, table=True):
     name: str = Field(
         unique=True,
         index=True,
-        max_length=50,
+        max_length=500,
         description="Agent name for mentions (@code_assistant)",
     )
     display_name: str = Field(
         max_length=100, description="Display name (e.g., 'Code Assistant')"
     )
     description: str = Field(
-        max_length=500, description="Agent description and capabilities"
+        nullable=True, max_length=500, description="Agent description and capabilities"
+    )
+    introduction: str = Field(
+        nullable=True, max_length=500, description="Agent introduction"
     )
     agent_type: str = Field(
         max_length=100, description="Agent type: system/custom/specialized"
@@ -63,9 +66,6 @@ class AIAgentModel(SQLModel, table=True):
         max_length=20,
         description="Avatar style: default/anime/realistic/abstract",
     )
-    color_theme: Optional[str] = Field(
-        default=None, max_length=7, description="Theme color (hex format: #RRGGBB)"
-    )
     conversation_style: str = Field(
         default="professional",
         max_length=100,
@@ -74,7 +74,8 @@ class AIAgentModel(SQLModel, table=True):
 
     # 4) Core Configuration
     system_prompt: str = Field(
-        sa_column=Column(Text), description="System prompt for the agent"
+        sa_column=Column(Text),
+        description="System prompt for the agent",
     )
     personality_config: Dict[str, Any] = Field(
         default={},
@@ -162,7 +163,6 @@ class AIAgentModel(SQLModel, table=True):
                     "presence_penalty": 0.0,
                     "frequency_penalty": 0.0,
                 },
-                # "enabled_tools": ["python_executor", "file_reader", "web_search"], # Moved to contact-level
                 "capabilities": ["code_generation", "debugging", "code_review"],
                 "required_permissions": [],
                 "max_context_length": 4000,

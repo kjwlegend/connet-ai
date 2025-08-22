@@ -207,13 +207,17 @@ class ContactService(BaseRepositoryService):
     ) -> bool:
         """Remove a contact (unfollow)."""
         try:
-            # Find and delete contact
+            # Find and delete contact using composite key
             contacts = await self.contact_repository.get_by_follower_id(user_id)
-            contact = next((c for c in contacts if c.following_id == contact_id), None)
+            contact = next((c for c in contacts if c.following_id == contact_id and c.following_type.value == contact_type), None)
             
             if contact:
-                # Use composite key to delete (this is a placeholder - may need refinement)
-                return await self.contact_repository.delete_contact(contact.id)  # Assuming we add id field
+                # Use composite key to delete
+                return await self.contact_repository.delete_contact(
+                    follower_id=contact.follower_id,
+                    following_id=contact.following_id,
+                    following_type=contact.following_type.value
+                )
             return False
         except Exception as e:
             logger.error(f"Error removing contact: {e}")

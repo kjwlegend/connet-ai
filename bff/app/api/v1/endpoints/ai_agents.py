@@ -55,7 +55,7 @@ async def create_agent(
 )
 async def list_agents(
     agent_type: Optional[str] = Query(None, description="Filter by agent type"),
-    status: Optional[str] = Query(None, description="Filter by status"),
+    agent_status: Optional[str] = Query(None, description="Filter by status"),
     search: Optional[str] = Query(
         None, description="Search in name, display_name, or description"
     ),
@@ -77,7 +77,7 @@ async def list_agents(
         return await service.list_agents(
             user_id=current_user.id,
             agent_type=agent_type,
-            status=status,
+            status=agent_status,
             search=search,
             pagination=pagination,
         )

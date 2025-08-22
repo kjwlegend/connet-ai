@@ -10,10 +10,14 @@ export { AuthService as default } from './auth'
 // Re-export for backward compatibility with existing code
 export { AuthService as AuthAPI } from './auth'
 
+// AI Agents service
+export { AgentsService } from './agents'
+
+// Contacts service
+export { ContactsService } from './contacts'
+
 // TODO: Add other services as they are implemented to match BFF endpoints
-// export { ContactsService } from './contacts'
 // export { ConversationsService } from './conversations'
-// export { AIAgentsService } from './ai-agents'  
 // export { AIChatService } from './ai-chat'
 // export { TimelineService } from './timeline'
 // export { SettingsService } from './settings'
