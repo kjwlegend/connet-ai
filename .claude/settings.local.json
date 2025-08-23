@@ -26,7 +26,8 @@
       "Bash(timeout 15 pnpm dev)",
       "Bash(alembic current:*)",
       "Bash(.pathScriptsactivate)",
-      "Bash(pip show:*)"
+      "Bash(pip show:*)",
+      "Bash(alembic revision:*)"
     ],
     "deny": [],
     "defaultMode": "acceptEdits",

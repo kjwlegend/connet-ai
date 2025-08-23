@@ -33,11 +33,10 @@ api_router.include_router(ai_chat.router)
 # contacts
 api_router.include_router(contacts.router, tags=["Contacts"])
 
-# LangGraph enhanced chat functionality
-api_router.include_router(langgraph_chat.router, prefix="/langgraph", tags=["LangGraph Chat"])
+# Enhanced conversation functionality  
+api_router.include_router(langgraph_chat.router, prefix="/conversations", tags=["Conversations"])
 
-# Standard conversation endpoints (temporarily disabled)
-# api_router.include_router(conversations.router, prefix="/conversations", tags=["Conversations"])
+# Note: Original conversations endpoint replaced with LangGraph-enhanced version
 
 # TODO: Uncomment as endpoints are implemented
 # api_router.include_router(files.router, prefix="/files", tags=["files"])
