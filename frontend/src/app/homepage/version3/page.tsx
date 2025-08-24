@@ -3,7 +3,7 @@
 import { useState, useMemo } from 'react'
 import { motion } from 'framer-motion'
 import { useTranslations } from '@/lib/i18n/client'
-import { useWaitlist } from '@/hooks/useWaitlist'
+import { useWaitlist } from '@/hooks/legacy/useWaitlist'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { 

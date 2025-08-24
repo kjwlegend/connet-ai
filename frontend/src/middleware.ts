@@ -1,52 +1,61 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
-
-// Define protected and public routes
-const protectedRoutes = [
-  '/dashboard',
-  '/chat',
-  '/contacts',
-  '/files',
-  '/timeline',
-  '/plugins',
-  '/settings',
-]
-const authRoutes = ['/login', '/register']
-const publicRoutes = ['/']
+import { canAccessRoute } from '@/lib/auth/route-config'
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
 
-  // Get token from cookies or headers
-  const token =
-    request.cookies.get('auth_token')?.value ||
-    request.headers.get('authorization')?.replace('Bearer ', '')
-
-  const isAuthenticated = !!token && token !== 'undefined'
-
-  // Check if the current path is protected
-  const isProtectedRoute = protectedRoutes.some((route) =>
-    pathname.startsWith(route)
-  )
-  const isAuthRoute = authRoutes.some((route) => pathname.startsWith(route))
-  const isPublicRoute = publicRoutes.includes(pathname)
-
-  // Redirect unauthenticated users trying to access protected routes
-  if (isProtectedRoute && !isAuthenticated) {
-    const loginUrl = new URL('/login', request.url)
-    loginUrl.searchParams.set('redirect', pathname)
-    return NextResponse.redirect(loginUrl)
+  // Get token from various sources (适配新的分类存储系统)
+  const getTokenFromStorage = () => {
+    // Try categorized storage keys first
+    const storageCategories = ['permanent', 'cache', 'session', 'temporary']
+    for (const category of storageCategories) {
+      const categoryKey = `${category}:connet-ai-store`
+      const cookieValue = request.cookies.get(categoryKey)?.value
+      if (cookieValue) {
+        try {
+          const storeData = JSON.parse(cookieValue)
+          if (storeData?.auth?.token || storeData?.state?.auth?.token) {
+            return storeData.auth?.token || storeData.state.auth.token
+          }
+        } catch {
+          // Continue to next method
+        }
+      }
+    }
+    
+    // Fallback methods
+    return (
+      request.cookies.get('auth_token')?.value ||
+      request.cookies.get('connet-ai-store')?.value ||
+      request.headers.get('authorization')?.replace('Bearer ', '')
+    )
   }
 
-  // Redirect authenticated users away from auth pages
-  // if (isAuthRoute && isAuthenticated) {
-  //   const dashboardUrl = new URL('/dashboard', request.url)
-  //   return NextResponse.redirect(dashboardUrl)
-  // }
+  const token = getTokenFromStorage()
+  const isAuthenticated = !!token && token !== 'undefined' && token !== 'null'
 
-  // Allow authenticated users to access home page, redirect unauthenticated to login
-  if (pathname === '/' && !isAuthenticated) {
-    return NextResponse.redirect(new URL('/login', request.url))
+  // Use route config to determine access
+  const accessCheck = canAccessRoute(pathname, isAuthenticated)
+
+  if (accessCheck.shouldRedirect && accessCheck.redirectTo) {
+    const redirectUrl = new URL(accessCheck.redirectTo, request.url)
+    
+    // Add redirect parameter for protected routes
+    if (!isAuthenticated && accessCheck.redirectTo.includes('/login')) {
+      redirectUrl.searchParams.set('redirect', pathname)
+    }
+    
+    return NextResponse.redirect(redirectUrl)
+  }
+
+  // Special handling for root path
+  if (pathname === '/') {
+    if (isAuthenticated) {
+      return NextResponse.redirect(new URL('/chat', request.url))
+    } else {
+      return NextResponse.redirect(new URL('/login', request.url))
+    }
   }
 
   return NextResponse.next()

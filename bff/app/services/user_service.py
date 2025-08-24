@@ -43,7 +43,7 @@ class UserService(BaseRepositoryService):
 
             if user:
                 # Cache for 30 minutes
-                await self.cache_manager.set(cache_key, user, ttl=1800)
+                await self.cache_manager.set(cache_key, user, expire=1800)
                 logger.debug(f"User {user_id} cached")
 
             return user

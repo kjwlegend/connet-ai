@@ -4,6 +4,7 @@ import { useState } from "react";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { SocialSidebar } from "@/components/features/timeline/components/SocialSidebar";
 import { SocialContent } from "@/components/features/timeline/components/SocialContent";
+import { LayoutGuard } from "@/components/auth/RouteGuard";
 import { cn } from "@/lib/utils";
 import { useTheme } from "next-themes";
 
@@ -16,7 +17,8 @@ export default function SocialLayout({ children }: SocialLayoutProps) {
   const { theme } = useTheme();
 
   return (
-    <AppLayout>
+    <LayoutGuard>
+      <AppLayout>
       {/* Middle Panel - Social Categories */}
       <div className={cn(
         "w-64 border-r flex flex-col",
@@ -34,6 +36,7 @@ export default function SocialLayout({ children }: SocialLayoutProps) {
       <div className="flex-1">
         <SocialContent category={selectedCategory} />
       </div>
-    </AppLayout>
+      </AppLayout>
+    </LayoutGuard>
   );
 }

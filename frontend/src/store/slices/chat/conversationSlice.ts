@@ -15,7 +15,7 @@ export interface ConversationSliceState {
   
   // Filters and search
   searchQuery: string
-  filters: ConversationState['filters']
+  conversationFilters: ConversationState['filters']
   
   // UI state
   isLoading: boolean
@@ -163,7 +163,7 @@ const createConversationSlice: StateCreator<
   conversations: createCachedData([], CACHE_TTL.CONVERSATIONS),
   activeConversationId: null,
   searchQuery: '',
-  filters: {
+  conversationFilters: {
     showArchived: false,
     showMuted: false,
   },
@@ -413,11 +413,11 @@ const createConversationSlice: StateCreator<
   },
 
   setFilters: (filters) => set((state) => ({
-    filters: { ...state.filters, ...filters }
+    conversationFilters: { ...state.conversationFilters, ...filters }
   })),
 
   resetFilters: () => set({
-    filters: {
+    conversationFilters: {
       showArchived: false,
       showMuted: false,
     },

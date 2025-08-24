@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
@@ -11,6 +11,7 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Checkbox } from '@/components/ui/checkbox'
 import { useTranslations } from '@/lib/i18n/client'
 import { useAuth } from '@/store'
+import { useAuthRegister } from '@/hooks/business/auth'
 import {
   RegisterFormData,
   validateRegisterForm,
@@ -21,12 +22,13 @@ import { cn } from '@/lib/utils/cn'
 import { LanguageToggle } from '@/components/ui/LanguageToggle'
 import { OAuthButtonsGroup } from '@/components/auth/OAuthButton'
 import { CheckCircle, Mail, ArrowRight } from 'lucide-react'
-import { useToast } from '@/hooks/use-toast'
+import { useToast } from '@/hooks/ui/use-toast'
 
 export default function RegisterPage() {
   const t = useTranslations()
   const router = useRouter()
-  const { registerWithCredentials, ui, error } = useAuth()
+  const { ui, error } = useAuth()
+  const { registerWithCredentials } = useAuthRegister()
   const isLoading = ui.isLoading
   const { toast } = useToast()
 
@@ -47,29 +49,29 @@ export default function RegisterPage() {
   const [registrationSuccess, setRegistrationSuccess] = useState(false)
   const [registeredEmail, setRegisteredEmail] = useState('')
 
-  /**
-   * Background dot configuration for hydration-safe rendering.
-   * We intentionally initialize on client after mount to avoid SSR/client markup mismatch
-   * caused by Math.random() during server render.
-   */
-  type DotConfig = {
-    left: string
-    top: string
-    duration: number
-    delay: number
-  }
-  const [dots, setDots] = useState<DotConfig[]>([])
-
-  useEffect(() => {
-    // Generate deterministic dot positions/timings for this client session only
-    const generated: DotConfig[] = Array.from({ length: 20 }, () => ({
-      left: `${Math.random() * 100}%`,
-      top: `${Math.random() * 100}%`,
-      duration: 3 + Math.random() * 2,
-      delay: Math.random() * 2,
-    }))
-    setDots(generated)
-  }, [])
+  // Fixed positions for background dots to avoid hydration mismatch
+  const backgroundDots = useMemo(() => [
+    { left: 15, top: 20, duration: 4.2, delay: 0.8 },
+    { left: 78, top: 15, duration: 3.7, delay: 1.3 },
+    { left: 23, top: 65, duration: 4.8, delay: 0.2 },
+    { left: 67, top: 45, duration: 3.4, delay: 1.9 },
+    { left: 89, top: 75, duration: 4.5, delay: 0.6 },
+    { left: 34, top: 35, duration: 3.9, delay: 1.5 },
+    { left: 56, top: 82, duration: 4.1, delay: 0.4 },
+    { left: 18, top: 48, duration: 3.6, delay: 1.7 },
+    { left: 82, top: 22, duration: 4.3, delay: 0.1 },
+    { left: 45, top: 78, duration: 3.8, delay: 1.2 },
+    { left: 71, top: 58, duration: 4.6, delay: 0.9 },
+    { left: 29, top: 18, duration: 3.5, delay: 1.4 },
+    { left: 63, top: 38, duration: 4.4, delay: 0.7 },
+    { left: 91, top: 68, duration: 3.3, delay: 1.6 },
+    { left: 41, top: 88, duration: 4.7, delay: 0.3 },
+    { left: 12, top: 55, duration: 4.0, delay: 1.8 },
+    { left: 85, top: 32, duration: 3.2, delay: 0.5 },
+    { left: 52, top: 12, duration: 4.9, delay: 1.1 },
+    { left: 76, top: 92, duration: 3.1, delay: 1.0 },
+    { left: 38, top: 72, duration: 4.8, delay: 0.9 },
+  ], [])
 
   // Auto-fill invite code from URL on component mount
   useEffect(() => {
@@ -157,7 +159,7 @@ export default function RegisterPage() {
         utm_campaign: trackingInfo.utm_campaign,
       }
 
-      await registerWithCredentials(registerData)
+      const result = await registerWithCredentials(registerData)
 
       // Show email verification flow instead of redirecting
       setRegisteredEmail(formData.email)
@@ -291,12 +293,12 @@ export default function RegisterPage() {
     <div className="h-screen w-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 overflow-hidden fixed inset-0">
       {/* Background Network Animation Layer */}
       <div className="fixed inset-0 z-0 opacity-20">
-        {/* Floating network dots - render after mount to keep hydration stable */}
-        {dots.map((dot, i) => (
+        {/* Floating network dots */}
+        {backgroundDots.map((dot, i) => (
           <motion.div
             key={i}
             className="absolute w-1 h-1 bg-purple-400 rounded-full"
-            style={{ left: dot.left, top: dot.top }}
+            style={{ left: `${dot.left}%`, top: `${dot.top}%` }}
             animate={{
               opacity: [0.2, 0.8, 0.2],
               scale: [0.8, 1.3, 0.8],

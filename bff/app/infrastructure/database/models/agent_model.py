@@ -120,6 +120,28 @@ class AIAgentModel(SQLModel, table=True):
         default=None, sa_column=Column(JSONB), description="Embedding of capabilities"
     )
 
+    # 10) LangGraph Integration Fields (New)
+    node_type: Optional[str] = Field(
+        default="standard",
+        max_length=50, 
+        description="LangGraph node type: standard, workflow, tool, memory, router"
+    )
+    execution_config: Optional[Dict[str, Any]] = Field(
+        default=None,
+        sa_column=Column(JSONB),
+        description="Execution configuration for LangGraph nodes"
+    )
+    resource_limits: Optional[Dict[str, Any]] = Field(
+        default=None,
+        sa_column=Column(JSONB),
+        description="Resource limits (memory, CPU, timeout, etc.)"
+    )
+    dependencies: Optional[Dict[str, Any]] = Field(
+        default=None,
+        sa_column=Column(JSONB),
+        description="Agent dependencies and requirements"
+    )
+
     # 11) Timestamps
     created_by: UUID = Field(foreign_key="users.id", description="Creator user ID")
     created_at: datetime = Field(
@@ -134,6 +156,7 @@ class AIAgentModel(SQLModel, table=True):
 
     # OpenAPI 文档示例
     model_config = {
+        "protected_namespaces": (),
         "json_schema_extra": {
             "example": {
                 "name": "code_assistant",

@@ -45,8 +45,9 @@ class KnowledgeBaseModel(SQLModel, table=True):
     tags: List[str] = Field(default=[], sa_column=Column(JSON))
     knowledge_metadata: Dict[str, Any] = Field(default={}, sa_column=Column(JSONB))
 
-    created_at: datetime = Field(default_factory=datetime.now(), nullable=False)
-    updated_at: datetime = Field(default_factory=datetime.now(), nullable=False)
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+    updated_at: datetime = Field(default_factory=datetime.utcnow)
+
     created_by: Optional[UUID] = Field(default=None, foreign_key="users.id")
 
 
@@ -66,8 +67,8 @@ class KnowledgeDocumentModel(SQLModel, table=True):
     knowledge_document_metadata: Optional[Dict[str, Any]] = Field(
         default=None, sa_column=Column(JSON, nullable=True)
     )
-    created_at: datetime = Field(default_factory=datetime.now(), nullable=False)
-    updated_at: datetime = Field(default_factory=datetime.now(), nullable=False)
+    created_at: datetime = Field(default_factory=datetime.now, nullable=False)
+    updated_at: datetime = Field(default_factory=datetime.now, nullable=False)
     is_active: bool = Field(default=True, nullable=False)
 
     model_config = {
@@ -103,8 +104,8 @@ class RAGDocumentModel(SQLModel, table=True):
     visibility: str = Field(default="private", max_length=50)  # private, shared, public
     shared_with: List[UUID] = Field(default=[], sa_column=Column(JSONB))
 
-    created_at: datetime = Field(default_factory=datetime.now())
-    updated_at: datetime = Field(default_factory=datetime.now())
+    created_at: datetime = Field(default_factory=datetime.now)
+    updated_at: datetime = Field(default_factory=datetime.now)
     processed_at: Optional[datetime] = Field(default=None)
 
 
@@ -136,4 +137,4 @@ class RAGDocumentChunkModel(SQLModel, table=True):
     quality_score: float = Field(default=1.0)
     token_count: int = Field(default=0)
 
-    created_at: datetime = Field(default_factory=datetime.now())
+    created_at: datetime = Field(default_factory=datetime.now)

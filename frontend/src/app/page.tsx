@@ -3,7 +3,7 @@
 import { useState, useMemo, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { useTranslations } from '@/lib/i18n/client'
-import { useWaitlist } from '@/hooks/useWaitlist'
+import { useWaitlist } from '@/hooks/legacy/useWaitlist'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
@@ -82,6 +82,37 @@ export default function HomePage() {
       }
     })
   }, [isClient])
+
+  // Fixed positions for floating elements to avoid hydration issues
+  const floatingElements = useMemo(() => [
+    { left: 12, top: 25, duration: 4.2, delay: 0.8 },
+    { left: 78, top: 15, duration: 3.7, delay: 1.3 },
+    { left: 23, top: 65, duration: 4.8, delay: 0.2 },
+    { left: 67, top: 45, duration: 3.4, delay: 1.9 },
+    { left: 89, top: 75, duration: 4.5, delay: 0.6 },
+    { left: 34, top: 35, duration: 3.9, delay: 1.5 },
+    { left: 56, top: 82, duration: 4.1, delay: 0.4 },
+    { left: 18, top: 48, duration: 3.6, delay: 1.7 },
+    { left: 82, top: 22, duration: 4.3, delay: 0.1 },
+    { left: 45, top: 78, duration: 3.8, delay: 1.2 },
+    { left: 71, top: 58, duration: 4.6, delay: 0.9 },
+    { left: 29, top: 18, duration: 3.5, delay: 1.4 },
+    { left: 63, top: 38, duration: 4.4, delay: 0.7 },
+    { left: 91, top: 68, duration: 3.3, delay: 1.6 },
+    { left: 41, top: 88, duration: 4.7, delay: 0.3 },
+  ], [])
+
+  // Fixed positions for memory nodes
+  const memoryNodes = useMemo(() => [
+    { left: 28, top: 42 },
+    { left: 38, top: 38 },
+    { left: 48, top: 46 },
+    { left: 58, top: 34 },
+    { left: 68, top: 52 },
+    { left: 78, top: 29 },
+    { left: 88, top: 45 },
+    { left: 98, top: 58 },
+  ], [])
 
   const handleJoinWaitlist = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -595,22 +626,22 @@ export default function HomePage() {
           </div>
           {/* Floating Tech Elements */}
           <div className="absolute inset-0 overflow-hidden">
-            {Array.from({ length: 15 }).map((_, i) => (
+            {floatingElements.map((element, i) => (
               <motion.div
                 key={i}
                 className="absolute w-2 h-2 bg-blue-400/20 rounded-full"
                 style={{
-                  left: `${Math.random() * 100}%`,
-                  top: `${Math.random() * 100}%`,
+                  left: `${element.left}%`,
+                  top: `${element.top}%`,
                 }}
                 animate={{
                   y: [0, -30, 0],
                   opacity: [0.2, 0.6, 0.2],
                 }}
                 transition={{
-                  duration: 3 + Math.random() * 2,
+                  duration: element.duration,
                   repeat: Infinity,
-                  delay: Math.random() * 2,
+                  delay: element.delay,
                 }}
               />
             ))}
@@ -740,20 +771,20 @@ export default function HomePage() {
           </div>
           {/* Floating Memory Nodes */}
           <div className="absolute inset-0 overflow-hidden">
-            {Array.from({ length: 8 }).map((_, i) => (
+            {memoryNodes.map((node, i) => (
               <motion.div
                 key={i}
                 className="absolute w-4 h-4 border-2 border-purple-400/30 rounded-full"
                 style={{
-                  left: `${20 + i * 10}%`,
-                  top: `${30 + Math.sin(i) * 40}%`,
+                  left: `${node.left}%`,
+                  top: `${node.top}%`,
                 }}
                 animate={{
                   scale: [1, 1.2, 1],
                   opacity: [0.3, 0.7, 0.3],
                 }}
                 transition={{
-                  duration: 2 + Math.random(),
+                  duration: 2 + (i * 0.2),
                   repeat: Infinity,
                   delay: i * 0.3,
                 }}

@@ -25,12 +25,17 @@ source venv/bin/activate  # On Windows: venv\Scripts\activate
 pip install -r requirements.txt
 python -m uvicorn app.main:app --reload --host 0.0.0.0 --port 8000  # Start development server
 
-# Alternative development commands
-make dev           # Start with Docker Compose
-make setup         # Setup local environment
-make migrate       # Run database migrations
-make test          # Run tests
-make lint          # Run code quality checks
+# Alternative development commands using Makefile
+make dev           # Start development server locally
+make install       # Install Python dependencies
+make debug-start   # Start debug environment (PostgreSQL + Redis only)
+make test          # Run tests with pytest
+make test-cov      # Run tests with coverage
+make lint          # Run linting (flake8 + mypy)
+make format        # Format code (black + isort)
+make docker-start  # Start all services with Docker
+make docker-stop   # Stop Docker services
+make db-upgrade    # Run database migrations with Alembic
 ```
 
 ### Testing
@@ -39,26 +44,29 @@ make lint          # Run code quality checks
 cd frontend
 pnpm test          # Run Jest tests
 pnpm test:watch    # Run tests in watch mode
+pnpm test:coverage # Run tests with coverage
 
 # Backend testing  
 cd bff
 pytest             # Run all tests
-pytest tests/unit  # Run unit tests only
-pytest -v          # Verbose output
+pytest -v          # Run tests with verbose output
 make test          # Run tests via Makefile
+make test-cov      # Run tests with coverage report
 ```
 
 ## Architecture Overview
 
 ### Tech Stack
-- **Frontend**: Next.js 15.3.2 with App Router, TypeScript, Tailwind CSS, shadcn/ui
+- **Frontend**: Next.js 15.3.2 with App Router, TypeScript, Tailwind CSS 4.x, shadcn/ui
 - **Package Manager**: pnpm (not npm)
 - **State Management**: Zustand
-- **Authentication**: NextAuth.js (planned integration with FastAPI backend)
-- **Internationalization**: next-international (English/Chinese support)
+- **Authentication**: Supabase Auth integration
+- **Internationalization**: next-intl (English/Chinese support)
 - **Theme System**: next-themes with class-based dark mode
-- **Backend**: FastAPI BFF service + Supabase integration, LangChain/LangGraph for AI
-- **Python Package Management**: pip with requirements.txt and pyproject.toml
+- **Backend**: FastAPI BFF service with comprehensive DDD architecture
+- **Database**: PostgreSQL with SQLModel ORM and Alembic migrations
+- **AI Integration**: LangChain + LangGraph for multi-agent orchestration
+- **Python Package Management**: pip with requirements.txt and pyproject.toml (hatchling build system)
 
 ### Frontend Architecture
 
@@ -124,32 +132,43 @@ app/
 ## Development Guidelines
 
 ### Code Preferences (from .cursor/rules/)
-- Always prefer simple solutions
-- Avoid code duplication - check existing codebase for similar functionality
-- Keep files under 200-300 lines - refactor beyond that
-- Never mock data for dev/prod environments (only for tests)
-- Don't overwrite .env files without confirmation
-- Keep codebase clean and organized
+- **Always prefer simple solutions**
+- **Avoid code duplication** - check existing codebase for similar functionality before creating new code
+- **Environment awareness** - write code that works across dev, test, and prod environments
+- **Careful changes** - only make changes that are requested or well understood and related to the request
+- **Fix without introducing new patterns** - exhaust existing implementation options before introducing new tech/patterns
+- **Keep codebase clean and organized**
+- **File size limits** - keep files under 200-300 lines, refactor beyond that
+- **No mocking in non-test environments** - mocking data is only for tests, never for dev or prod
+- **Environment file protection** - never overwrite .env files without confirmation
+- **Remove old implementations** - when introducing new patterns, remove old duplicate logic
 
 ### Styling & UI
-- Uses Tailwind CSS with class-based dark mode (`darkMode: 'class'`)
-- shadcn/ui for consistent UI components
+- Uses Tailwind CSS 4.x with class-based dark mode (`darkMode: 'class'`)
+- shadcn/ui for consistent UI components with Radix UI primitives
 - Theme system with next-themes provider
-- Tailwind animate plugin for animations
+- Framer Motion for advanced animations
+- Additional packages: tw-animate-css, class-variance-authority for component variants
 
 ### Internationalization
 - Supports English (`en`) and Chinese (`zh`) locales
 - Default locale: English
-- Uses next-international for i18n
+- Uses next-intl for i18n
 - Configuration in `lib/i18n/config.ts`
-- **重要**: 翻译文件位于 `lib/i18n/messages/` 目录，不是 `locales/` 目录
-  - 英文翻译: `lib/i18n/messages/en.json`
-  - 中文翻译: `lib/i18n/messages/zh.json`
+- **重要**: Translation files are located in both directories:
+  - Primary: `lib/i18n/messages/` (en.json, zh.json)
+  - Fallback: `lib/i18n/locales/` (en.json, zh.json)
 
 ### State Management
 - Zustand for client-side state management
-- Store slices in `store/slices/` (authSlice.ts, settingsSlice.ts)
-- Types defined in `store/types.ts`
+- Store slices organized by feature in `store/slices/`:
+  - `auth/authSlice.ts` - Authentication state
+  - `chat/conversationSlice.ts` - Chat and conversation state
+  - `contacts/contactsSlice.ts` - Contact management
+  - `agents/agentsSlice.ts` - AI agent state
+  - `ui/` - UI-related state (layout, notifications, preferences)
+- Types defined in `store/types/` with feature-based organization
+- Middleware for persistence and hydration in `store/middleware/`
 
 ## Development Environment Setup
 
@@ -173,50 +192,96 @@ app/
 ## Backend Development Status
 
 ### ✅ Completed (BFF Service)
-- **Core Architecture**: FastAPI application with DDD structure
-- **Database Models**: 17+ comprehensive SQLModel classes supporting human-AI hybrid community:
+- **Core Architecture**: FastAPI application with Domain-Driven Design (DDD) structure
+- **Application Structure**:
+  - `app/api/v1/endpoints/` - API endpoint modules (auth, users, ai_agents, conversations, contacts, etc.)
+  - `app/core/` - Core configuration and interfaces
+  - `app/infrastructure/` - External integrations (database, cache, supabase, security)
+  - `app/services/` - Business logic layer with LangGraph integration
+  - `app/schemas/` - Pydantic models for request/response validation
+- **Database Models**: 17+ comprehensive SQLModel classes in `app/infrastructure/database/models/`:
   - User system (User, UserInvitation, UserRegistrationSource, UserLLMSettings, UserPromptLibrary, UserSubscription)
-  - AI agent system (Agent, AgentKnowledgeBase)  
-  - Conversation system (Conversation, ConversationParticipant, ConversationTopic, ConversationUserSetting, Message)
+  - AI agent system (Agent, Knowledge models)  
+  - Conversation system (Conversation, ConversationParticipant, Message, etc.)
   - File system (File, FilePermission)
   - Social system (Contact, TimelinePost, TimelineComment, TimelineLike)
-- **Infrastructure**: Database connection, caching (Redis), security (JWT), Supabase integration
-- **API Framework**: Complete FastAPI setup with 12 endpoint modules including AI services
-- **AI Services**: Agent management, chat, documents, tools endpoints with LangChain integration
+- **Infrastructure**: Complete setup with Redis caching, Supabase integration, security middleware
+- **API Framework**: FastAPI with comprehensive middleware stack and 12+ endpoint modules
+- **AI Services**: Full LangChain/LangGraph integration with multi-agent orchestration
 
 ### 🚧 In Progress
-- **Database Migrations**: Alembic setup and initial schema deployment
-- **Supabase Integration**: Project setup with pgvector for semantic search
+- **Database Migrations**: Alembic setup and schema deployment
+- **Frontend-Backend Integration**: API service integration with Zustand stores
+- **Real-time Features**: WebSocket implementation for chat functionality
 
 ### 📋 Future Implementation
-- **Authentication**: Complete NextAuth.js and FastAPI backend integration
-- **Real-time**: Supabase Realtime for chat and presence
-- **AI Integration**: LangGraph for multi-agent orchestration
+- **Authentication**: Complete Supabase Auth integration across frontend/backend
+- **Real-time**: Enhanced WebSocket and Supabase Realtime for chat and presence
 - **Plugin System**: Dynamic loading of AI tools and external integrations
-- **Payments**: Integration with Creem.io (initial) then Stripe (scale)
+- **Payments**: Integration with payment providers for subscription management
 
 ## Important References
 
 - **Design System**: See `Design-system.md` for comprehensive UI/UX guidelines, color schemes, component specifications
 - **Product Requirements**: See `README.md` for detailed product requirements, architecture plans, and technical specifications
-- **Backend Progress**: See `docs/bff-progress-tracker.md` for detailed BFF service development status
 - **Database Schema**: See `bff/database_schema_design.md` for comprehensive schema documentation
 - **Coding Preferences**: See `.cursor/rules/` for development guidelines and tech stack details
+- **Architecture Documentation**: See `docs/` directory for detailed architecture plans and implementation guides
 
-## File Structure Conventions
+## Key Project Structure
 
-- Components are organized by feature/domain
-- UI components use shadcn/ui patterns
-- Types are centralized in `types/` directory
-- Utilities and configurations in `lib/`
-- Store management follows Zustand slice pattern
+### Frontend (`frontend/`)
+```
+src/
+├── app/                    # Next.js App Router pages
+│   ├── (auth)/            # Authentication pages (login, register)
+│   ├── (main)/            # Main application routes
+│   ├── (test)/            # Test pages for development
+│   └── api/               # API routes and webhooks
+├── components/
+│   ├── ui/                # shadcn/ui components
+│   ├── features/          # Feature-specific components
+│   │   ├── chat/          # Chat interface components
+│   │   ├── contacts/      # Contact management
+│   │   ├── settings/      # Settings pages
+│   │   └── timeline/      # Social timeline features
+│   └── layout/            # Layout components
+├── lib/                   # Utilities and configurations
+│   ├── i18n/             # Internationalization setup
+│   ├── design-system/    # Design tokens and theme system
+│   └── seo/              # SEO configuration
+├── store/                 # Zustand state management
+│   ├── slices/           # Feature-based state slices
+│   └── middleware/       # Store middleware (persistence, logging)
+└── services/             # API client services
+```
+
+### Backend (`bff/`)
+```
+app/
+├── api/v1/               # Versioned API endpoints
+├── core/                 # Core configuration
+├── infrastructure/       # External integrations
+│   ├── database/        # SQLModel models and repositories
+│   ├── cache/           # Redis cache implementation
+│   ├── external/        # Supabase and other external services
+│   └── security/        # Authentication and security
+├── services/            # Business logic layer
+│   └── langgraph/       # LangGraph AI orchestration
+├── schemas/             # Pydantic request/response models
+└── utils/               # Utility functions
+```
 
 ## Important Notes
 
 - This is a bilingual platform with both English and Chinese support
-- Focus on clean, maintainable code following established patterns
-- The project is in early development with many components being newly added
+- Focus on clean, maintainable code following established patterns in `.cursor/rules/`
+- The project uses Domain-Driven Design (DDD) architecture in the backend
 - Pay attention to existing coding preferences and maintain consistency
-- Always remember to leverage i18n for globalization (English/Chinese)
-- Backend uses pip with requirements.txt and pyproject.toml for dependency management
+- Always leverage i18n for globalization (English/Chinese) using next-intl
+- Backend uses pip with requirements.txt and pyproject.toml (hatchling build system)
 - Frontend uses pnpm as the package manager (not npm)
+- Follow the three-panel layout design pattern for UI consistency
+- Use feature-based organization for components and state management
+- Prefer existing solutions and patterns over introducing new ones
+- Test coverage is important - use Jest for frontend and pytest for backend

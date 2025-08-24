@@ -17,6 +17,7 @@ from app.schemas.ai import (
 )
 from app.schemas.user import UserResponse
 from app.services.ai_agent_service import AIAgentService
+from app.services.langgraph.contact_manager import ContactInstanceManager
 
 router = APIRouter(prefix="/agents", tags=["AI Agents"])
 
@@ -273,6 +274,142 @@ async def rollback_agent(
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Failed to rollback agent: {str(e)}",
+        )
+
+
+# Agent Marketplace endpoints
+
+@router.get(
+    "/marketplace",
+    response_model=AIAgentListResponse,
+    summary="Get Agent Marketplace",
+    description="Browse available agents in the marketplace",
+)
+async def get_marketplace_agents(
+    category: Optional[str] = Query(None, description="Filter by agent category"),
+    search: Optional[str] = Query(None, description="Search agents by name or description"),
+    featured: Optional[bool] = Query(None, description="Show only featured agents"),
+    limit: int = Query(20, ge=1, le=100, description="Maximum number of agents"),
+    offset: int = Query(0, ge=0, description="Pagination offset"),
+    current_user: UserResponse = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db_session),
+) -> AIAgentListResponse:
+    """Get marketplace agents."""
+    
+    try:
+        service = AIAgentService(db)
+        return await service.get_marketplace_agents(
+            category=category,
+            search=search,
+            featured=featured,
+            limit=limit,
+            offset=offset
+        )
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to get marketplace agents: {str(e)}",
+        )
+
+
+@router.post(
+    "/{agent_id}/add-to-contacts",
+    response_model=dict,
+    summary="Add Agent to Contacts",
+    description="Convert an agent to a personalized contact instance",
+)
+async def add_agent_to_contacts(
+    agent_id: UUID,
+    customization_data: dict = {},
+    current_user: UserResponse = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db_session),
+):
+    """Add agent to user's contacts with optional personalization."""
+    
+    try:
+        # Initialize contact manager
+        contact_manager = ContactInstanceManager(db)
+        
+        # Convert agent to contact instance
+        contact_info = await contact_manager.agent_to_contact_conversion(
+            user_id=current_user.id,
+            agent_id=agent_id,
+            custom_system_prompt=customization_data.get("custom_system_prompt"),
+            instance_config=customization_data.get("instance_config"),
+            resource_limits=customization_data.get("resource_limits"),
+            display_name_override=customization_data.get("display_name")
+        )
+        
+        return {
+            "message": "Agent successfully added to contacts",
+            "contact_info": contact_info
+        }
+        
+    except ValueError as e:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=str(e)
+        )
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to add agent to contacts: {str(e)}",
+        )
+
+
+@router.get(
+    "/{agent_id}/compatibility",
+    response_model=dict,
+    summary="Check Agent Compatibility",
+    description="Check if agent can be added to user's contacts and any limitations",
+)
+async def check_agent_compatibility(
+    agent_id: UUID,
+    current_user: UserResponse = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db_session),
+):
+    """Check agent compatibility for contact conversion."""
+    
+    try:
+        # Check if agent exists and is accessible
+        agent_service = AIAgentService(db)
+        agent = await agent_service.get_agent(agent_id, current_user.id)
+        
+        if not agent:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Agent not found or access denied"
+            )
+        
+        # Check if user already has this agent as a contact
+        contact_manager = ContactInstanceManager(db)
+        existing_contact = await contact_manager.get_contact_effective_config(
+            current_user.id, agent_id
+        )
+        
+        compatibility_info = {
+            "compatible": True,
+            "already_added": existing_contact is not None,
+            "agent_capabilities": agent.capabilities if hasattr(agent, 'capabilities') else [],
+            "required_permissions": agent.required_permissions if hasattr(agent, 'required_permissions') else [],
+            "estimated_cost_per_request": "0.02",  # Mock value
+            "max_requests_per_hour": 100,  # Default limit
+            "customization_options": {
+                "custom_system_prompt": True,
+                "temperature_adjustment": True,
+                "response_length": True,
+                "resource_limits": True
+            }
+        }
+        
+        return compatibility_info
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to check compatibility: {str(e)}",
         )
 
 

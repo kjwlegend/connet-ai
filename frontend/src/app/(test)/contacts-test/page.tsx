@@ -8,10 +8,17 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Checkbox } from '@/components/ui/checkbox'
 import { useContacts } from '@/store'
+import { useContactsQuery, useContactsMutation, useContactsSearch, useContactsKnowledge, useContactsTools } from '@/hooks/business/contacts'
 import type { ContactType, RelationshipType, NotificationLevel } from '@/services/api'
 
 export default function ContactsTestPage() {
   const contacts = useContacts()
+  const { loadContacts, getContact } = useContactsQuery()
+  const { createContact, updateContact, deleteContact, toggleFavorite } = useContactsMutation()
+  const { searchContacts } = useContactsSearch()
+  const { loadContactKnowledgeBases } = useContactsKnowledge()
+  const { loadContactTools } = useContactsTools()
+  
   const [logs, setLogs] = useState<string[]>([])
   const [testData, setTestData] = useState({
     followingId: '',
@@ -34,7 +41,7 @@ export default function ContactsTestPage() {
 
   const testAddContact = async () => {
     try {
-      addLog('Testing add contact with store...')
+      addLog('Testing add contact with new business hooks...')
       const contactData = {
         following_id: testData.followingId,
         following_type: testData.followingType,
@@ -46,7 +53,7 @@ export default function ContactsTestPage() {
         notification_level: testData.notificationLevel,
       }
 
-      const result = await contacts.createContact(contactData)
+      const result = await createContact(contactData)
       addLog(`✅ Add contact success: ${result.display_name || result.following_id}`)
       addLog(`   Type: ${result.following_type}, Relationship: ${result.relationship_type}`)
       addLog(`   Is favorite: ${result.is_favorite}`)
@@ -57,7 +64,7 @@ export default function ContactsTestPage() {
 
   const testGetUserContacts = async () => {
     try {
-      addLog('Testing get user contacts with store...')
+      addLog('Testing get user contacts with new business hooks...')
       const params = {
         skip: testData.skip,
         limit: testData.limit,
@@ -66,7 +73,7 @@ export default function ContactsTestPage() {
         ...(testData.searchQuery && { search: testData.searchQuery }),
       }
 
-      await contacts.getUserContacts(params)
+      await loadContacts(params)
       addLog(`✅ Get user contacts success: Found ${contacts.contacts.length} contacts`)
       addLog(`   Total in pagination: ${contacts.pagination.total}`)
       contacts.contacts.forEach((contact, index) => {
@@ -83,14 +90,14 @@ export default function ContactsTestPage() {
         addLog('❌ Please enter a search query first.')
         return
       }
-      addLog(`Testing search contacts with store: "${testData.searchQuery}"`)
+      addLog(`Testing search contacts with new business hooks: "${testData.searchQuery}"`)
       const params = {
         query: testData.searchQuery,
         limit: testData.limit,
         ...(testData.followingType && { contact_type: testData.followingType }),
       }
 
-      await contacts.searchContacts(params)
+      await searchContacts(params)
       addLog(`✅ Search contacts success: Found ${contacts.searchResults.length} results`)
       contacts.searchResults.forEach((contact, index) => {
         addLog(`  ${index + 1}. ${contact.name || contact.display_name} (${contact.type}) - Followed: ${contact.is_followed}`)
@@ -106,8 +113,8 @@ export default function ContactsTestPage() {
         addLog('❌ Please enter a following ID first.')
         return
       }
-      addLog(`Testing get specific contact with store: ${testData.followingId}`)
-      const result = await contacts.getContact(testData.followingId, testData.followingType)
+      addLog(`Testing get specific contact with new business hooks: ${testData.followingId}`)
+      const result = await getContact(testData.followingId, testData.followingType)
       if (result) {
         addLog(`✅ Get contact success: ${result.display_name || 'Unknown'}`)
         addLog(`   Notes: ${result.notes || 'None'}`)
@@ -127,14 +134,14 @@ export default function ContactsTestPage() {
         addLog('❌ Please enter a following ID first.')
         return
       }
-      addLog(`Testing update contact with store: ${testData.followingId}`)
+      addLog(`Testing update contact with new business hooks: ${testData.followingId}`)
       const updateData = {
         display_name: `${testData.displayName} (Updated)`,
         notes: `${testData.notes} - Updated at ${new Date().toLocaleTimeString()}`,
         tags: [...testData.tags, 'updated'],
       }
 
-      const result = await contacts.updateContact(testData.followingId, testData.followingType, updateData)
+      const result = await updateContact(testData.followingId, testData.followingType, updateData)
       if (result) {
         addLog(`✅ Update contact success: ${result.display_name}`)
         addLog(`   Updated notes: ${result.notes}`)
@@ -152,8 +159,8 @@ export default function ContactsTestPage() {
         addLog('❌ Please enter a following ID first.')
         return
       }
-      addLog(`Testing toggle favorite with store: ${testData.followingId}`)
-      const result = await contacts.toggleFavorite(testData.followingId, testData.followingType)
+      addLog(`Testing toggle favorite with new business hooks: ${testData.followingId}`)
+      const result = await toggleFavorite(testData.followingId, testData.followingType)
       addLog(`✅ Toggle favorite success: ${result ? 'Now favorite' : 'No longer favorite'}`)
     } catch (error: any) {
       addLog(`❌ Toggle favorite failed: ${error.message}`)
@@ -166,8 +173,8 @@ export default function ContactsTestPage() {
         addLog('❌ Please enter a following ID first.')
         return
       }
-      addLog(`Testing remove contact with store: ${testData.followingId}`)
-      await contacts.deleteContact(testData.followingId, testData.followingType)
+      addLog(`Testing remove contact with new business hooks: ${testData.followingId}`)
+      await deleteContact(testData.followingId, testData.followingType)
       addLog(`✅ Remove contact success`)
     } catch (error: any) {
       addLog(`❌ Remove contact failed: ${error.message}`)
@@ -180,8 +187,8 @@ export default function ContactsTestPage() {
         addLog('❌ Please enter a following ID first.')
         return
       }
-      addLog(`Testing get contact knowledge bases with store: ${testData.followingId}`)
-      await contacts.getContactKnowledgeBases(testData.followingId, testData.followingType)
+      addLog(`Testing get contact knowledge bases with new business hooks: ${testData.followingId}`)
+      await loadContactKnowledgeBases(testData.followingId, testData.followingType)
       addLog(`✅ Get contact knowledge success: Found ${contacts.contactKnowledge.length} knowledge bases`)
       contacts.contactKnowledge.forEach((kb, index) => {
         addLog(`  ${index + 1}. ${kb.knowledge_base_name || 'Unknown'} - ${kb.alias || 'No alias'}`)
@@ -197,8 +204,8 @@ export default function ContactsTestPage() {
         addLog('❌ Please enter a following ID first.')
         return
       }
-      addLog(`Testing get contact tools with store: ${testData.followingId}`)
-      await contacts.getContactTools(testData.followingId, testData.followingType)
+      addLog(`Testing get contact tools with new business hooks: ${testData.followingId}`)
+      await loadContactTools(testData.followingId, testData.followingType)
       addLog(`✅ Get contact tools success: Found ${contacts.contactTools.length} tools`)
       contacts.contactTools.forEach((tool, index) => {
         addLog(`  ${index + 1}. ${tool.tool_name || 'Unknown'} - Enabled: ${tool.enabled}`)
@@ -214,7 +221,7 @@ export default function ContactsTestPage() {
 
   return (
     <div className="container mx-auto p-6 max-w-6xl">
-      <h1 className="text-3xl font-bold mb-6">Contacts API Test Page (with Store)</h1>
+      <h1 className="text-3xl font-bold mb-6">Contacts API Test Page (with New Business Hooks)</h1>
       
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Test Controls */}
@@ -361,57 +368,57 @@ export default function ContactsTestPage() {
               <Button 
                 onClick={testAddContact} 
                 size="sm"
-                disabled={contacts.ui.isCreating}
+                disabled={contacts.contactsUI.isCreating}
               >
-                {contacts.ui.isCreating ? 'Adding...' : 'Add Contact'}
+                {contacts.contactsUI.isCreating ? 'Adding...' : 'Add Contact'}
               </Button>
               <Button 
                 onClick={testGetUserContacts} 
                 size="sm" 
                 variant="outline"
-                disabled={contacts.ui.isLoading}
+                disabled={contacts.contactsUI.isLoading}
               >
-                {contacts.ui.isLoading ? 'Loading...' : 'Get Contacts'}
+                {contacts.contactsUI.isLoading ? 'Loading...' : 'Get Contacts'}
               </Button>
               <Button 
                 onClick={testSearchContacts} 
                 size="sm"
-                disabled={contacts.ui.isSearching}
+                disabled={contacts.contactsUI.isSearching}
               >
-                {contacts.ui.isSearching ? 'Searching...' : 'Search Contacts'}
+                {contacts.contactsUI.isSearching ? 'Searching...' : 'Search Contacts'}
               </Button>
               <Button 
                 onClick={testGetContact} 
                 size="sm"
-                disabled={contacts.ui.isLoading}
+                disabled={contacts.contactsUI.isLoading}
               >
                 Get Contact
               </Button>
               <Button 
                 onClick={testUpdateContact} 
                 size="sm"
-                disabled={contacts.ui.isUpdating}
+                disabled={contacts.contactsUI.isUpdating}
               >
-                {contacts.ui.isUpdating ? 'Updating...' : 'Update Contact'}
+                {contacts.contactsUI.isUpdating ? 'Updating...' : 'Update Contact'}
               </Button>
               <Button 
                 onClick={testToggleFavorite} 
                 size="sm"
-                disabled={contacts.ui.isLoading}
+                disabled={contacts.contactsUI.isLoading}
               >
                 Toggle Favorite
               </Button>
               <Button 
                 onClick={testGetContactKnowledge} 
                 size="sm"
-                disabled={contacts.ui.isLoading}
+                disabled={contacts.contactsUI.isLoading}
               >
                 Get Knowledge
               </Button>
               <Button 
                 onClick={testGetContactTools} 
                 size="sm"
-                disabled={contacts.ui.isLoading}
+                disabled={contacts.contactsUI.isLoading}
               >
                 Get Tools
               </Button>
@@ -419,9 +426,9 @@ export default function ContactsTestPage() {
                 onClick={testRemoveContact} 
                 size="sm" 
                 variant="destructive"
-                disabled={contacts.ui.isDeleting}
+                disabled={contacts.contactsUI.isDeleting}
               >
-                {contacts.ui.isDeleting ? 'Removing...' : 'Remove Contact'}
+                {contacts.contactsUI.isDeleting ? 'Removing...' : 'Remove Contact'}
               </Button>
             </div>
           </CardContent>
@@ -481,10 +488,10 @@ export default function ContactsTestPage() {
               <strong>Skip/Limit:</strong> {testData.skip}/{testData.limit}
             </div>
             <div>
-              <strong>Store Loading:</strong> {contacts.ui.isLoading ? '⏳ Yes' : '✅ No'}
+              <strong>Store Loading:</strong> {contacts.contactsUI.isLoading ? '⏳ Yes' : '✅ No'}
             </div>
             <div>
-              <strong>Store Creating:</strong> {contacts.ui.isCreating ? '⏳ Yes' : '✅ No'}
+              <strong>Store Creating:</strong> {contacts.contactsUI.isCreating ? '⏳ Yes' : '✅ No'}
             </div>
             <div>
               <strong>Store Error:</strong> {contacts.error.current || '✅ None'}

@@ -31,7 +31,7 @@ class MessageState(TypedDict):
 
 
 class ContactInfo(TypedDict):
-    """Contact information in workflow state"""
+    """Contact information in workflow state - Enhanced for Priority 2"""
     contact_id: str
     agent_id: str
     follower_id: str
@@ -40,6 +40,10 @@ class ContactInfo(TypedDict):
     system_prompt: str
     model_preferences: Dict[str, Any]
     is_active: bool
+    # Enhanced fields for contact instance management
+    resource_limits: Optional[Dict[str, Any]]
+    custom_config: Optional[Dict[str, Any]]
+    contact_notes: Optional[str]
 
 
 class ContactResponse(TypedDict):

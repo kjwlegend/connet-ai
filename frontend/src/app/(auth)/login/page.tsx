@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { motion } from "framer-motion";
@@ -11,6 +11,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useTranslations } from "@/lib/i18n/client";
 import { useAuth } from "@/store";
+import { useAuthLogin } from "@/hooks/business/auth";
 import {
   LoginFormData,
   validateLoginForm,
@@ -23,7 +24,8 @@ import { OAuthButtonsGroup } from "@/components/auth/OAuthButton";
 function LoginForm() {
   const t = useTranslations();
   const router = useRouter();
-  const { loginWithCredentials, ui, error } = useAuth();
+  const { ui, error } = useAuth();
+  const { loginWithCredentials } = useAuthLogin();
   const isLoading = ui.isLoading;
 
   const [formData, setFormData] = useState<LoginFormData>({
@@ -36,6 +38,30 @@ function LoginForm() {
     Record<string, ValidationResult>
   >({});
   const [touched, setTouched] = useState<Record<string, boolean>>({});
+
+  // Fixed positions for background dots to avoid hydration mismatch
+  const backgroundDots = useMemo(() => [
+    { left: 15, top: 20, duration: 4.2, delay: 0.8 },
+    { left: 78, top: 15, duration: 3.7, delay: 1.3 },
+    { left: 23, top: 65, duration: 4.8, delay: 0.2 },
+    { left: 67, top: 45, duration: 3.4, delay: 1.9 },
+    { left: 89, top: 75, duration: 4.5, delay: 0.6 },
+    { left: 34, top: 35, duration: 3.9, delay: 1.5 },
+    { left: 56, top: 82, duration: 4.1, delay: 0.4 },
+    { left: 18, top: 48, duration: 3.6, delay: 1.7 },
+    { left: 82, top: 22, duration: 4.3, delay: 0.1 },
+    { left: 45, top: 78, duration: 3.8, delay: 1.2 },
+    { left: 71, top: 58, duration: 4.6, delay: 0.9 },
+    { left: 29, top: 18, duration: 3.5, delay: 1.4 },
+    { left: 63, top: 38, duration: 4.4, delay: 0.7 },
+    { left: 91, top: 68, duration: 3.3, delay: 1.6 },
+    { left: 41, top: 88, duration: 4.7, delay: 0.3 },
+    { left: 12, top: 55, duration: 4.0, delay: 1.8 },
+    { left: 85, top: 32, duration: 3.2, delay: 0.5 },
+    { left: 52, top: 12, duration: 4.9, delay: 1.1 },
+    { left: 76, top: 92, duration: 3.1, delay: 1.0 },
+    { left: 38, top: 72, duration: 4.8, delay: 0.9 },
+  ], []);
 
   const handleInputChange = (
     field: keyof LoginFormData,
@@ -82,15 +108,17 @@ function LoginForm() {
     }
 
     try {
-      await loginWithCredentials(
+      const user = await loginWithCredentials(
         formData.email,
         formData.password,
         formData.rememberMe
       );
-      console.log("Login successful, redirecting to dashboard");
-      router.push("/chat");
+      if (user) {
+        console.log("Login successful, redirecting to dashboard");
+        router.push("/chat");
+      }
     } catch (err) {
-      // Error is handled by the store and displayed via error state
+      // Error is handled by the business hook and displayed via error state
     }
   };
 
@@ -99,22 +127,22 @@ function LoginForm() {
       {/* Background Network Animation Layer */}
       <div className="fixed inset-0 z-0 opacity-40">
         {/* Floating network dots */}
-        {[...Array(20)].map((_, i) => (
+        {backgroundDots.map((dot, i) => (
           <motion.div
             key={i}
             className="absolute w-1 h-1 bg-blue-400 rounded-full"
             style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
+              left: `${dot.left}%`,
+              top: `${dot.top}%`,
             }}
             animate={{
               opacity: [0.2, 0.8, 0.2],
               scale: [0.8, 1.3, 0.8],
             }}
             transition={{
-              duration: 3 + Math.random() * 2,
+              duration: dot.duration,
               repeat: Infinity,
-              delay: Math.random() * 2,
+              delay: dot.delay,
             }}
           />
         ))}

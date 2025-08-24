@@ -10,6 +10,7 @@ from typing import Dict, Any
 
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlmodel.ext.asyncio.session import AsyncSession
+from sqlalchemy import text
 
 from app.config.settings import Settings, get_settings
 from app.infrastructure.cache.redis_client import get_redis_client
@@ -39,7 +40,6 @@ async def health_check(
 @router.get("/detailed")
 async def detailed_health_check(
     settings: Settings = Depends(get_settings),
-    session: AsyncSession = Depends(get_session),
 ) -> Dict[str, Any]:
     """Detailed health check with service dependencies."""
     
@@ -56,11 +56,12 @@ async def detailed_health_check(
     
     # Check database connection
     try:
-        await session.execute("SELECT 1")
-        health_status["checks"]["database"] = {
-            "status": "healthy",
-            "message": "Database connection successful"
-        }
+        async with get_session() as session:
+            await session.execute(text("SELECT 1"))
+            health_status["checks"]["database"] = {
+                "status": "healthy",
+                "message": "Database connection successful"
+            }
     except Exception as e:
         all_healthy = False
         health_status["checks"]["database"] = {

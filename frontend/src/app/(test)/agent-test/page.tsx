@@ -7,10 +7,15 @@ import { Textarea } from '@/components/ui/textarea'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { useAgents } from '@/store'
+import { useAgentsQuery, useAgentsMutation, useAgentVersions } from '@/hooks/business/agents'
 import type { AIAgentType } from '@/services/api'
 
 export default function AgentTestPage() {
   const agents = useAgents()
+  const { listAgents, getAgent, searchAgents } = useAgentsQuery()
+  const { createAgent, updateAgent, deleteAgent, deployAgent } = useAgentsMutation()
+  const { getAgentVersions } = useAgentVersions()
+  
   const [logs, setLogs] = useState<string[]>([])
   const [testData, setTestData] = useState({
     name: 'test_agent',
@@ -33,7 +38,7 @@ export default function AgentTestPage() {
 
   const testCreateAgent = async () => {
     try {
-      addLog('Testing create agent with store...')
+      addLog('Testing create agent with new business hooks...')
       const agentData = {
         name: testData.name,
         display_name: testData.displayName,
@@ -70,7 +75,7 @@ export default function AgentTestPage() {
         required_permissions: [],
       }
 
-      const result = await agents.createAgent(agentData)
+      const result = await createAgent(agentData)
       addLog(`✅ Create agent success: ${result.id}`)
       addLog(`   Display name: ${result.display_name}`)
       addLog(`   Status: ${result.status}`)
@@ -82,11 +87,11 @@ export default function AgentTestPage() {
 
   const testListAgents = async () => {
     try {
-      addLog('Testing list agents with store...')
-      await agents.listAgents({ page: 1, size: 10 })
-      addLog(`✅ List agents success: Found ${agents.agents.length} agents`)
+      addLog('Testing list agents with new business hooks...')
+      await listAgents({ page: 1, size: 10 })
+      addLog(`✅ List agents success: Found ${agents.agents?.length ?? 0} agents`)
       addLog(`   Total: ${agents.pagination.total}`)
-      agents.agents.forEach((agent, index) => {
+      agents.agents?.forEach((agent, index) => {
         addLog(`  ${index + 1}. ${agent.display_name} (${agent.id})`)
       })
     } catch (error: any) {
@@ -100,8 +105,8 @@ export default function AgentTestPage() {
         addLog('❌ No agent ID. Create an agent first.')
         return
       }
-      addLog(`Testing get agent with store: ${testData.agentId}`)
-      const result = await agents.getAgent(testData.agentId)
+      addLog(`Testing get agent with new business hooks: ${testData.agentId}`)
+      const result = await getAgent(testData.agentId)
       addLog(`✅ Get agent success: ${result.display_name}`)
       addLog(`   Status: ${result.status}, Type: ${result.agent_type}`)
       addLog(`   Usage count: ${result.usage_count}`)
@@ -117,13 +122,13 @@ export default function AgentTestPage() {
         addLog('❌ No agent ID. Create an agent first.')
         return
       }
-      addLog(`Testing update agent with store: ${testData.agentId}`)
+      addLog(`Testing update agent with new business hooks: ${testData.agentId}`)
       const updateData = {
         display_name: `${testData.displayName} (Updated)`,
         description: `${testData.description} - Updated at ${new Date().toLocaleTimeString()}`,
       }
 
-      const result = await agents.updateAgent(testData.agentId, updateData)
+      const result = await updateAgent(testData.agentId, updateData)
       addLog(`✅ Update agent success: ${result.display_name}`)
       addLog(`   Description: ${result.description}`)
     } catch (error: any) {
@@ -137,8 +142,8 @@ export default function AgentTestPage() {
         addLog('❌ No agent ID. Create an agent first.')
         return
       }
-      addLog(`Testing deploy agent with store: ${testData.agentId}`)
-      const result = await agents.deployAgent(testData.agentId)
+      addLog(`Testing deploy agent with new business hooks: ${testData.agentId}`)
+      const result = await deployAgent(testData.agentId)
       addLog(`✅ Deploy agent success: ${result.message}`)
       addLog(`   Deployment status: ${result.deployment_status || 'deployed'}`)
     } catch (error: any) {
@@ -152,10 +157,10 @@ export default function AgentTestPage() {
         addLog('❌ No agent ID. Create an agent first.')
         return
       }
-      addLog(`Testing get agent versions with store: ${testData.agentId}`)
-      await agents.getAgentVersions(testData.agentId)
-      addLog(`✅ Get agent versions success: Found ${agents.agentVersions.length} versions`)
-      agents.agentVersions.forEach((version, index) => {
+      addLog(`Testing get agent versions with new business hooks: ${testData.agentId}`)
+      await getAgentVersions(testData.agentId)
+      addLog(`✅ Get agent versions success: Found ${agents.agentVersions?.length ?? 0} versions`)
+      agents.agentVersions?.forEach((version, index) => {
         addLog(`  ${index + 1}. Version ${version.version} - ${version.is_current ? 'Current' : 'Historical'}`)
       })
     } catch (error: any) {
@@ -169,8 +174,8 @@ export default function AgentTestPage() {
         addLog('❌ No agent ID. Create an agent first.')
         return
       }
-      addLog(`Testing delete agent with store: ${testData.agentId}`)
-      await agents.deleteAgent(testData.agentId)
+      addLog(`Testing delete agent with new business hooks: ${testData.agentId}`)
+      await deleteAgent(testData.agentId)
       addLog(`✅ Delete agent success`)
       setTestData(prev => ({ ...prev, agentId: '' }))
     } catch (error: any) {
@@ -181,10 +186,10 @@ export default function AgentTestPage() {
   const testSearchAgents = async () => {
     try {
       const searchQuery = testData.displayName.toLowerCase()
-      addLog(`Testing search agents with store: "${searchQuery}"`)
-      await agents.searchAgents(searchQuery)
-      addLog(`✅ Search agents success: Found ${agents.agents.length} results`)
-      agents.agents.forEach((agent, index) => {
+      addLog(`Testing search agents with new business hooks: "${searchQuery}"`)
+      await searchAgents(searchQuery)
+      addLog(`✅ Search agents success: Found ${agents.agents?.length ?? 0} results`)
+      agents.agents?.forEach((agent, index) => {
         addLog(`  ${index + 1}. ${agent.display_name} (${agent.id})`)
       })
     } catch (error: any) {
@@ -198,7 +203,7 @@ export default function AgentTestPage() {
 
   return (
     <div className="container mx-auto p-6 max-w-6xl">
-      <h1 className="text-3xl font-bold mb-6">AI Agent API Test Page (with Store)</h1>
+      <h1 className="text-3xl font-bold mb-6">AI Agent API Test Page (with New Business Hooks)</h1>
       
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Test Controls */}
@@ -316,9 +321,9 @@ export default function AgentTestPage() {
               <Button 
                 onClick={testCreateAgent} 
                 size="sm"
-                disabled={agents.ui.isCreating}
+                disabled={agents.ui?.isCreating}
               >
-                {agents.ui.isCreating ? 'Creating...' : 'Create Agent'}
+                {agents.ui?.isCreating ? 'Creating...' : 'Create Agent'}
               </Button>
               <Button 
                 onClick={testListAgents} 
@@ -432,10 +437,10 @@ export default function AgentTestPage() {
               <strong>Store Error:</strong> {agents.error.current || '✅ None'}
             </div>
             <div>
-              <strong>Agents Count:</strong> {agents.agents.length}
+              <strong>Agents Count:</strong> {agents.agents?.length ?? 0}
             </div>
             <div>
-              <strong>Versions Count:</strong> {agents.agentVersions.length}
+              <strong>Versions Count:</strong> {agents.agentVersions?.length ?? 0}
             </div>
             <div>
               <strong>Current Agent:</strong> {agents.currentAgent?.display_name || 'None'}

@@ -27,7 +27,9 @@
       "Bash(alembic current:*)",
       "Bash(.pathScriptsactivate)",
       "Bash(pip show:*)",
-      "Bash(alembic revision:*)"
+      "Bash(alembic revision:*)",
+      "Bash(cat:*)",
+      "Bash(curl:*)"
     ],
     "deny": [],
     "defaultMode": "acceptEdits",
@@ -35,5 +37,10 @@
       "D:\\d\\codes\\xiaoguang-next-gen",
       "d:\\codes\\xiaoguang-next-gen"
     ]
+  },
+  "statusLine": {
+    "type": "command",
+    "command": "npx ccpet@latest",
+    "padding": 0
   }
 }

@@ -4,12 +4,14 @@ import { useState } from "react";
 import { MiddlePanel } from "@/components/layout/MiddlePanel";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { MainContent } from "@/components/layout/MainContent";
+import { LayoutGuard } from "@/components/auth/RouteGuard";
 
 export default function PluginsLayout() {
   const [selectedItem, setSelectedItem] = useState<string | null>(null);
 
   return (
-    <AppLayout>
+    <LayoutGuard>
+      <AppLayout>
       {/* Middle Panel - Plugins List */}
       <MiddlePanel
         mode="plugins"
@@ -23,6 +25,7 @@ export default function PluginsLayout() {
         selectedItem={selectedItem}
         onItemSelect={setSelectedItem}
       />
-    </AppLayout>
+      </AppLayout>
+    </LayoutGuard>
   );
 }

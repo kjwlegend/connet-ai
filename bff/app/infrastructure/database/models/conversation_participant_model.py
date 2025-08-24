@@ -69,12 +69,21 @@ class ConversationParticipantModel(SQLModel, table=True):
         default=True,
         description="Whether notifications are enabled"
     )
-    settings: Optional[dict] = Field(default=None,
-        description="Participant-specific settings"
-    ,
-
+    settings: Optional[dict] = Field(
+        default=None,
+        description="Participant-specific settings",
         sa_column=Column(JSON)
-
+    )
+    
+    # LangGraph Workflow Fields (New)
+    workflow_priority: Optional[int] = Field(
+        default=0,
+        description="Priority in workflow execution (higher = first)"
+    )
+    conversation_permissions: Optional[dict] = Field(
+        default=None,
+        description="Participant-specific permissions and capabilities",
+        sa_column=Column(JSON)
     )
     
     model_config = {

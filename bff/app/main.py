@@ -39,7 +39,15 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
     try:
         # Initialize core services
         await init_database()
-        await get_redis_client().ping()
+        
+        # Try to connect to Redis (optional for development)
+        try:
+            redis_client = await get_redis_client()
+            await redis_client.ping()
+            logger.info("Redis connection established")
+        except Exception as e:
+            logger.warning(f"Redis connection failed (continuing without cache): {e}")
+        
         await init_supabase()
         
         # Initialize event bus
@@ -60,9 +68,13 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
         event_bus = get_event_bus()
         await event_bus.stop()
         
-        # Close Redis connection
-        redis_client = get_redis_client()
-        await redis_client.close()
+        # Close Redis connection (if available)
+        try:
+            redis_client = await get_redis_client()
+            await redis_client.close()
+            logger.info("Redis connection closed")
+        except Exception as e:
+            logger.warning(f"Error closing Redis connection: {e}")
         
         logger.info("Shutdown complete")
 

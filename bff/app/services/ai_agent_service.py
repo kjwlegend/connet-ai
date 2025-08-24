@@ -91,7 +91,85 @@ class AIAgentService(BaseService):
         search: Optional[str] = None,
         pagination: Optional[PaginationParams] = None,
     ) -> AIAgentListResponse:
-        """List agents with filtering"""
+        """List agents with filtering (deprecated - use get_public_agents or get_my_agents)"""
+
+        # Convert pagination to offset/limit
+        offset = 0
+        limit = 100
+        if pagination:
+            offset = (pagination.page - 1) * pagination.size
+            limit = pagination.size
+
+        agents, total = await self.agent_repo.list_agents(
+            user_id=user_id,
+            agent_type=agent_type,
+            status=status,
+            search=search,
+            offset=offset,
+            limit=limit,
+        )
+
+        agent_responses = [AIAgentResponse.model_validate(agent) for agent in agents]
+
+        if pagination:
+            return AIAgentListResponse(
+                agents=agent_responses,
+                total=total,
+                page=pagination.page,
+                size=pagination.size,
+            )
+
+        return AIAgentListResponse(
+            agents=agent_responses, total=total, page=1, size=len(agent_responses)
+        )
+
+    async def get_public_agents(
+        self,
+        agent_type: Optional[str] = None,
+        status: Optional[str] = None,
+        search: Optional[str] = None,
+        pagination: Optional[PaginationParams] = None,
+    ) -> AIAgentListResponse:
+        """Get all public agents"""
+
+        # Convert pagination to offset/limit
+        offset = 0
+        limit = 100
+        if pagination:
+            offset = (pagination.page - 1) * pagination.size
+            limit = pagination.size
+
+        agents, total = await self.agent_repo.list_public_agents(
+            agent_type=agent_type,
+            status=status,
+            search=search,
+            offset=offset,
+            limit=limit,
+        )
+
+        agent_responses = [AIAgentResponse.model_validate(agent) for agent in agents]
+
+        if pagination:
+            return AIAgentListResponse(
+                agents=agent_responses,
+                total=total,
+                page=pagination.page,
+                size=pagination.size,
+            )
+
+        return AIAgentListResponse(
+            agents=agent_responses, total=total, page=1, size=len(agent_responses)
+        )
+
+    async def get_my_agents(
+        self,
+        user_id: UUID,
+        agent_type: Optional[str] = None,
+        status: Optional[str] = None,
+        search: Optional[str] = None,
+        pagination: Optional[PaginationParams] = None,
+    ) -> AIAgentListResponse:
+        """Get agents created by the user"""
 
         # Convert pagination to offset/limit
         offset = 0

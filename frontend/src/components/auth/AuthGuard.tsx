@@ -2,7 +2,8 @@
 
 import { useEffect } from 'react'
 import { useRouter, usePathname } from 'next/navigation'
-import useStore from '@/store'
+import { useAuth } from '@/store'
+import { useAuthSession } from '@/hooks/business/auth'
 import { LoadingSpinner } from '@/components/common/LoadingSpinner'
 
 interface AuthGuardProps {
@@ -20,7 +21,8 @@ export function AuthGuard({
 }: AuthGuardProps) {
   const router = useRouter()
   const pathname = usePathname()
-  const { isAuthenticated, isLoading, initializeAuth } = useStore()
+  const { auth, ui } = useAuth()
+  const { initializeAuth } = useAuthSession()
 
   useEffect(() => {
     // Initialize auth on component mount
@@ -29,20 +31,20 @@ export function AuthGuard({
 
   useEffect(() => {
     console.log('AuthGuard effect:', {
-      isLoading,
+      isLoading: ui.isInitializing,
       requireAuth,
-      isAuthenticated,
+      isAuthenticated: auth.isAuthenticated,
       pathname,
     })
-    if (!isLoading) {
-      if (requireAuth && !isAuthenticated) {
+    if (!ui.isInitializing) {
+      if (requireAuth && !auth.isAuthenticated) {
         // Add current path as redirect parameter
         const redirectUrl = `${redirectTo}?redirect=${encodeURIComponent(
           pathname
         )}`
         console.log('AuthGuard: Redirecting to login:', redirectUrl)
         router.push(redirectUrl)
-      } else if (!requireAuth && isAuthenticated) {
+      } else if (!requireAuth && auth.isAuthenticated) {
         const targetUrl = authenticatedRedirectTo || '/'
         console.log(
           'AuthGuard: User authenticated on auth page, redirecting to:',
@@ -68,8 +70,8 @@ export function AuthGuard({
       }
     }
   }, [
-    isAuthenticated,
-    isLoading,
+    auth.isAuthenticated,
+    ui.isInitializing,
     requireAuth,
     redirectTo,
     authenticatedRedirectTo,
@@ -78,7 +80,7 @@ export function AuthGuard({
   ])
 
   // Show loading while checking authentication
-  if (isLoading) {
+  if (ui.isInitializing) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <LoadingSpinner />
@@ -87,12 +89,12 @@ export function AuthGuard({
   }
 
   // If requireAuth is true and user is not authenticated, don't render children
-  if (requireAuth && !isAuthenticated) {
+  if (requireAuth && !auth.isAuthenticated) {
     return null
   }
 
   // If requireAuth is false and user is authenticated, don't render children
-  if (!requireAuth && isAuthenticated) {
+  if (!requireAuth && auth.isAuthenticated) {
     return null
   }
 
@@ -115,20 +117,20 @@ export function withAuthGuard<P extends object>(
 
 // Hook for checking auth status in components
 export function useAuthGuard() {
-  const { isAuthenticated, isLoading, user } = useStore()
+  const { auth, ui } = useAuth()
 
   return {
-    isAuthenticated,
-    isLoading,
-    user,
+    isAuthenticated: auth.isAuthenticated,
+    isLoading: ui.isInitializing,
+    user: auth.user,
     requireAuth: (redirectTo = '/login') => {
       const router = useRouter()
 
       useEffect(() => {
-        if (!isLoading && !isAuthenticated) {
+        if (!ui.isInitializing && !auth.isAuthenticated) {
           router.push(redirectTo)
         }
-      }, [isAuthenticated, isLoading, redirectTo, router])
+      }, [auth.isAuthenticated, ui.isInitializing, redirectTo, router])
     },
   }
 }

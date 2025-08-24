@@ -1,6 +1,70 @@
+/**
+ * 简化的 Store 架构
+ * 只负责状态管理，业务逻辑已移至 /hooks/business/
+ * 
+ * @version 2.0.0 - 重构后的新架构，UI属性命名空间化
+ * @changelog
+ * - v2.0.0 (2025-01-23): 重构架构分离业务逻辑，修复UI属性冲突，添加版本管理
+ * - v1.0.0 (2024-12-01): 初始版本，包含业务逻辑的完整store
+ */
+
 import { create } from 'zustand'
-import { devtools, persist, subscribeWithSelector } from 'zustand/middleware'
+import { devtools, subscribeWithSelector } from 'zustand/middleware'
+import { persist } from './middleware/persist'
+import { PERSIST_CONFIGS } from './utils/persistence'
 import { env } from '@/lib/config/env'
+
+// Store版本管理
+export const STORE_VERSION = '2.0.0'
+export const STORE_VERSION_KEY = 'connet-ai-store-version'
+
+// 版本兼容性检查
+export const checkStoreVersion = () => {
+  if (typeof window === 'undefined') return true // SSR环境跳过检查
+  
+  const storedVersion = localStorage.getItem(STORE_VERSION_KEY)
+  
+  if (!storedVersion) {
+    // 首次使用，保存当前版本
+    localStorage.setItem(STORE_VERSION_KEY, STORE_VERSION)
+    return true
+  }
+  
+  if (storedVersion !== STORE_VERSION) {
+    console.warn(`Store version mismatch. Current: ${STORE_VERSION}, Stored: ${storedVersion}`)
+    
+    // 这里可以添加版本迁移逻辑
+    if (shouldClearStoreOnVersionMismatch(storedVersion, STORE_VERSION)) {
+      console.warn('Clearing store due to version incompatibility')
+      clearStorageForNewVersion()
+    }
+    
+    // 更新版本标记
+    localStorage.setItem(STORE_VERSION_KEY, STORE_VERSION)
+  }
+  
+  return true
+}
+
+// 判断是否需要清空store（版本不兼容时）
+const shouldClearStoreOnVersionMismatch = (oldVersion: string, newVersion: string): boolean => {
+  // 主版本号变更时清空store
+  const oldMajor = parseInt(oldVersion.split('.')[0])
+  const newMajor = parseInt(newVersion.split('.')[0])
+  
+  return oldMajor !== newMajor
+}
+
+// 清空存储（用于版本不兼容时）
+const clearStorageForNewVersion = () => {
+  // 清空Zustand持久化的数据
+  localStorage.removeItem('connet-ai-store')
+  
+  // 可以保留用户偏好等重要数据
+  // const userPreferences = localStorage.getItem('user-preferences')
+  // 清空后可以恢复：
+  // if (userPreferences) localStorage.setItem('user-preferences', userPreferences)
+}
 
 // Import slice creators
 import createAuthSlice from './slices/auth/authSlice'
@@ -11,10 +75,6 @@ import createConversationSlice from './slices/chat/conversationSlice'
 import createAgentsSlice from './slices/agents/agentsSlice'
 import createContactsSlice from './slices/contacts/contactsSlice'
 
-// Import utilities
-import { PERSIST_CONFIGS, STORAGE_CATEGORIES } from './utils/persistence'
-import { logger } from './middleware/logger'
-
 // Import types
 import { AuthSlice } from './slices/auth/authSlice'
 import { PreferencesSlice } from './slices/ui/preferencesSlice'
@@ -24,17 +84,6 @@ import { ConversationSlice } from './slices/chat/conversationSlice'
 import { AgentsSlice } from './slices/agents/agentsSlice'
 import { ContactsSlice } from './slices/contacts/contactsSlice'
 
-/**
- * Enhanced Store Architecture - Phase 1 Implementation
- * 
- * Features:
- * - Layered data architecture (UI, App, Cache, Realtime)
- * - Selective persistence with TTL support
- * - Optimized slice structure for performance
- * - Comprehensive type safety
- * - Cache management with automatic cleanup
- */
-
 // Combined store state type
 export interface AppStoreState extends 
   AuthSlice, 
@@ -43,115 +92,133 @@ export interface AppStoreState extends
   NotificationSlice, 
   ConversationSlice,
   AgentsSlice,
-  ContactsSlice {}
+  ContactsSlice {
+  // Store元数据
+  version: string
+}
 
-// Create the main store with enhanced middleware
+// Create the main store
 const useAppStore = create<AppStoreState>()(
   devtools(
-    logger(
+    persist(
       subscribeWithSelector(
-        (set, get, store) => ({
-          // Auth slice - with secure persistence
-          ...createAuthSlice(set, get, store),
+        (set, get, store) => {
+          // 执行版本兼容性检查
+          checkStoreVersion()
           
-          // UI slices - with different persistence strategies
-          ...createPreferencesSlice(set, get, store),
-          ...createLayoutSlice(set, get, store),
-          ...createNotificationSlice(set, get, store),
-          
-          // Chat slices - with cache-based persistence
-          ...createConversationSlice(set, get, store),
-          
-          // Data slices - for managing external data
-          ...createAgentsSlice(set, get, store),
-          ...createContactsSlice(set, get, store),
-        })
+          return {
+            // Store版本信息
+            version: STORE_VERSION,
+            
+            // Auth slice
+            ...createAuthSlice(set, get, store),
+            
+            // UI slices
+            ...createPreferencesSlice(set, get, store),
+            ...createLayoutSlice(set, get, store),
+            ...createNotificationSlice(set, get, store),
+            
+            // Chat slices
+            ...createConversationSlice(set, get, store),
+            
+            // Data slices
+            ...createAgentsSlice(set, get, store),
+            ...createContactsSlice(set, get, store),
+          }
+        }
       ),
-      'AppStore-v2'
+      // 持久化配置 - 选择性存储重要数据
+      {
+        name: 'connet-ai-store',
+        ...PERSIST_CONFIGS.UI_PREFERENCES<AppStoreState>('connet-ai-store'),
+        partialize: (state) => ({
+          // 持久化认证信息
+          auth: {
+            user: state.auth.user,
+            token: state.auth.token,
+            refreshToken: state.auth.refreshToken,
+            isAuthenticated: state.auth.isAuthenticated,
+            sessionStarted: state.auth.sessionStarted,
+            // 不持久化 lastActivity，每次启动时重新设置
+          },
+          // 持久化用户偏好设置
+          preferences: state.preferences,
+          // 持久化布局设置
+          layout: {
+            ...state.layout,
+            // 不持久化临时状态
+            isLoading: false,
+          },
+          // 其他需要持久化的状态...
+        }),
+        version: parseFloat(STORE_VERSION),
+      }
     ),
     {
-      name: 'connet-ai-devtools-v2',
+      name: 'connet-ai-store-devtools',
       enabled: env.ENABLE_DEBUG,
+      version: parseFloat(STORE_VERSION),
     }
   )
 )
 
-// Note: Specialized stores removed - using single store architecture for better performance
-
 export default useAppStore
 
-// Export specialized store hooks with optimized selectors
+// Export simple store hooks - 只提供基础的状态访问器
+// 复杂的业务逻辑使用 /hooks/business/ 中的 hooks
 
-// Enhanced Auth Hook with Better Performance - use stable selectors to prevent infinite loops
 export const useAuth = () => {
   const auth = useAppStore((state) => state.auth)
-  const ui = useAppStore((state) => state.ui)
+  const authUI = useAppStore((state) => state.authUI)
   const error = useAppStore((state) => state.error)
   
-  // Get actions with stable selectors
+  // 只导出基础的状态操作，不包含复杂业务逻辑
   const login = useAppStore((state) => state.login)
   const logout = useAppStore((state) => state.logout)
   const setUser = useAppStore((state) => state.setUser)
+  const setToken = useAppStore((state) => state.setToken)
+  const setRefreshToken = useAppStore((state) => state.setRefreshToken)
   const setLoading = useAppStore((state) => state.setLoading)
   const setInitializing = useAppStore((state) => state.setInitializing)
   const toggleLoginModal = useAppStore((state) => state.toggleLoginModal)
   const setError = useAppStore((state) => state.setError)
   const clearError = useAppStore((state) => state.clearError)
-  const clearErrorHistory = useAppStore((state) => state.clearErrorHistory)
   const updateUserPreferences = useAppStore((state) => state.updateUserPreferences)
-  const initializeAuth = useAppStore((state) => state.initializeAuth)
-  const loginWithCredentials = useAppStore((state) => state.loginWithCredentials)
-  const registerWithCredentials = useAppStore((state) => state.registerWithCredentials)
-  const validateToken = useAppStore((state) => state.validateToken)
-  const refreshAuthToken = useAppStore((state) => state.refreshAuthToken)
-  const getCurrentUser = useAppStore((state) => state.getCurrentUser)
-  const getOAuthUrl = useAppStore((state) => state.getOAuthUrl)
-  const handleOAuthCallback = useAppStore((state) => state.handleOAuthCallback)
-  const loginWithOAuth = useAppStore((state) => state.loginWithOAuth)
-  const requestPasswordReset = useAppStore((state) => state.requestPasswordReset)
   const extendSession = useAppStore((state) => state.extendSession)
   const checkSessionTimeout = useAppStore((state) => state.checkSessionTimeout)
   const resetSession = useAppStore((state) => state.resetSession)
+  const initializeAuth = useAppStore((state) => state.initializeAuth)
+  const validateToken = useAppStore((state) => state.validateToken)
+  const refreshAuthToken = useAppStore((state) => state.refreshAuthToken)
+  const getCurrentUser = useAppStore((state) => state.getCurrentUser)
   
   return {
     auth,
-    ui,
+    ui: authUI, // 为了向后兼容，添加 ui 别名
+    authUI,
     error,
     login,
     logout,
     setUser,
+    setToken,
+    setRefreshToken,
     setLoading,
     setInitializing,
     toggleLoginModal,
     setError,
     clearError,
-    clearErrorHistory,
     updateUserPreferences,
-    initializeAuth,
-    loginWithCredentials,
-    registerWithCredentials,
-    validateToken,
-    refreshAuthToken,
-    getCurrentUser,
-    getOAuthUrl,
-    handleOAuthCallback,
-    loginWithOAuth,
-    requestPasswordReset,
     extendSession,
     checkSessionTimeout,
     resetSession,
+    initializeAuth,
+    validateToken,
+    refreshAuthToken,
+    getCurrentUser,
   }
 }
 
-// Lightweight auth hooks for specific use cases
-export const useAuthUser = () => useAppStore((state) => state.auth.user)
-export const useAuthToken = () => useAppStore((state) => state.auth.token)
-export const useIsAuthenticated = () => useAppStore((state) => state.auth.isAuthenticated)
-export const useAuthLoading = () => useAppStore((state) => state.ui.isLoading)
-export const useAuthError = () => useAppStore((state) => state.error.current)
-
 export const useUIPreferences = () => {
-  // Use separate selectors to prevent object creation on every render
   const preferences = useAppStore((state) => state.preferences)
   const setTheme = useAppStore((state) => state.setTheme)
   const setLanguage = useAppStore((state) => state.setLanguage)
@@ -168,7 +235,6 @@ export const useUIPreferences = () => {
 }
 
 export const useLayout = () => {
-  // Use separate selectors to prevent object creation on every render
   const layout = useAppStore((state) => state.layout)
   const navigation = useAppStore((state) => state.navigation)
   const toggleSidebar = useAppStore((state) => state.toggleSidebar)
@@ -176,7 +242,6 @@ export const useLayout = () => {
   const setMiddlePanelWidth = useAppStore((state) => state.setMiddlePanelWidth)
   const setCurrentNavigation = useAppStore((state) => state.setCurrentNavigation)
   const navigateTo = useAppStore((state) => state.navigateTo)
-  const applyLayoutPreset = useAppStore((state) => state.applyLayoutPreset)
   
   return {
     layout,
@@ -186,12 +251,10 @@ export const useLayout = () => {
     setMiddlePanelWidth,
     setCurrentNavigation,
     navigateTo,
-    applyLayoutPreset,
   }
 }
 
 export const useNotifications = () => {
-  // Use separate selectors to prevent object creation on every render
   const notifications = useAppStore((state) => state.notifications)
   const modals = useAppStore((state) => state.modals)
   const showToast = useAppStore((state) => state.showToast)
@@ -214,153 +277,76 @@ export const useNotifications = () => {
 }
 
 export const useConversations = () => {
-  // Use separate selectors to prevent object creation on every render
   const conversations = useAppStore((state) => state.conversations)
   const activeConversationId = useAppStore((state) => state.activeConversationId)
   const isLoading = useAppStore((state) => state.isLoading)
   const conversationError = useAppStore((state) => state.conversationError)
-  const loadConversations = useAppStore((state) => state.loadConversations)
-  const createConversation = useAppStore((state) => state.createConversation)
   const setActiveConversation = useAppStore((state) => state.setActiveConversation)
-  const pinConversation = useAppStore((state) => state.pinConversation)
-  const archiveConversation = useAppStore((state) => state.archiveConversation)
-  const exportConversation = useAppStore((state) => state.exportConversation)
-  const setConversationError = useAppStore((state) => state.setConversationError)
-  const clearConversationError = useAppStore((state) => state.clearConversationError)
   
   return {
     conversations,
     activeConversationId,
     isLoading,
     conversationError,
-    loadConversations,
-    createConversation,
     setActiveConversation,
-    pinConversation,
-    archiveConversation,
-    exportConversation,
-    setConversationError,
-    clearConversationError,
   }
 }
 
 export const useAgents = () => {
-  // Use separate selectors for data and actions to prevent infinite loops
   const agents = useAppStore((state) => state.agents)
   const currentAgent = useAppStore((state) => state.currentAgent)
   const agentVersions = useAppStore((state) => state.agentVersions)
-  const pagination = useAppStore((state) => state.agentsPagination)
-  const filters = useAppStore((state) => state.agentsFilters)
   const ui = useAppStore((state) => state.agentsUI)
   const error = useAppStore((state) => state.agentsError)
+  const pagination = useAppStore((state) => state.agentsPagination)
+  const filters = useAppStore((state) => state.agentsFilters)
   
-  // Get actions with stable selectors
+  // 基础状态操作
   const setAgents = useAppStore((state) => state.setAgents)
   const addAgent = useAppStore((state) => state.addAgent)
   const updateAgentInList = useAppStore((state) => state.updateAgentInList)
-  const removeAgent = useAppStore((state) => state.removeAgent)
   const setCurrentAgent = useAppStore((state) => state.setCurrentAgent)
-  const setAgentVersions = useAppStore((state) => state.setAgentVersions)
   const setLoading = useAppStore((state) => state.setLoading)
-  const setCreating = useAppStore((state) => state.setCreating)
-  const setUpdating = useAppStore((state) => state.setUpdating)
-  const setDeleting = useAppStore((state) => state.setDeleting)
-  const setDeploying = useAppStore((state) => state.setDeploying)
-  const toggleCreateModal = useAppStore((state) => state.toggleCreateModal)
-  const toggleEditModal = useAppStore((state) => state.toggleEditModal)
   const setError = useAppStore((state) => state.setError)
   const clearError = useAppStore((state) => state.clearError)
-  const clearErrorHistory = useAppStore((state) => state.clearErrorHistory)
-  const setFilters = useAppStore((state) => state.setAgentsFilters)
-  const clearFilters = useAppStore((state) => state.clearAgentsFilters)
-  const setPagination = useAppStore((state) => state.setAgentsPagination)
-  const createAgent = useAppStore((state) => state.createAgent)
-  const listAgents = useAppStore((state) => state.listAgents)
-  const getAgent = useAppStore((state) => state.getAgent)
-  const updateAgent = useAppStore((state) => state.updateAgent)
-  const deleteAgent = useAppStore((state) => state.deleteAgent)
-  const deployAgent = useAppStore((state) => state.deployAgent)
-  const getAgentVersions = useAppStore((state) => state.getAgentVersions)
-  const rollbackAgent = useAppStore((state) => state.rollbackAgent)
-  const refreshAgents = useAppStore((state) => state.refreshAgents)
-  const searchAgents = useAppStore((state) => state.searchAgents)
-  const loadMoreAgents = useAppStore((state) => state.loadMoreAgents)
+  const setAgentsFilters = useAppStore((state) => state.setAgentsFilters)
   
   return {
-    // Data
     agents,
     currentAgent,
     agentVersions,
-    pagination,
-    filters,
     ui,
     error,
-    
-    // Data actions
+    pagination,
+    filters,
     setAgents,
     addAgent,
     updateAgentInList,
-    removeAgent,
     setCurrentAgent,
-    setAgentVersions,
-    
-    // UI actions
     setLoading,
-    setCreating,
-    setUpdating,
-    setDeleting,
-    setDeploying,
-    toggleCreateModal,
-    toggleEditModal,
-    
-    // Error actions
     setError,
     clearError,
-    clearErrorHistory,
-    
-    // Filter actions
-    setFilters,
-    clearFilters,
-    setPagination,
-    
-    // API operations
-    createAgent,
-    listAgents,
-    getAgent,
-    updateAgent,
-    deleteAgent,
-    deployAgent,
-    getAgentVersions,
-    rollbackAgent,
-    
-    // Utility operations
-    refreshAgents,
-    searchAgents,
-    loadMoreAgents,
+    setAgentsFilters,
   }
 }
 
 export const useContacts = () => {
-  // Use separate selectors for data and actions to prevent infinite loops
-  const contacts = useAppStore((state) => state.contacts)
-  const searchResults = useAppStore((state) => state.searchResults)
-  const currentContact = useAppStore((state) => state.currentContact)
-  const contactKnowledge = useAppStore((state) => state.contactKnowledge)
-  const contactTools = useAppStore((state) => state.contactTools)
-  const pagination = useAppStore((state) => state.contactsPagination)
-  const filters = useAppStore((state) => state.contactsFilters)
-  const ui = useAppStore((state) => state.contactsUI)
-  const error = useAppStore((state) => state.contactsError)
+  const data = useAppStore((state) => state.data)
+  const contactsUI = useAppStore((state) => state.contactsUI)
+  const error = useAppStore((state) => state.error)
+  const contactsFilters = useAppStore((state) => state.contactsFilters)
+  const pagination = useAppStore((state) => state.pagination)
   
-  // Get actions with stable selectors
+  // 基础状态操作
   const setContacts = useAppStore((state) => state.setContacts)
   const addContact = useAppStore((state) => state.addContact)
   const updateContactInList = useAppStore((state) => state.updateContactInList)
-  const removeContact = useAppStore((state) => state.removeContact)
+  const removeContactFromList = useAppStore((state) => state.removeContactFromList)
   const setCurrentContact = useAppStore((state) => state.setCurrentContact)
   const setSearchResults = useAppStore((state) => state.setSearchResults)
   const setContactKnowledge = useAppStore((state) => state.setContactKnowledge)
   const setContactTools = useAppStore((state) => state.setContactTools)
+  const clearSearchResults = useAppStore((state) => state.clearSearchResults)
   const setLoading = useAppStore((state) => state.setLoading)
   const setSearching = useAppStore((state) => state.setSearching)
   const setCreating = useAppStore((state) => state.setCreating)
@@ -371,51 +357,31 @@ export const useContacts = () => {
   const toggleSearchModal = useAppStore((state) => state.toggleSearchModal)
   const setError = useAppStore((state) => state.setError)
   const clearError = useAppStore((state) => state.clearError)
-  const clearErrorHistory = useAppStore((state) => state.clearErrorHistory)
-  const setFilters = useAppStore((state) => state.setContactsFilters)
-  const clearFilters = useAppStore((state) => state.clearContactsFilters)
-  const setPagination = useAppStore((state) => state.setContactsPagination)
-  const createContact = useAppStore((state) => state.createContact)
-  const getUserContacts = useAppStore((state) => state.getUserContacts)
-  const searchContacts = useAppStore((state) => state.searchContacts)
-  const getContact = useAppStore((state) => state.getContact)
-  const updateContact = useAppStore((state) => state.updateContact)
-  const deleteContact = useAppStore((state) => state.deleteContact)
-  const toggleFavorite = useAppStore((state) => state.toggleFavorite)
-  const addKnowledgeToContact = useAppStore((state) => state.addKnowledgeToContact)
-  const removeKnowledgeFromContact = useAppStore((state) => state.removeKnowledgeFromContact)
-  const getContactKnowledgeBases = useAppStore((state) => state.getContactKnowledgeBases)
-  const addToolToContact = useAppStore((state) => state.addToolToContact)
-  const removeToolFromContact = useAppStore((state) => state.removeToolFromContact)
-  const getContactTools = useAppStore((state) => state.getContactTools)
-  const updateContactToolConfig = useAppStore((state) => state.updateContactToolConfig)
-  const refreshContacts = useAppStore((state) => state.refreshContacts)
-  const loadMoreContacts = useAppStore((state) => state.loadMoreContacts)
-  const clearSearchResults = useAppStore((state) => state.clearSearchResults)
+  const setFilters = useAppStore((state) => state.setFilters)
+  const clearFilters = useAppStore((state) => state.clearFilters)
+  const setPagination = useAppStore((state) => state.setPagination)
+  const resetPagination = useAppStore((state) => state.resetPagination)
+  const clearAllData = useAppStore((state) => state.clearAllData)
   
   return {
-    // Data
-    contacts,
-    searchResults,
-    currentContact,
-    contactKnowledge,
-    contactTools,
-    pagination,
-    filters,
-    ui,
+    contacts: data.contacts,
+    searchResults: data.searchResults,
+    currentContact: data.currentContact,
+    contactKnowledge: data.contactKnowledge,
+    contactTools: data.contactTools,
+    contactsUI,
     error,
-    
-    // Data actions
+    contactsFilters,
+    pagination,
     setContacts,
     addContact,
     updateContactInList,
-    removeContact,
+    removeContactFromList,
     setCurrentContact,
     setSearchResults,
     setContactKnowledge,
     setContactTools,
-    
-    // UI actions
+    clearSearchResults,
     setLoading,
     setSearching,
     setCreating,
@@ -424,41 +390,13 @@ export const useContacts = () => {
     toggleAddModal,
     toggleEditModal,
     toggleSearchModal,
-    
-    // Error actions
     setError,
     clearError,
-    clearErrorHistory,
-    
-    // Filter actions
     setFilters,
     clearFilters,
     setPagination,
-    
-    // API operations - Contact Management
-    createContact,
-    getUserContacts,
-    searchContacts,
-    getContact,
-    updateContact,
-    deleteContact,
-    toggleFavorite,
-    
-    // API operations - Knowledge Management
-    addKnowledgeToContact,
-    removeKnowledgeFromContact,
-    getContactKnowledgeBases,
-    
-    // API operations - Tool Management
-    addToolToContact,
-    removeToolFromContact,
-    getContactTools,
-    updateContactToolConfig,
-    
-    // Utility operations
-    refreshContacts,
-    loadMoreContacts,
-    clearSearchResults,
+    resetPagination,
+    clearAllData,
   }
 }
 
@@ -480,112 +418,16 @@ export const useToasts = () => {
   }
 }
 
-// Performance monitoring hook - Fixed infinite loop by using stable selectors
-export const useStoreStats = () => {
-  // Use separate selectors to prevent object creation on every render
-  const stateSize = useAppStore((state) => JSON.stringify(state).length)
-  const conversationsCount = useAppStore((state) => state.conversations.data.length)
-  const toastsCount = useAppStore((state) => state.notifications.toasts.length)
-  const modalsCount = useAppStore((state) => state.modals.modals.length)
-  const conversationsTimestamp = useAppStore((state) => state.conversations.timestamp)
-  const conversationsTtl = useAppStore((state) => state.conversations.ttl)
-  
-  // Calculate derived values
-  const conversationsValid = conversationsTimestamp + conversationsTtl > Date.now()
-  const conversationsAge = Date.now() - conversationsTimestamp
-  
+// Export store version utilities
+export const useStoreVersion = () => {
+  const version = useAppStore((state) => state.version)
   return {
-    stateSize,
-    counts: {
-      conversations: conversationsCount,
-      toasts: toastsCount,
-      modals: modalsCount,
-    },
-    cacheStatus: {
-      conversationsValid,
-      conversationsAge,
-    },
+    version,
+    checkVersion: checkStoreVersion,
+    STORE_VERSION,
   }
 }
 
-// Development helpers
-export const useDevTools = () => {
-  if (!env.ENABLE_DEBUG) {
-    return {
-      getState: () => null,
-      resetStore: () => {},
-      exportState: () => '{}',
-    }
-  }
-  
-  return {
-    getState: () => useAppStore.getState(),
-    resetStore: () => {
-      // Reset to initial state - simplified to avoid function call issues
-      if (typeof window !== 'undefined') {
-        localStorage.clear()
-        window.location.reload()
-      }
-    },
-    exportState: () => JSON.stringify(useAppStore.getState(), null, 2),
-  }
-}
-
-// Initialize store on client side with proper cleanup
-if (typeof window !== 'undefined') {
-  const store = useAppStore.getState()
-  
-  // Initialize auth
-  store.initializeAuth()
-  
-  // Load initial data
-  store.loadConversations()
-  
-  // Setup periodic maintenance with cleanup
-  const maintenanceInterval = setInterval(() => {
-    const state = useAppStore.getState()
-    
-    // Clean up expired toasts
-    const expiredToasts = state.notifications.toasts.filter(
-      toast => !toast.persistent && toast.duration && 
-      Date.now() - new Date(toast.createdAt).getTime() > toast.duration
-    )
-    expiredToasts.forEach(toast => state.removeToast(toast.id))
-    
-    // Check session timeout
-    if (state.auth.isAuthenticated && state.checkSessionTimeout()) {
-      console.warn('Session timed out')
-      state.logout()
-    }
-    
-    // Clean up old error history (keep last 5)
-    if (state.error.history.length > 5) {
-      state.clearErrorHistory()
-    }
-  }, 30000) // Every 30 seconds
-  
-  // Auto-extend session on user activity
-  const activityEvents = ['mousedown', 'keydown', 'scroll', 'touchstart']
-  const handleActivity = () => {
-    const state = useAppStore.getState()
-    if (state.auth.isAuthenticated) {
-      state.extendSession()
-    }
-  }
-  
-  activityEvents.forEach(event => {
-    document.addEventListener(event, handleActivity, { passive: true })
-  })
-  
-  // Cleanup on page unload
-  window.addEventListener('beforeunload', () => {
-    clearInterval(maintenanceInterval)
-    activityEvents.forEach(event => {
-      document.removeEventListener(event, handleActivity)
-    })
-  })
-}
-
-// Type-safe store access
+// Export store types
 export type AppStore = typeof useAppStore
 export type AppStoreActions = AppStoreState

@@ -151,7 +151,7 @@ class RateLimitMiddleware(BaseHTTPMiddleware):
     async def _is_request_allowed(self, client_id: str) -> bool:
         """Check if request is allowed based on rate limits."""
         try:
-            redis_client = get_redis_client()
+            redis_client = await get_redis_client()
             current_time = int(time.time())
             window_start = current_time - self.window_size
             

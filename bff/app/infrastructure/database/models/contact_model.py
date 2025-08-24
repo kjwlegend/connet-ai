@@ -206,6 +206,28 @@ class ContactModel(SQLModel, table=True):
         description="Notification level: none, important, normal, all",
     )
 
+    # 9.5) Contact Instance Fields (New) - for Agent-to-Contact conversion
+    agent_id: Optional[UUID] = Field(
+        default=None,
+        foreign_key="agents.id",
+        description="Direct reference to agent when following_type=agent"
+    )
+    custom_system_prompt: Optional[str] = Field(
+        default=None,
+        sa_column=Column(Text),
+        description="User-customized system prompt for this contact instance"
+    )
+    instance_config: Optional[Dict[str, Any]] = Field(
+        default=None,
+        sa_column=Column(JSON),
+        description="Contact instance configuration (model preferences, etc.)"
+    )
+    resource_limits: Optional[Dict[str, Any]] = Field(
+        default=None,
+        sa_column=Column(JSON),
+        description="Per-contact resource limits"
+    )
+
     # 10) Timestamps
     created_at: datetime = Field(
         default_factory=datetime.utcnow,

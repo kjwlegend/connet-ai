@@ -49,6 +49,8 @@ class ModelPreferences(BaseModel):
     code_model: Optional[str] = Field(default=None)
     creative_model: Optional[str] = Field(default=None)
     
+    model_config = {"protected_namespaces": ()}
+    
     # Generation parameters
     temperature: float = Field(default=0.7, ge=0.0, le=1.0)
     max_tokens: Optional[int] = Field(default=None, gt=0)
@@ -93,6 +95,8 @@ class AIAgentCreate(BaseModel):
         if not v.replace('_', '').replace('-', '').isalnum():
             raise ValueError('Name must be alphanumeric with underscores and dashes only')
         return v
+    
+    model_config = {"protected_namespaces": ()}
 
 
 class AIAgentUpdate(BaseModel):
@@ -113,6 +117,8 @@ class AIAgentUpdate(BaseModel):
     status: Optional[AIAgentStatus] = Field(default=None)
     is_public: Optional[bool] = Field(default=None)
     is_active: Optional[bool] = Field(default=None)
+    
+    model_config = {"protected_namespaces": ()}
 
 
 class AIAgentResponse(BaseModel):
@@ -512,6 +518,8 @@ class ChatResponse(BaseModel):
     confidence_score: float = Field(default=1.0)
     
     created_at: datetime
+    
+    model_config = {"protected_namespaces": ()}
 
 
 # Error Schemas

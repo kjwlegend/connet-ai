@@ -1,129 +1,110 @@
 /**
- * Enhanced Auth Slice for New Store Architecture
- * Features:
- * - Proper persistence with selective storage
- * - Better error handling
- * - Optimized performance
- * - Type-safe operations
+ * 简化的认证状态管理 Slice
+ * 只负责状态管理，不包含业务逻辑
+ * 业务逻辑已移至 /hooks/business/auth/
  */
 
-import { StateCreator } from "zustand";
-import { StorageUtil } from "@/lib/utils/storage";
-import { STORAGE_KEYS } from "@/lib/config/constants";
-import {
-  AuthService,
-  apiClient,
-  type OAuthUrlRequest,
-  type OAuthCallbackRequest,
-  type RegisterRequest,
-  type RegisterResponse,
-  type APIError
-} from "@/services/api";
-
-// Runtime-safe API error guard
-const isAPIError = (e: unknown): e is APIError =>
-  typeof e === "object" && e !== null && "message" in e;
+import { StateCreator } from "zustand"
 
 export interface User {
-  id: string;
-  email: string;
-  full_name: string;
-  username?: string;
-  is_active: boolean;
-  invitation_code?: string;
-  created_at: string;
-  updated_at: string;
-  last_login_at?: string;
-  permissions: string[];
-  roles: string[];
-  avatar?: string;
-  preferences?: UserPreferences;
+  id: string
+  email: string
+  full_name: string
+  username?: string
+  is_active: boolean
+  invitation_code?: string
+  created_at: string
+  updated_at: string
+  last_login_at?: string
+  permissions: string[]
+  roles: string[]
+  avatar?: string
+  preferences?: UserPreferences
 }
 
 export interface UserPreferences {
-  theme: "light" | "dark" | "system";
-  language: "en" | "zh";
+  theme: "light" | "dark" | "system"
+  language: "en" | "zh"
   notifications: {
-    email: boolean;
-    push: boolean;
-    mentions: boolean;
-  };
+    email: boolean
+    push: boolean
+    mentions: boolean
+  }
 }
 
-// Enhanced auth state with better structure
+// 认证状态接口
 export interface AuthState {
-  // Core auth data
+  // 核心认证数据
   auth: {
-    user: User | null;
-    token: string | null;
-    refreshToken: string | null;
-    isAuthenticated: boolean;
-    sessionStarted: Date | null;
-    lastActivity: Date | null;
-  };
+    user: User | null
+    token: string | null
+    refreshToken: string | null
+    isAuthenticated: boolean
+    sessionStarted: Date | null
+    lastActivity: Date | null
+  }
   
-  // UI state
-  ui: {
-    isLoading: boolean;
-    isInitializing: boolean;
-    showLoginModal: boolean;
-  };
+  // UI状态
+  authUI: {
+    isLoading: boolean
+    isInitializing: boolean
+    showLoginModal: boolean
+  }
   
-  // Error state
+  // 错误状态
   error: {
-    current: string | null;
+    current: string | null
     history: Array<{
-      message: string;
-      timestamp: Date;
-      action: string;
-    }>;
-  };
+      message: string
+      timestamp: Date
+      action: string
+    }>
+  }
 }
 
+// 认证动作接口
 export interface AuthActions {
-  // Core actions
-  login: (userData: User, token: string, refreshToken?: string) => void;
-  logout: () => Promise<void>;
-  setUser: (user: User) => void;
+  // 核心状态管理动作
+  setUser: (user: User | null) => void
+  setToken: (token: string | null) => void
+  setRefreshToken: (refreshToken: string | null) => void
+  setAuthenticated: (authenticated: boolean) => void
+  setSessionStarted: (started: Date | null) => void
+  updateLastActivity: () => void
   
-  // UI actions  
-  setLoading: (loading: boolean) => void;
-  setInitializing: (initializing: boolean) => void;
-  toggleLoginModal: (show?: boolean) => void;
+  // UI状态管理
+  setLoading: (loading: boolean) => void
+  setInitializing: (initializing: boolean) => void
+  toggleLoginModal: (show?: boolean) => void
   
-  // Error actions
-  setError: (error: string | null, action?: string) => void;
-  clearError: () => void;
-  clearErrorHistory: () => void;
+  // 错误状态管理
+  setError: (error: string | null, action?: string) => void
+  clearError: () => void
+  clearErrorHistory: () => void
   
-  // Preferences
-  updateUserPreferences: (preferences: Partial<UserPreferences>) => void;
+  // 用户偏好管理
+  updateUserPreferences: (preferences: Partial<UserPreferences>) => void
   
-  // Auth operations
-  initializeAuth: () => Promise<void>;
-  loginWithCredentials: (email: string, password: string, rememberMe?: boolean) => Promise<void>;
-  registerWithCredentials: (data: RegisterRequest) => Promise<RegisterResponse>;
-  validateToken: () => Promise<boolean>;
-  refreshAuthToken: () => Promise<boolean>;
-  getCurrentUser: () => Promise<void>;
+  // 会话管理
+  extendSession: () => void
+  clearSession: () => void
+  checkSessionTimeout: () => boolean
+  resetSession: () => void
   
-  // OAuth operations
-  getOAuthUrl: (provider: "google" | "github", redirectUri: string) => Promise<{ url: string; state: string }>;
-  handleOAuthCallback: (provider: "google" | "github", code: string, state: string, redirectUri: string) => Promise<{ isNewUser: boolean }>;
-  loginWithOAuth: (provider: "google" | "github") => Promise<void>;
+  // 认证业务逻辑（异步操作的占位符）
+  initializeAuth: () => Promise<void>
+  validateToken: () => Promise<boolean>
+  refreshAuthToken: () => Promise<boolean>
+  getCurrentUser: () => Promise<void>
   
-  // Password reset operations
-  requestPasswordReset: (email: string) => Promise<void>;
-  
-  // Session management
-  extendSession: () => void;
-  checkSessionTimeout: () => boolean;
-  resetSession: () => void;
+  // 复合操作（保留最基本的）
+  login: (user: User, token: string, refreshToken?: string) => void
+  logout: () => void
 }
 
-export type AuthSlice = AuthState & AuthActions;
+export type AuthSlice = AuthState & AuthActions
 
-// Initial state
+// 初始状态
 const initialAuthState: AuthState = {
   auth: {
     user: null,
@@ -133,7 +114,7 @@ const initialAuthState: AuthState = {
     sessionStarted: null,
     lastActivity: null,
   },
-  ui: {
+  authUI: {
     isLoading: false,
     isInitializing: false,
     showLoginModal: false,
@@ -142,452 +123,225 @@ const initialAuthState: AuthState = {
     current: null,
     history: [],
   },
-};
+}
 
-const createAuthSlice: StateCreator<AuthSlice, [], [], AuthSlice> = (set, get) => {
-  // Set up API client auth token getter (only on client side)
-  if (typeof window !== "undefined" && apiClient?.setAuthTokenGetter) {
-    apiClient.setAuthTokenGetter(() => {
-      return get().auth.token;
-    });
-  }
+const createAuthSlice: StateCreator<AuthSlice, [], [], AuthSlice> = (set, get) => ({
+  ...initialAuthState,
 
-  return {
-    ...initialAuthState,
-
-    // Core actions
-    login: (userData, token, refreshToken) => {
-      const now = new Date();
-      
-      // Store tokens
-      StorageUtil.setItem(STORAGE_KEYS.AUTH_TOKEN, token);
-      if (refreshToken) {
-        StorageUtil.setItem(STORAGE_KEYS.REFRESH_TOKEN, refreshToken);
+  // 核心状态管理动作
+  setUser: (user) => {
+    set(state => ({
+      auth: {
+        ...state.auth,
+        user,
+        lastActivity: user ? new Date() : state.auth.lastActivity,
       }
+    }))
+  },
 
-      // Store in cookies for middleware access
-      if (typeof document !== "undefined") {
-        document.cookie = `auth_token=${token}; path=/; max-age=${60 * 60 * 24 * 7}; secure; samesite=strict`;
-        if (refreshToken) {
-          document.cookie = `auth_refresh_token=${refreshToken}; path=/; max-age=${60 * 60 * 24 * 30}; secure; samesite=strict`;
-        }
+  setToken: (token) => {
+    set(state => ({
+      auth: { ...state.auth, token }
+    }))
+  },
+
+  setRefreshToken: (refreshToken) => {
+    set(state => ({
+      auth: { ...state.auth, refreshToken }
+    }))
+  },
+
+  setAuthenticated: (isAuthenticated) => {
+    set(state => ({
+      auth: { ...state.auth, isAuthenticated }
+    }))
+  },
+
+  setSessionStarted: (sessionStarted) => {
+    set(state => ({
+      auth: { ...state.auth, sessionStarted }
+    }))
+  },
+
+  updateLastActivity: () => {
+    set(state => ({
+      auth: {
+        ...state.auth,
+        lastActivity: new Date(),
       }
+    }))
+  },
 
-      set(state => ({
-        auth: {
-          ...state.auth,
-          user: userData,
-          token,
-          refreshToken,
-          isAuthenticated: true,
-          sessionStarted: now,
-          lastActivity: now,
-        },
-        ui: {
-          ...state.ui,
-          isLoading: false,
-          showLoginModal: false,
-        },
-        error: {
-          ...state.error,
-          current: null,
-        },
-      }));
+  // UI状态管理
+  setLoading: (isLoading) => {
+    set(state => ({
+      authUI: { ...state.authUI, isLoading }
+    }))
+  },
 
-      // Ensure API client has the new token immediately
-      if (typeof window !== "undefined" && apiClient?.setAuthTokenGetter) {
-        apiClient.setAuthTokenGetter(() => get().auth.token);
+  setInitializing: (isInitializing) => {
+    set(state => ({
+      authUI: { ...state.authUI, isInitializing }
+    }))
+  },
+
+  toggleLoginModal: (show) => {
+    set(state => ({
+      authUI: {
+        ...state.authUI,
+        showLoginModal: show !== undefined ? show : !state.authUI.showLoginModal,
       }
-    },
+    }))
+  },
 
-    logout: async () => {
-      const { auth } = get();
-
-      try {
-        // Call logout API if we have a token
-        if (auth.token) {
-          await AuthService.logout();
-        }
-      } catch (error) {
-        console.error("Logout API call failed:", error);
-        // Continue with local logout even if API call fails
-      } finally {
-        // Always clean up local state
-        StorageUtil.removeItem(STORAGE_KEYS.AUTH_TOKEN);
-        StorageUtil.removeItem(STORAGE_KEYS.REFRESH_TOKEN);
-
-        // Clear cookies
-        if (typeof document !== "undefined") {
-          document.cookie = "auth_token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
-          document.cookie = "auth_refresh_token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
-        }
-
-        set(state => ({
-          auth: {
-            ...initialAuthState.auth,
-          },
-          ui: {
-            ...state.ui,
-            isLoading: false,
-          },
-          error: {
-            ...state.error,
-            current: null,
-          },
-        }));
-      }
-    },
-
-    setUser: (user) => {
-      set(state => ({
-        auth: {
-          ...state.auth,
-          user,
-          lastActivity: new Date(),
-        }
-      }));
-    },
-
-    // UI actions
-    setLoading: (isLoading) => {
-      set(state => ({
-        ui: {
-          ...state.ui,
-          isLoading,
-        }
-      }));
-    },
-
-    setInitializing: (isInitializing) => {
-      set(state => ({
-        ui: {
-          ...state.ui,
-          isInitializing,
-        }
-      }));
-    },
-
-    toggleLoginModal: (show) => {
-      set(state => ({
-        ui: {
-          ...state.ui,
-          showLoginModal: show !== undefined ? show : !state.ui.showLoginModal,
-        }
-      }));
-    },
-
-    // Error actions
-    setError: (error, action = 'unknown') => {
-      set(state => ({
-        error: {
-          current: error,
-          history: error ? [
-            ...state.error.history.slice(-4), // Keep last 5 errors
-            {
-              message: error,
-              timestamp: new Date(),
-              action,
-            }
-          ] : state.error.history,
-        },
-        ui: {
-          ...state.ui,
-          isLoading: false,
-        }
-      }));
-    },
-
-    clearError: () => {
-      set(state => ({
-        error: {
-          ...state.error,
-          current: null,
-        }
-      }));
-    },
-
-    clearErrorHistory: () => {
-      set(state => ({
-        error: {
-          ...state.error,
-          history: [],
-        }
-      }));
-    },
-
-    updateUserPreferences: (preferences) => {
-      const { auth } = get();
-      if (auth.user) {
-        const updatedUser = {
-          ...auth.user,
-          preferences: {
-            ...auth.user.preferences,
-            ...preferences,
-          },
-        };
-        get().setUser(updatedUser);
-      }
-    },
-
-    // Session management
-    extendSession: () => {
-      set(state => ({
-        auth: {
-          ...state.auth,
-          lastActivity: new Date(),
-        }
-      }));
-    },
-
-    checkSessionTimeout: () => {
-      const { auth } = get();
-      if (!auth.lastActivity) return false;
-      
-      const timeout = 30 * 60 * 1000; // 30 minutes
-      return Date.now() - auth.lastActivity.getTime() > timeout;
-    },
-
-    resetSession: () => {
-      set(state => ({
-        auth: {
-          ...state.auth,
-          sessionStarted: new Date(),
-          lastActivity: new Date(),
-        }
-      }));
-    },
-
-    // Auth operations (same as before but with enhanced error handling)
-    initializeAuth: async () => {
-      const { setError, setInitializing } = get();
-      
-      setInitializing(true);
-      
-      const token = StorageUtil.getItem<string>(STORAGE_KEYS.AUTH_TOKEN);
-      const refreshToken = StorageUtil.getItem<string>(STORAGE_KEYS.REFRESH_TOKEN);
-
-      if (token) {
-        // Set cookies to sync with middleware
-        if (typeof document !== "undefined") {
-          document.cookie = `auth_token=${token}; path=/; max-age=${60 * 60 * 24 * 7}; secure; samesite=strict`;
-          if (refreshToken) {
-            document.cookie = `auth_refresh_token=${refreshToken}; path=/; max-age=${60 * 60 * 24 * 30}; secure; samesite=strict`;
+  // 错误状态管理
+  setError: (error, action = 'unknown') => {
+    set(state => ({
+      error: {
+        current: error,
+        history: error ? [
+          ...state.error.history.slice(-4),
+          {
+            message: error,
+            timestamp: new Date(),
+            action,
           }
-        }
-
-        set(state => ({
-          auth: {
-            ...state.auth,
-            token,
-            refreshToken,
-            isAuthenticated: true,
-          },
-          ui: {
-            ...state.ui,
-            isLoading: true,
-          }
-        }));
-
-        // Ensure API client has the token from localStorage
-        if (typeof window !== "undefined" && apiClient?.setAuthTokenGetter) {
-          apiClient.setAuthTokenGetter(() => get().auth.token);
-        }
-
-        try {
-          // Try to get current user to validate the token
-          await get().getCurrentUser();
-        } catch (error) {
-          // Token is invalid, try to refresh
-          const refreshSuccess = await get().refreshAuthToken();
-          if (!refreshSuccess) {
-            // Refresh failed, logout
-            await get().logout();
-          }
-        }
+        ] : state.error.history,
+      },
+      authUI: {
+        ...state.authUI,
+        isLoading: false, // 出错时停止loading
       }
-      
-      setInitializing(false);
-    },
+    }))
+  },
 
-    loginWithCredentials: async (email: string, password: string, rememberMe = false) => {
-      const { login, setError, setLoading } = get();
+  clearError: () => {
+    set(state => ({
+      error: { ...state.error, current: null }
+    }))
+  },
 
-      try {
-        setLoading(true);
-        setError(null);
+  clearErrorHistory: () => {
+    set(state => ({
+      error: { ...state.error, history: [] }
+    }))
+  },
 
-        const response = await AuthService.login({ email, password });
-
-        login(
-          response.user,
-          response.access_token,
-          rememberMe ? response.refresh_token : undefined
-        );
-      } catch (error) {
-        const errorMessage = error instanceof Error ? error.message : "Login failed. Please try again.";
-        setError(errorMessage, 'loginWithCredentials');
-        throw error;
-      } finally {
-        setLoading(false);
+  // 用户偏好管理
+  updateUserPreferences: (preferences) => {
+    const { auth } = get()
+    if (auth.user) {
+      const updatedUser = {
+        ...auth.user,
+        preferences: {
+          ...auth.user.preferences,
+          ...preferences,
+        },
       }
-    },
+      get().setUser(updatedUser)
+    }
+  },
 
-    registerWithCredentials: async (data: RegisterRequest) => {
-      const { setError, setLoading } = get();
-
-      try {
-        setLoading(true);
-        setError(null);
-
-        const registerResponse = await AuthService.register(data);
-
-        // Don't auto-login after registration since email verification is required
-        return registerResponse;
-      } catch (error) {
-        const errorMessage = error instanceof Error ? error.message : "Registration failed. Please try again.";
-        setError(errorMessage, 'registerWithCredentials');
-        throw error;
-      } finally {
-        setLoading(false);
+  // 会话管理
+  extendSession: () => {
+    set(state => ({
+      auth: {
+        ...state.auth,
+        lastActivity: new Date(),
       }
-    },
+    }))
+  },
 
-    validateToken: async () => {
-      const { auth } = get();
-
-      if (!auth.token) {
-        return false;
+  clearSession: () => {
+    set(state => ({
+      auth: {
+        ...initialAuthState.auth,
       }
+    }))
+  },
 
-      try {
-        const response = await AuthService.verifyToken({ token: auth.token });
-        return response.valid;
-      } catch (error) {
-        return false;
-      }
-    },
+  checkSessionTimeout: () => {
+    const { auth } = get()
+    if (!auth.isAuthenticated || !auth.lastActivity) {
+      return true
+    }
+    
+    // 检查是否超过2小时无活动（可配置）
+    const sessionTimeout = 2 * 60 * 60 * 1000 // 2小时
+    const timeSinceLastActivity = Date.now() - auth.lastActivity.getTime()
+    return timeSinceLastActivity > sessionTimeout
+  },
 
-    refreshAuthToken: async () => {
-      const { auth, login, logout } = get();
+  resetSession: () => {
+    set(() => ({
+      ...initialAuthState
+    }))
+  },
 
-      if (!auth.refreshToken) {
-        return false;
-      }
+  // 认证业务逻辑（异步操作的占位符）
+  // 这些方法在store中只是占位符，实际实现在对应的hook中
+  initializeAuth: async () => {
+    // 占位符：实际逻辑在 useAuthSession 中实现
+    console.warn('initializeAuth called from store - this should be implemented in useAuthSession hook')
+  },
 
-      try {
-        const response = await AuthService.refreshToken({
-          refresh_token: auth.refreshToken,
-        });
+  validateToken: async () => {
+    // 占位符：实际逻辑在 useAuthSession 中实现
+    console.warn('validateToken called from store - this should be implemented in useAuthSession hook')
+    return false
+  },
 
-        login(response.user, response.access_token, response.refresh_token);
-        return true;
-      } catch (error) {
-        // Refresh failed, logout user
-        await logout();
-        return false;
-      }
-    },
+  refreshAuthToken: async () => {
+    // 占位符：实际逻辑在 useAuthSession 中实现
+    console.warn('refreshAuthToken called from store - this should be implemented in useAuthSession hook')
+    return false
+  },
 
-    getCurrentUser: async () => {
-      try {
-        const user = await AuthService.getCurrentUser();
-        get().setUser(user);
-      } catch (error) {
-        throw error;
-      }
-    },
+  getCurrentUser: async () => {
+    // 占位符：实际逻辑在 useAuthSession 中实现
+    console.warn('getCurrentUser called from store - this should be implemented in useAuthSession hook')
+  },
 
-    getOAuthUrl: async (provider: "google" | "github", redirectUri: string) => {
-      const { setError } = get();
-      
-      try {
-        setError(null);
+  // 复合操作
+  login: (user, token, refreshToken) => {
+    const now = new Date()
+    set(state => ({
+      auth: {
+        ...state.auth,
+        user,
+        token,
+        refreshToken: refreshToken || null,
+        isAuthenticated: true,
+        sessionStarted: now,
+        lastActivity: now,
+      },
+      authUI: {
+        ...state.authUI,
+        isLoading: false,
+        showLoginModal: false,
+      },
+      error: {
+        ...state.error,
+        current: null,
+      },
+    }))
+  },
 
-        const response = await AuthService.getOAuthUrl({
-          provider,
-          redirect_uri: redirectUri,
-        });
+  logout: () => {
+    set(state => ({
+      auth: {
+        ...initialAuthState.auth,
+      },
+      authUI: {
+        ...state.authUI,
+        isLoading: false,
+      },
+      error: {
+        ...state.error,
+        current: null,
+      },
+    }))
+  },
+})
 
-        return {
-          url: response.url,
-          state: response.state,
-        };
-      } catch (error) {
-        const errorMessage = isAPIError(error) ? error.message : `Failed to get ${provider} OAuth URL`;
-        setError(errorMessage, 'getOAuthUrl');
-        throw error;
-      }
-    },
-
-    handleOAuthCallback: async (provider: "google" | "github", code: string, state: string, redirectUri: string) => {
-      const { login, setError, setLoading } = get();
-
-      try {
-        setLoading(true);
-        setError(null);
-
-        const response = await AuthService.oauthCallback({
-          provider,
-          code,
-          state,
-          redirect_uri: redirectUri,
-        });
-
-        // Login user with OAuth response
-        login(response.user, response.access_token, response.refresh_token);
-
-        // Return whether user is new for potential onboarding flow
-        return { isNewUser: response.is_new_user || false };
-      } catch (error) {
-        const errorMessage = isAPIError(error) ? error.message : `${provider} authentication failed`;
-        setError(errorMessage, 'handleOAuthCallback');
-        throw error;
-      } finally {
-        setLoading(false);
-      }
-    },
-
-    loginWithOAuth: async (provider: "google" | "github") => {
-      const { setLoading, setError, getOAuthUrl } = get();
-      
-      try {
-        setLoading(true);
-        setError(null);
-
-        // Get current URL origin for redirect
-        const redirectUri = `${window.location.origin}/auth/callback`;
-
-        // Get OAuth URL
-        const { url } = await getOAuthUrl(provider, redirectUri);
-
-        // Redirect to OAuth provider
-        window.location.href = url;
-      } catch (error) {
-        setLoading(false);
-        const errorMessage = isAPIError(error) ? error.message : `Failed to initialize ${provider} login`;
-        setError(errorMessage, 'loginWithOAuth');
-        throw error;
-      }
-    },
-
-    // Password reset operations
-    requestPasswordReset: async (email: string) => {
-      const { setError, setLoading } = get();
-
-      try {
-        setLoading(true);
-        setError(null);
-
-        await AuthService.requestPasswordReset({ email });
-      } catch (error) {
-        const errorMessage = isAPIError(error) ? error.message : "Failed to send password reset email. Please try again.";
-        setError(errorMessage, 'requestPasswordReset');
-        throw error;
-      } finally {
-        setLoading(false);
-      }
-    },
-  };
-};
-
-export default createAuthSlice;
+export default createAuthSlice

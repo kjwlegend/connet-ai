@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { Button } from '@/components/ui/button'
@@ -10,19 +10,35 @@ import { Card, CardContent } from '@/components/ui/card'
 import { useTranslations } from '@/lib/i18n/client'
 import { FormValidator } from '@/lib/utils/validation'
 import { useAuth } from '@/store'
+import { useAuthPassword } from '@/hooks/business/auth'
 import { cn } from '@/lib/utils/cn'
 import { LanguageToggle } from '@/components/ui/LanguageToggle'
 import { CheckCircle, ArrowLeft } from 'lucide-react'
 
 export default function ForgotPasswordPage() {
   const t = useTranslations()
-  const { requestPasswordReset, ui, error } = useAuth()
+  const { ui, error } = useAuth()
+  const { requestPasswordReset } = useAuthPassword()
   const isLoading = ui.isLoading
   
   const [email, setEmail] = useState('')
   const [success, setSuccess] = useState(false)
   const [emailError, setEmailError] = useState<string | null>(null)
   const [touched, setTouched] = useState(false)
+
+  // Fixed positions for background dots to avoid hydration mismatch
+  const backgroundDots = useMemo(() => [
+    { left: 15, top: 20, duration: 4.2, delay: 0.8 },
+    { left: 78, top: 15, duration: 3.7, delay: 1.3 },
+    { left: 23, top: 65, duration: 4.8, delay: 0.2 },
+    { left: 67, top: 45, duration: 3.4, delay: 1.9 },
+    { left: 89, top: 75, duration: 4.5, delay: 0.6 },
+    { left: 34, top: 35, duration: 3.9, delay: 1.5 },
+    { left: 56, top: 82, duration: 4.1, delay: 0.4 },
+    { left: 18, top: 48, duration: 3.6, delay: 1.7 },
+    { left: 82, top: 22, duration: 4.3, delay: 0.1 },
+    { left: 45, top: 78, duration: 3.8, delay: 1.2 },
+  ], [])
 
   const handleEmailChange = (value: string) => {
     setEmail(value)
@@ -51,10 +67,10 @@ export default function ForgotPasswordPage() {
     }
 
     try {
-      await requestPasswordReset(email)
+      const result = await requestPasswordReset({ email })
       setSuccess(true)
     } catch (err) {
-      // Error is handled by the store and displayed via error state
+      // Error is handled by the business hook and displayed via error state
     }
   }
 
@@ -63,22 +79,22 @@ export default function ForgotPasswordPage() {
       <div className="h-screen w-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 relative overflow-hidden fixed inset-0">
         {/* Background Network Animation Layer */}
         <div className="fixed inset-0 z-0 opacity-20">
-          {[...Array(20)].map((_, i) => (
+          {backgroundDots.map((dot, i) => (
             <motion.div
               key={i}
               className="absolute w-1 h-1 bg-green-400 rounded-full"
               style={{
-                left: `${Math.random() * 100}%`,
-                top: `${Math.random() * 100}%`,
+                left: `${dot.left}%`,
+                top: `${dot.top}%`,
               }}
               animate={{
                 opacity: [0.2, 0.8, 0.2],
                 scale: [0.8, 1.3, 0.8],
               }}
               transition={{
-                duration: 3 + Math.random() * 2,
+                duration: dot.duration,
                 repeat: Infinity,
-                delay: Math.random() * 2,
+                delay: dot.delay,
               }}
             />
           ))}
@@ -198,22 +214,22 @@ export default function ForgotPasswordPage() {
     <div className="h-screen w-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 relative overflow-hidden fixed inset-0">
       {/* Background Network Animation Layer */}
       <div className="fixed inset-0 z-0 opacity-20">
-        {[...Array(20)].map((_, i) => (
+        {backgroundDots.map((dot, i) => (
           <motion.div
             key={i}
             className="absolute w-1 h-1 bg-blue-400 rounded-full"
             style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
+              left: `${dot.left}%`,
+              top: `${dot.top}%`,
             }}
             animate={{
               opacity: [0.2, 0.8, 0.2],
               scale: [0.8, 1.3, 0.8],
             }}
             transition={{
-              duration: 3 + Math.random() * 2,
+              duration: dot.duration,
               repeat: Infinity,
-              delay: Math.random() * 2,
+              delay: dot.delay,
             }}
           />
         ))}

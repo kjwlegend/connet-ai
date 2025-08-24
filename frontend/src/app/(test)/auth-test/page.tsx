@@ -1,152 +1,190 @@
-'use client'
+"use client";
 
-import { useState } from 'react'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { useAuth } from '@/store'
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useAuth } from "@/store";
+import {
+  useAuthLogin,
+  useAuthRegister,
+  useAuthPassword,
+  useAuthSession,
+  useAuthOAuth,
+} from "@/hooks/business/auth";
 
 export default function AuthTestPage() {
-  const auth = useAuth()
-  const [logs, setLogs] = useState<string[]>([])
+  const auth = useAuth();
+  const { loginWithCredentials } = useAuthLogin();
+  const { registerWithCredentials } = useAuthRegister();
+  const { requestPasswordReset, verifyEmail } = useAuthPassword();
+  const { getCurrentUser, validateToken, refreshToken: refreshAuthToken } = useAuthSession();
+  const { getOAuthUrl } = useAuthOAuth();
+  const persistedStore = localStorage.getItem("permanent:connet-ai-store");
+  const [logs, setLogs] = useState<string[]>([]);
   const [testData, setTestData] = useState({
-    email: 'test@example.com',
-    password: 'testpassword123',
-    fullName: 'Test User',
-    token: '',
-    refreshToken: '',
-  })
+    email: "test@example.com",
+    password: "testpassword123",
+    fullName: "Test User",
+    token: "",
+    refreshToken: "",
+  });
 
   const addLog = (message: string) => {
-    const timestamp = new Date().toLocaleTimeString()
-    setLogs(prev => [`[${timestamp}] ${message}`, ...prev])
-  }
+    const timestamp = new Date().toLocaleTimeString();
+    setLogs((prev) => [`[${timestamp}] ${message}`, ...prev]);
+  };
 
   const testLogin = async () => {
     try {
-      addLog('Testing login with authSlice...')
-      await auth.loginWithCredentials(testData.email, testData.password, true)
-      addLog(`Login success: ${auth.auth.user?.email}, token: ${auth.auth.token?.substring(0, 20)}...`)
-      setTestData(prev => ({ ...prev, token: auth.auth.token || '', refreshToken: auth.auth.refreshToken || '' }))
+      addLog("Testing login with new business hooks...");
+      const user = await loginWithCredentials(
+        testData.email,
+        testData.password,
+        true
+      );
+      if (user) {
+        addLog(
+          `Login success: ${user.email}, token: ${auth.auth.token?.substring(
+            0,
+            20
+          )}...`
+        );
+        setTestData((prev) => ({
+          ...prev,
+          token: auth.auth.token || "",
+          refreshToken: auth.auth.refreshToken || "",
+        }));
+      }
     } catch (error: any) {
-      addLog(`Login failed: ${error.message}`)
+      addLog(`Login failed: ${error.message}`);
     }
-  }
+  };
 
   const testRegister = async () => {
     try {
-      addLog('Testing register with authSlice...')
-      const result = await auth.registerWithCredentials({
+      addLog("Testing register with new business hooks...");
+      const result = await registerWithCredentials({
         email: testData.email,
         password: testData.password,
-        full_name: testData.fullName
-      })
-      addLog(`Register success: ${result.user.email}`)
+        full_name: testData.fullName,
+      });
+      addLog(`Register success: ${result.user.email}`);
     } catch (error: any) {
-      addLog(`Register failed: ${error.message}`)
+      addLog(`Register failed: ${error.message}`);
     }
-  }
+  };
 
   const testGetCurrentUser = async () => {
     try {
-      addLog('Testing get current user with authSlice...')
-      await auth.getCurrentUser()
-      addLog(`Get current user success: ${auth.auth.user?.email} (${auth.auth.user?.full_name})`)
+      addLog("Testing get current user with new business hooks...");
+      const user = await getCurrentUser();
+      if (user) {
+        addLog(`Get current user success: ${user.email} (${user.full_name})`);
+      }
     } catch (error: any) {
-      addLog(`Get current user failed: ${error.message}`)
+      addLog(`Get current user failed: ${error.message}`);
     }
-  }
+  };
 
   const testRefreshToken = async () => {
     try {
-      addLog('Testing refresh token with authSlice...')
+      addLog("Testing refresh token with new business hooks...");
       if (!auth.auth.refreshToken) {
-        addLog('No refresh token available. Login first.')
-        return
+        addLog("No refresh token available. Login first.");
+        return;
       }
-      const success = await auth.refreshAuthToken()
+      const success = await refreshAuthToken();
       if (success) {
-        addLog(`Refresh token success: new token ${auth.auth.token?.substring(0, 20)}...`)
-        setTestData(prev => ({ ...prev, token: auth.auth.token || '', refreshToken: auth.auth.refreshToken || '' }))
+        addLog(
+          `Refresh token success: new token ${auth.auth.token?.substring(
+            0,
+            20
+          )}...`
+        );
+        setTestData((prev) => ({
+          ...prev,
+          token: auth.auth.token || "",
+          refreshToken: auth.auth.refreshToken || "",
+        }));
       } else {
-        addLog('Refresh token failed')
+        addLog("Refresh token failed");
       }
     } catch (error: any) {
-      addLog(`Refresh token failed: ${error.message}`)
+      addLog(`Refresh token failed: ${error.message}`);
     }
-  }
+  };
 
   const testVerifyToken = async () => {
     try {
-      addLog('Testing verify token with authSlice...')
+      addLog("Testing verify token with new business hooks...");
       if (!auth.auth.token) {
-        addLog('No token available. Login first.')
-        return
+        addLog("No token available. Login first.");
+        return;
       }
-      const isValid = await auth.validateToken()
-      addLog(`Verify token success: valid=${isValid}`)
+      const isValid = await validateToken();
+      addLog(`Verify token success: valid=${isValid}`);
     } catch (error: any) {
-      addLog(`Verify token failed: ${error.message}`)
+      addLog(`Verify token failed: ${error.message}`);
     }
-  }
+  };
 
   const testPasswordReset = async () => {
     try {
-      addLog('Testing password reset (direct AuthService call)...')
-      // Note: Password reset doesn't require authentication, so direct call is fine
-      const { AuthService } = await import('@/services/api')
-      const result = await AuthService.requestPasswordReset({ email: testData.email })
-      addLog(`Password reset success: ${result.message}`)
+      addLog("Testing password reset with new business hooks...");
+      const result = await requestPasswordReset({ email: testData.email });
+      addLog(`Password reset success: ${result.message}`);
     } catch (error: any) {
-      addLog(`Password reset failed: ${error.message}`)
+      addLog(`Password reset failed: ${error.message}`);
     }
-  }
+  };
 
   const testVerifyEmail = async () => {
     try {
-      addLog('Testing verify email (direct AuthService call)...')
+      addLog("Testing verify email with new business hooks...");
       if (!testData.token) {
-        addLog('No token provided. Enter a verification token first.')
-        return
+        addLog("No token provided. Enter a verification token first.");
+        return;
       }
-      // Note: Email verification doesn't require auth headers, so direct call is fine
-      const { AuthService } = await import('@/services/api')
-      const result = await AuthService.verifyEmail(testData.token, testData.email)
-      addLog(`Verify email success: ${result.message}`)
+      const result = await verifyEmail(testData.token, testData.email);
+      addLog(`Verify email success: ${result.message}`);
     } catch (error: any) {
-      addLog(`Verify email failed: ${error.message}`)
+      addLog(`Verify email failed: ${error.message}`);
     }
-  }
+  };
 
   const testGetOAuthUrl = async () => {
     try {
-      addLog('Testing get OAuth URL with authSlice...')
-      const result = await auth.getOAuthUrl('google', 'http://localhost:3000/auth/callback')
-      addLog(`Get OAuth URL success: ${result.url}`)
+      addLog("Testing get OAuth URL with new business hooks...");
+      const result = await getOAuthUrl(
+        "google",
+        "http://localhost:3000/auth/callback"
+      );
+      addLog(`Get OAuth URL success: ${result.url}`);
     } catch (error: any) {
-      addLog(`Get OAuth URL failed: ${error.message}`)
+      addLog(`Get OAuth URL failed: ${error.message}`);
     }
-  }
+  };
 
   const testLogout = async () => {
     try {
-      addLog('Testing logout with authSlice...')
-      await auth.logout()
-      addLog('Logout success')
-      setTestData(prev => ({ ...prev, token: '', refreshToken: '' }))
+      addLog("Testing logout with authSlice...");
+      await auth.logout();
+      addLog("Logout success");
+      setTestData((prev) => ({ ...prev, token: "", refreshToken: "" }));
     } catch (error: any) {
-      addLog(`Logout failed: ${error.message}`)
+      addLog(`Logout failed: ${error.message}`);
     }
-  }
+  };
 
   const clearLogs = () => {
-    setLogs([])
-  }
+    setLogs([]);
+  };
 
   return (
     <div className="container mx-auto p-6 max-w-6xl">
       <h1 className="text-3xl font-bold mb-6">Auth API Test Page</h1>
-      
+
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Test Controls */}
         <Card>
@@ -158,49 +196,79 @@ export default function AuthTestPage() {
               <label className="block text-sm font-medium mb-1">Email</label>
               <Input
                 value={testData.email}
-                onChange={(e) => setTestData(prev => ({ ...prev, email: e.target.value }))}
+                onChange={(e) =>
+                  setTestData((prev) => ({ ...prev, email: e.target.value }))
+                }
                 placeholder="Enter email"
               />
             </div>
-            
+
             <div>
               <label className="block text-sm font-medium mb-1">Password</label>
               <Input
                 type="password"
                 value={testData.password}
-                onChange={(e) => setTestData(prev => ({ ...prev, password: e.target.value }))}
+                onChange={(e) =>
+                  setTestData((prev) => ({ ...prev, password: e.target.value }))
+                }
                 placeholder="Enter password"
               />
             </div>
-            
+
             <div>
-              <label className="block text-sm font-medium mb-1">Full Name</label>
+              <label className="block text-sm font-medium mb-1">
+                Full Name
+              </label>
               <Input
                 value={testData.fullName}
-                onChange={(e) => setTestData(prev => ({ ...prev, fullName: e.target.value }))}
+                onChange={(e) =>
+                  setTestData((prev) => ({ ...prev, fullName: e.target.value }))
+                }
                 placeholder="Enter full name for registration"
               />
             </div>
-            
+
             <div>
-              <label className="block text-sm font-medium mb-1">Token (for verify)</label>
+              <label className="block text-sm font-medium mb-1">
+                Token (for verify)
+              </label>
               <Input
                 value={testData.token}
-                onChange={(e) => setTestData(prev => ({ ...prev, token: e.target.value }))}
+                onChange={(e) =>
+                  setTestData((prev) => ({ ...prev, token: e.target.value }))
+                }
                 placeholder="Enter token to verify"
               />
             </div>
 
             <div className="grid grid-cols-2 gap-2">
-              <Button onClick={testLogin} size="sm">Login</Button>
-              <Button onClick={testRegister} size="sm" variant="outline">Register</Button>
-              <Button onClick={testGetCurrentUser} size="sm">Get User</Button>
-              <Button onClick={testRefreshToken} size="sm">Refresh Token</Button>
-              <Button onClick={testVerifyToken} size="sm">Verify Token</Button>
-              <Button onClick={testPasswordReset} size="sm">Password Reset</Button>
-              <Button onClick={testVerifyEmail} size="sm">Verify Email</Button>
-              <Button onClick={testGetOAuthUrl} size="sm">OAuth URL</Button>
-              <Button onClick={testLogout} size="sm">Logout</Button>
+              <Button onClick={testLogin} size="sm">
+                Login
+              </Button>
+              <Button onClick={testRegister} size="sm" variant="outline">
+                Register
+              </Button>
+              <Button onClick={testGetCurrentUser} size="sm">
+                Get User
+              </Button>
+              <Button onClick={testRefreshToken} size="sm">
+                Refresh Token
+              </Button>
+              <Button onClick={testVerifyToken} size="sm">
+                Verify Token
+              </Button>
+              <Button onClick={testPasswordReset} size="sm">
+                Password Reset
+              </Button>
+              <Button onClick={testVerifyEmail} size="sm">
+                Verify Email
+              </Button>
+              <Button onClick={testGetOAuthUrl} size="sm">
+                OAuth URL
+              </Button>
+              <Button onClick={testLogout} size="sm">
+                Logout
+              </Button>
             </div>
           </CardContent>
         </Card>
@@ -209,12 +277,16 @@ export default function AuthTestPage() {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between">
             <CardTitle>Test Logs</CardTitle>
-            <Button onClick={clearLogs} variant="outline" size="sm">Clear</Button>
+            <Button onClick={clearLogs} variant="outline" size="sm">
+              Clear
+            </Button>
           </CardHeader>
           <CardContent>
             <div className="bg-gray-100 dark:bg-gray-800 p-4 rounded-md h-96 overflow-y-auto font-mono text-sm">
               {logs.length === 0 ? (
-                <p className="text-gray-500">No logs yet. Click buttons to test APIs.</p>
+                <p className="text-gray-500">
+                  No logs yet. Click buttons to test APIs.
+                </p>
               ) : (
                 logs.map((log, index) => (
                   <div key={index} className="mb-1">
@@ -223,6 +295,7 @@ export default function AuthTestPage() {
                 ))
               )}
             </div>
+            <div>{persistedStore}</div>
           </CardContent>
         </Card>
       </div>
@@ -238,44 +311,57 @@ export default function AuthTestPage() {
               <strong>Test Email:</strong> {testData.email}
             </div>
             <div>
-              <strong>Authenticated:</strong> {auth.auth.isAuthenticated ? '✅ Yes' : '❌ No'}
+              <strong>Authenticated:</strong>{" "}
+              {auth.auth.isAuthenticated ? "✅ Yes" : "❌ No"}
             </div>
             <div>
-              <strong>Current User:</strong> {auth.auth.user?.email || 'None'}
+              <strong>Current User:</strong> {auth.auth.user?.email || "None"}
             </div>
             <div>
-              <strong>User Name:</strong> {auth.auth.user?.full_name || 'None'}
+              <strong>User Name:</strong> {auth.auth.user?.full_name || "None"}
             </div>
             <div>
-              <strong>Has Token:</strong> {auth.auth.token ? '✅ Yes' : '❌ No'}
+              <strong>Has Token:</strong> {auth.auth.token ? "✅ Yes" : "❌ No"}
             </div>
             <div>
-              <strong>Has Refresh Token:</strong> {auth.auth.refreshToken ? '✅ Yes' : '❌ No'}
+              <strong>Has Refresh Token:</strong>{" "}
+              {auth.auth.refreshToken ? "✅ Yes" : "❌ No"}
             </div>
             <div>
-              <strong>Loading:</strong> {auth.ui.isLoading ? '⏳ Yes' : '✅ No'}
+              <strong>Loading:</strong>{" "}
+              {auth.authUI.isLoading ? "⏳ Yes" : "✅ No"}
             </div>
             <div>
-              <strong>Initializing:</strong> {auth.ui.isInitializing ? '⏳ Yes' : '✅ No'}
+              <strong>Initializing:</strong>{" "}
+              {auth.authUI.isInitializing ? "⏳ Yes" : "✅ No"}
             </div>
             <div>
-              <strong>Current Error:</strong> {auth.error.current || '✅ None'}
+              <strong>Current Error:</strong> {auth.error.current || "✅ None"}
             </div>
             <div>
               <strong>Error History:</strong> {auth.error.history.length} errors
             </div>
             <div>
-              <strong>Session Started:</strong> {auth.auth.sessionStarted ? new Date(auth.auth.sessionStarted).toLocaleTimeString() : 'None'}
+              <strong>Session Started:</strong>{" "}
+              {auth.auth.sessionStarted
+                ? new Date(auth.auth.sessionStarted).toLocaleTimeString()
+                : "None"}
             </div>
             <div>
-              <strong>Last Activity:</strong> {auth.auth.lastActivity ? new Date(auth.auth.lastActivity).toLocaleTimeString() : 'None'}
+              <strong>Last Activity:</strong>{" "}
+              {auth.auth.lastActivity
+                ? new Date(auth.auth.lastActivity).toLocaleTimeString()
+                : "None"}
             </div>
             <div className="md:col-span-2">
-              <strong>Token Preview:</strong> {auth.auth.token ? `${auth.auth.token.substring(0, 30)}...` : 'None'}
+              <strong>Token Preview:</strong>{" "}
+              {auth.auth.token
+                ? `${auth.auth.token.substring(0, 30)}...`
+                : "None"}
             </div>
           </div>
         </CardContent>
       </Card>
     </div>
-  )
+  );
 }

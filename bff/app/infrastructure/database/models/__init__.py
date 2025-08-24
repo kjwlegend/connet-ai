@@ -6,6 +6,7 @@ from .agent_model import AIAgentModel
 from .contact_model import ContactModel
 from .conversation_model import ConversationModel
 from .conversation_participant_model import ConversationParticipantModel
+from .conversation_memory_model import ConversationMemoryModel
 from .message_model import MessageModel
 
 # Optional models (commented out for now)
@@ -45,5 +46,6 @@ __all__ = [
     "ContactModel", 
     "ConversationModel",
     "ConversationParticipantModel",
+    "ConversationMemoryModel",
     "MessageModel",
 ]

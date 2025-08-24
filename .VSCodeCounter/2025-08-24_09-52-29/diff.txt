@@ -1,0 +1,110 @@
+Date : 2025-08-24 09:52:29
+Directory : d:\Codes\xiaoguang-next-gen\docs
+Total : 72 files,  14732 codes, 120 comments, 2712 blanks, all 17564 lines
+
+Languages
++----------+------------+------------+------------+------------+------------+
+| language | files      | code       | comment    | blank      | total      |
++----------+------------+------------+------------+------------+------------+
+| Markdown |         69 |     12,794 |          0 |      2,371 |     15,165 |
+| Python   |          2 |      1,199 |        120 |        340 |      1,659 |
+| JSON     |          1 |        739 |          0 |          1 |        740 |
++----------+------------+------------+------------+------------+------------+
+
+Directories
++-------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| path                                                                                | files      | code       | comment    | blank      | total      |
++-------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| .                                                                                   |         72 |     14,732 |        120 |      2,712 |     17,564 |
+| . (Files)                                                                           |          8 |     -1,390 |          0 |       -280 |     -1,670 |
+| AI                                                                                  |         26 |      6,307 |        120 |        877 |      7,304 |
+| AI (Files)                                                                          |         12 |     -3,240 |          0 |       -993 |     -4,233 |
+| AI\protocol                                                                         |         14 |      9,547 |        120 |      1,870 |     11,537 |
+| AI\protocol (Files)                                                                 |         11 |      7,609 |          0 |      1,529 |      9,138 |
+| AI\protocol\examples                                                                |          2 |      1,199 |        120 |        340 |      1,659 |
+| AI\protocol\schemas                                                                 |          1 |        739 |          0 |          1 |        740 |
+| archive                                                                             |         12 |      8,023 |          0 |      1,445 |      9,468 |
+| auth                                                                                |          1 |        196 |          0 |         95 |        291 |
+| backend                                                                             |         21 |      1,139 |          0 |        429 |      1,568 |
+| infrastructure                                                                      |          1 |          0 |          0 |         30 |         30 |
+| testreports                                                                         |          3 |        457 |          0 |        116 |        573 |
++-------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+
+Files
++-------------------------------------------------------------------------------------+----------+------------+------------+------------+------------+
+| filename                                                                            | language | code       | comment    | blank      | total      |
++-------------------------------------------------------------------------------------+----------+------------+------------+------------+------------+
+| d:\Codes\xiaoguang-next-gen\docs\2025-08-01_data-flow-state-management.md           | Markdown |      1,344 |          0 |        216 |      1,560 |
+| d:\Codes\xiaoguang-next-gen\docs\2025-08-07_chat-room-logic-thoughts.md             | Markdown |        469 |          0 |        150 |        619 |
+| d:\Codes\xiaoguang-next-gen\docs\2025-08-07_llm-adapter-design.md                   | Markdown |        382 |          0 |         99 |        481 |
+| d:\Codes\xiaoguang-next-gen\docs\AI\2025-08-22_backend-refactoring-plan.md          | Markdown |        439 |          0 |         95 |        534 |
+| d:\Codes\xiaoguang-next-gen\docs\AI\2025-08-22_langgraph-implementation-plan.md     | Markdown |      1,224 |          0 |        277 |      1,501 |
+| d:\Codes\xiaoguang-next-gen\docs\AI\2025-08-22_migration-strategy.md                | Markdown |        678 |          0 |        159 |        837 |
+| d:\Codes\xiaoguang-next-gen\docs\AI\2025-08-22_revised-architecture-plan.md         | Markdown |        613 |          0 |        138 |        751 |
+| d:\Codes\xiaoguang-next-gen\docs\AI\ai-service-architecture.md                      | Markdown |       -593 |          0 |       -174 |       -767 |
+| d:\Codes\xiaoguang-next-gen\docs\AI\custom-agent-system.md                          | Markdown |     -1,159 |          0 |       -324 |     -1,483 |
+| d:\Codes\xiaoguang-next-gen\docs\AI\implementation-roadmap.md                       | Markdown |       -416 |          0 |        -84 |       -500 |
+| d:\Codes\xiaoguang-next-gen\docs\AI\memory-management-system.md                     | Markdown |       -677 |          0 |       -222 |       -899 |
+| d:\Codes\xiaoguang-next-gen\docs\AI\multi-agent-context-management.md               | Markdown |       -510 |          0 |       -141 |       -651 |
+| d:\Codes\xiaoguang-next-gen\docs\AI\prompts-management-system.md                    | Markdown |       -704 |          0 |       -182 |       -886 |
+| d:\Codes\xiaoguang-next-gen\docs\AI\protocol\01-theoretical-foundation.md           | Markdown |        427 |          0 |        123 |        550 |
+| d:\Codes\xiaoguang-next-gen\docs\AI\protocol\02-communication-protocol.md           | Markdown |        782 |          0 |        157 |        939 |
+| d:\Codes\xiaoguang-next-gen\docs\AI\protocol\04-memory-sharing-system.md            | Markdown |        862 |          0 |        159 |      1,021 |
+| d:\Codes\xiaoguang-next-gen\docs\AI\protocol\06-data-structures.md                  | Markdown |      1,630 |          0 |         56 |      1,686 |
+| d:\Codes\xiaoguang-next-gen\docs\AI\protocol\07-architecture-design.md              | Markdown |        692 |          0 |        176 |        868 |
+| d:\Codes\xiaoguang-next-gen\docs\AI\protocol\08-implementation-guide.md             | Markdown |      1,320 |          0 |        290 |      1,610 |
+| d:\Codes\xiaoguang-next-gen\docs\AI\protocol\README.md                              | Markdown |        141 |          0 |         49 |        190 |
+| d:\Codes\xiaoguang-next-gen\docs\AI\protocol\SUMMARY.md                             | Markdown |        199 |          0 |         79 |        278 |
+| d:\Codes\xiaoguang-next-gen\docs\AI\protocol\examples\basic-collaboration.py        | Python   |        585 |         40 |        153 |        778 |
+| d:\Codes\xiaoguang-next-gen\docs\AI\protocol\examples\memory-sharing.py             | Python   |        614 |         80 |        187 |        881 |
+| d:\Codes\xiaoguang-next-gen\docs\AI\protocol\llm-prompt-optimization.md             | Markdown |        556 |          0 |        152 |        708 |
+| d:\Codes\xiaoguang-next-gen\docs\AI\protocol\mvp-implementation-plan.md             | Markdown |        555 |          0 |        153 |        708 |
+| d:\Codes\xiaoguang-next-gen\docs\AI\protocol\mvp-quickstart.md                      | Markdown |        445 |          0 |        135 |        580 |
+| d:\Codes\xiaoguang-next-gen\docs\AI\protocol\schemas\agent-descriptor.json          | JSON     |        739 |          0 |          1 |        740 |
+| d:\Codes\xiaoguang-next-gen\docs\AI\rag-system-design.md                            | Markdown |       -959 |          0 |       -284 |     -1,243 |
+| d:\Codes\xiaoguang-next-gen\docs\AI\tools-webhook-system.md                         | Markdown |     -1,176 |          0 |       -251 |     -1,427 |
+| d:\Codes\xiaoguang-next-gen\docs\api-design-specifications.md                       | Markdown |     -1,053 |          0 |       -139 |     -1,192 |
+| d:\Codes\xiaoguang-next-gen\docs\archive\2025-08-01_api-design-specifications.md    | Markdown |      1,053 |          0 |        139 |      1,192 |
+| d:\Codes\xiaoguang-next-gen\docs\archive\2025-08-01_backend-architecture.md         | Markdown |      2,127 |          0 |        364 |      2,491 |
+| d:\Codes\xiaoguang-next-gen\docs\archive\2025-08-01_backend-todo.md                 | Markdown |        338 |          0 |         50 |        388 |
+| d:\Codes\xiaoguang-next-gen\docs\archive\2025-08-04_backend-task-tracker.md         | Markdown |        143 |          0 |         40 |        183 |
+| d:\Codes\xiaoguang-next-gen\docs\archive\2025-08-04_bff-database-flow.md            | Markdown |        332 |          0 |        130 |        462 |
+| d:\Codes\xiaoguang-next-gen\docs\archive\2025-08-04_bff-progress-tracker.md         | Markdown |        702 |          0 |         71 |        773 |
+| d:\Codes\xiaoguang-next-gen\docs\archive\2025-08-07_membership-design.md            | Markdown |        337 |          0 |        141 |        478 |
+| d:\Codes\xiaoguang-next-gen\docs\archive\2025-08-11_development-log.md              | Markdown |        301 |          0 |         65 |        366 |
+| d:\Codes\xiaoguang-next-gen\docs\archive\2025-08-11_need-human-action.md            | Markdown |        207 |          0 |         56 |        263 |
+| d:\Codes\xiaoguang-next-gen\docs\archive\2025-08-15_business-gamification-system.md | Markdown |        872 |          0 |        139 |      1,011 |
+| d:\Codes\xiaoguang-next-gen\docs\archive\2025-08-15_complete-system-architecture.md | Markdown |        380 |          0 |         58 |        438 |
+| d:\Codes\xiaoguang-next-gen\docs\archive\2025-08-22_backend-implementation-plan.md  | Markdown |      1,231 |          0 |        192 |      1,423 |
+| d:\Codes\xiaoguang-next-gen\docs\auth\oauth-setup-guide.md                          | Markdown |        196 |          0 |         95 |        291 |
+| d:\Codes\xiaoguang-next-gen\docs\backend\README.md                                  | Markdown |         43 |          0 |         16 |         59 |
+| d:\Codes\xiaoguang-next-gen\docs\backend\action-plan.md                             | Markdown |        170 |          0 |         48 |        218 |
+| d:\Codes\xiaoguang-next-gen\docs\backend\architecture-overview.md                   | Markdown |        210 |          0 |         41 |        251 |
+| d:\Codes\xiaoguang-next-gen\docs\backend\backend-architecture.md                    | Markdown |     -2,127 |          0 |       -364 |     -2,491 |
+| d:\Codes\xiaoguang-next-gen\docs\backend\backend-task-tracker.md                    | Markdown |       -143 |          0 |        -40 |       -183 |
+| d:\Codes\xiaoguang-next-gen\docs\backend\backend-todo.md                            | Markdown |       -338 |          0 |        -50 |       -388 |
+| d:\Codes\xiaoguang-next-gen\docs\backend\bff-database-flow.md                       | Markdown |       -332 |          0 |       -130 |       -462 |
+| d:\Codes\xiaoguang-next-gen\docs\backend\bff-progress-tracker.md                    | Markdown |       -575 |          0 |        -69 |       -644 |
+| d:\Codes\xiaoguang-next-gen\docs\backend\business-model.md                          | Markdown |        155 |          0 |         36 |        191 |
+| d:\Codes\xiaoguang-next-gen\docs\backend\database-design.md                         | Markdown |        403 |          0 |         84 |        487 |
+| d:\Codes\xiaoguang-next-gen\docs\backend\deployment-guide.md                        | Markdown |        667 |          0 |        155 |        822 |
+| d:\Codes\xiaoguang-next-gen\docs\backend\development-log.md                         | Markdown |       -301 |          0 |        -65 |       -366 |
+| d:\Codes\xiaoguang-next-gen\docs\backend\implementation-plan.md                     | Markdown |        345 |          0 |         82 |        427 |
+| d:\Codes\xiaoguang-next-gen\docs\backend\intelligent-llm-routing.md                 | Markdown |        287 |          0 |         72 |        359 |
+| d:\Codes\xiaoguang-next-gen\docs\backend\langgraph-architecture.md                  | Markdown |        665 |          0 |        148 |        813 |
+| d:\Codes\xiaoguang-next-gen\docs\backend\migration-strategy.md                      | Markdown |        437 |          0 |        102 |        539 |
+| d:\Codes\xiaoguang-next-gen\docs\backend\need-human-action.md                       | Markdown |       -207 |          0 |        -56 |       -263 |
+| d:\Codes\xiaoguang-next-gen\docs\backend\progress-tracker.md                        | Markdown |        249 |          0 |         99 |        348 |
+| d:\Codes\xiaoguang-next-gen\docs\backend\system-directory-architecture.md           | Markdown |        501 |          0 |         67 |        568 |
+| d:\Codes\xiaoguang-next-gen\docs\backend\troubleshooting.md                         | Markdown |        797 |          0 |        190 |        987 |
+| d:\Codes\xiaoguang-next-gen\docs\backend\user-psychology-strategy.md                | Markdown |        233 |          0 |         63 |        296 |
+| d:\Codes\xiaoguang-next-gen\docs\chat-room-logic-thoughts.md                        | Markdown |       -469 |          0 |       -150 |       -619 |
+| d:\Codes\xiaoguang-next-gen\docs\data-flow-state-management.md                      | Markdown |     -1,344 |          0 |       -216 |     -1,560 |
+| d:\Codes\xiaoguang-next-gen\docs\infrastructure\infrastructure-todo.md              | Markdown |          0 |          0 |         30 |         30 |
+| d:\Codes\xiaoguang-next-gen\docs\llm-adapter-design.md                              | Markdown |       -382 |          0 |        -99 |       -481 |
+| d:\Codes\xiaoguang-next-gen\docs\membership-design.md                               | Markdown |       -337 |          0 |       -141 |       -478 |
+| d:\Codes\xiaoguang-next-gen\docs\testreports\implementation_summary.md              | Markdown |        172 |          0 |         39 |        211 |
+| d:\Codes\xiaoguang-next-gen\docs\testreports\langgraph_implementation_complete.md   | Markdown |        178 |          0 |         44 |        222 |
+| d:\Codes\xiaoguang-next-gen\docs\testreports\langgraph_integration_report.md        | Markdown |        107 |          0 |         33 |        140 |
+| Total                                                                               |          |     14,732 |        120 |      2,712 |     17,564 |
++-------------------------------------------------------------------------------------+----------+------------+------------+------------+------------+

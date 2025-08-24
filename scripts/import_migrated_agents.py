@@ -25,7 +25,7 @@ from app.infrastructure.database.models.user_model import UserModel
 
 # Database configuration - update these with your actual database settings
 DATABASE_URL = (
-    "postgresql://postgres:your_secure_password_here@localhost:5432/connet_ai"
+    "postgresql://connetai-uat:cxXiiyXxJ2tn3cia@38.55.194.235:5432/connetai-uat"
 )
 
 

@@ -1,12 +1,13 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useTranslations } from "@/lib/i18n/client";
 import { useAuth } from "@/store";
+import { useAuthOAuth } from "@/hooks/business/auth";
 import { CheckCircle, AlertCircle, ArrowLeft } from "lucide-react";
 import Link from "next/link";
 
@@ -20,7 +21,8 @@ export default function OAuthCallbackPage() {
   const t = useTranslations();
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { handleOAuthCallback, ui } = useAuth();
+  const { ui } = useAuth();
+  const { handleOAuthCallback } = useAuthOAuth();
   const isLoading = ui.isLoading;
 
   const [status, setStatus] = useState<"loading" | "success" | "error">(
@@ -29,6 +31,20 @@ export default function OAuthCallbackPage() {
   const [error, setError] = useState<string | null>(null);
   const [isNewUser, setIsNewUser] = useState(false);
   const [provider, setProvider] = useState<"google" | "github" | null>(null);
+
+  // Fixed positions for background dots to avoid hydration mismatch
+  const backgroundDots = useMemo(() => [
+    { left: 15, top: 20, duration: 4.2, delay: 0.8 },
+    { left: 78, top: 15, duration: 3.7, delay: 1.3 },
+    { left: 23, top: 65, duration: 4.8, delay: 0.2 },
+    { left: 67, top: 45, duration: 3.4, delay: 1.9 },
+    { left: 89, top: 75, duration: 4.5, delay: 0.6 },
+    { left: 34, top: 35, duration: 3.9, delay: 1.5 },
+    { left: 56, top: 82, duration: 4.1, delay: 0.4 },
+    { left: 18, top: 48, duration: 3.6, delay: 1.7 },
+    { left: 82, top: 22, duration: 4.3, delay: 0.1 },
+    { left: 45, top: 78, duration: 3.8, delay: 1.2 },
+  ], []);
 
   /**
    * Process OAuth callback
@@ -150,7 +166,7 @@ export default function OAuthCallbackPage() {
     <div className="h-screen w-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 overflow-hidden fixed inset-0">
       {/* Background Network Animation Layer */}
       <div className="fixed inset-0 z-0 opacity-20">
-        {[...Array(20)].map((_, i) => (
+        {backgroundDots.map((dot, i) => (
           <motion.div
             key={i}
             className={`absolute w-1 h-1 rounded-full ${
@@ -161,17 +177,17 @@ export default function OAuthCallbackPage() {
                 : "bg-blue-400"
             }`}
             style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
+              left: `${dot.left}%`,
+              top: `${dot.top}%`,
             }}
             animate={{
               opacity: [0.2, 0.8, 0.2],
               scale: [0.8, 1.3, 0.8],
             }}
             transition={{
-              duration: 3 + Math.random() * 2,
+              duration: dot.duration,
               repeat: Infinity,
-              delay: Math.random() * 2,
+              delay: dot.delay,
             }}
           />
         ))}

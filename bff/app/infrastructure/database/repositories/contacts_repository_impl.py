@@ -393,4 +393,143 @@ class ContactRepository(BaseRepository[Contact]):
             await self.session.rollback()
             logger.error(f"Error updating tool config: {e}")
             raise
+
+    # Contact Instance Management Methods (Priority 2)
+    async def get_user_contact_by_agent(
+        self, 
+        user_id: UUID, 
+        agent_id: UUID
+    ) -> Optional[Contact]:
+        """Get user's contact instance for a specific agent."""
+        try:
+            stmt = select(Contact).where(
+                and_(
+                    Contact.follower_id == user_id,
+                    Contact.agent_id == agent_id,
+                    Contact.following_type == "agent"
+                )
+            )
+            result = await self.session.execute(stmt)
+            return result.scalar_one_or_none()
+        except Exception as e:
+            logger.error(f"Error getting user contact by agent {user_id} -> {agent_id}: {e}")
+            raise
+
+    async def create_contact_instance(
+        self,
+        user_id: UUID,
+        agent_id: UUID,
+        custom_system_prompt: Optional[str] = None,
+        instance_config: Optional[Dict[str, Any]] = None,
+        resource_limits: Optional[Dict[str, Any]] = None
+    ) -> Contact:
+        """Create a contact instance from an agent for a user."""
+        try:
+            # Check if contact instance already exists
+            existing = await self.get_user_contact_by_agent(user_id, agent_id)
+            if existing:
+                raise ValueError(f"Contact instance already exists for user {user_id} and agent {agent_id}")
+            
+            # Create new contact instance
+            contact = Contact(
+                follower_id=user_id,
+                following_id=agent_id,  # Reference the agent
+                following_type="agent",
+                agent_id=agent_id,  # Direct reference to agent
+                relationship_type="follow",
+                is_agent=True,  # Mark as agent contact
+                custom_system_prompt=custom_system_prompt,
+                instance_config=instance_config,
+                resource_limits=resource_limits,
+                created_at=datetime.utcnow(),
+                updated_at=datetime.utcnow()
+            )
+            
+            self.session.add(contact)
+            await self.session.commit()
+            await self.session.refresh(contact)
+            
+            logger.info(f"Contact instance created for user {user_id} and agent {agent_id}")
+            return contact
+            
+        except Exception as e:
+            await self.session.rollback()
+            logger.error(f"Error creating contact instance: {e}")
+            raise
+
+    async def update_contact_config(
+        self,
+        user_id: UUID,
+        agent_id: UUID,
+        custom_system_prompt: Optional[str] = None,
+        instance_config: Optional[Dict[str, Any]] = None,
+        resource_limits: Optional[Dict[str, Any]] = None
+    ) -> Optional[Contact]:
+        """Update contact instance configuration."""
+        try:
+            contact = await self.get_user_contact_by_agent(user_id, agent_id)
+            if not contact:
+                logger.warning(f"Contact instance not found for user {user_id} and agent {agent_id}")
+                return None
+            
+            # Update fields if provided
+            if custom_system_prompt is not None:
+                contact.custom_system_prompt = custom_system_prompt
+            if instance_config is not None:
+                contact.instance_config = instance_config
+            if resource_limits is not None:
+                contact.resource_limits = resource_limits
+            
+            contact.updated_at = datetime.utcnow()
+            
+            await self.session.commit()
+            await self.session.refresh(contact)
+            
+            logger.info(f"Contact config updated for user {user_id} and agent {agent_id}")
+            return contact
+            
+        except Exception as e:
+            await self.session.rollback()
+            logger.error(f"Error updating contact config: {e}")
+            raise
+
+    async def get_user_agent_contacts(self, user_id: UUID) -> List[Contact]:
+        """Get all agent contacts for a user."""
+        try:
+            stmt = select(Contact).where(
+                and_(
+                    Contact.follower_id == user_id,
+                    Contact.following_type == "agent",
+                    Contact.is_agent == True
+                )
+            ).order_by(Contact.created_at.desc())
+            
+            result = await self.session.execute(stmt)
+            return result.scalars().all()
+            
+        except Exception as e:
+            logger.error(f"Error getting user agent contacts for {user_id}: {e}")
+            raise
+
+    async def delete_contact_instance(
+        self, 
+        user_id: UUID, 
+        agent_id: UUID
+    ) -> bool:
+        """Delete a contact instance."""
+        try:
+            contact = await self.get_user_contact_by_agent(user_id, agent_id)
+            if not contact:
+                return False
+            
+            await self.session.delete(contact)
+            await self.session.commit()
+            
+            logger.info(f"Contact instance deleted for user {user_id} and agent {agent_id}")
+            return True
+            
+        except Exception as e:
+            await self.session.rollback()
+            logger.error(f"Error deleting contact instance: {e}")
+            raise
         
