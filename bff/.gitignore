@@ -116,7 +116,6 @@ temp/
 uploads/
 downloads/
 data/
-cache/
 
 # Alembic
 alembic/versions/*.py
