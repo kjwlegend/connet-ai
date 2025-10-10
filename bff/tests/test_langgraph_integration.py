@@ -11,16 +11,16 @@ from uuid import uuid4
 from unittest.mock import Mock, patch
 
 from sqlalchemy.ext.asyncio import AsyncSession
-from app.services.langgraph.workflow_engine import WorkflowEngine
-from app.services.langgraph.conversation_service import ConversationService
-from app.services.langgraph.contact_manager import ContactInstanceManager
-from app.services.langgraph.mention_parser import MentionParser
-from app.services.langgraph.state_models import ContactInfo, ConversationState, WorkflowType
-from app.infrastructure.database.models.user_model import UserModel
-from app.infrastructure.database.models.agent_model import AIAgentModel
-from app.infrastructure.database.models.contact_model import ContactModel, EntityType
-from app.infrastructure.database.models.conversation_model import ConversationModel
-from app.infrastructure.database.models.conversation_participant_model import ConversationParticipantModel
+from app.modules.ai.workflows.workflow_engine import WorkflowEngine
+from app.modules.ai.workflows.conversation_service import ConversationService
+from app.modules.ai.workflows.contact_manager import ContactInstanceManager
+from app.modules.ai.workflows.mention_parser import MentionParser
+from app.modules.ai.workflows.state_models import ContactInfo, ConversationState, WorkflowType
+from app.modules.users.models import UserModel
+from app.modules.ai.agents.models import AIAgentModel
+from app.modules.contacts.models import ContactModel, EntityType
+from app.modules.conversations.models import ConversationModel
+from app.modules.conversations.models import ConversationParticipantModel
 
 
 @pytest.fixture
@@ -277,7 +277,7 @@ class TestConversationService:
         assert success is True
     
     @pytest.mark.asyncio
-    @patch('app.services.langgraph.workflow_engine.WorkflowEngine.execute_conversation_workflow')
+    @patch('app.modules.ai.workflows.workflow_engine.WorkflowEngine.execute_conversation_workflow')
     async def test_send_message_with_workflow(self, mock_workflow, test_session, test_user, test_conversation):
         """Test sending message with workflow processing"""
         # Mock workflow response
@@ -359,7 +359,7 @@ class TestEndToEndWorkflow:
     """End-to-end workflow tests"""
     
     @pytest.mark.asyncio
-    @patch('app.services.langgraph.workflow_engine.ChatOpenAI')
+    @patch('app.modules.ai.workflows.workflow_engine.ChatOpenAI')
     async def test_complete_1v1_conversation_flow(self, mock_llm_class, test_session, test_user, test_agent):
         """Test complete 1v1 conversation flow"""
         # Mock LLM response
@@ -400,7 +400,7 @@ class TestEndToEndWorkflow:
         assert messages[1]["sender_type"] == "agent"
     
     @pytest.mark.asyncio
-    @patch('app.services.langgraph.workflow_engine.ChatOpenAI')
+    @patch('app.modules.ai.workflows.workflow_engine.ChatOpenAI')
     async def test_mention_routing_workflow(self, mock_llm_class, test_session, test_user):
         """Test @mention routing workflow"""
         # Create multiple agents

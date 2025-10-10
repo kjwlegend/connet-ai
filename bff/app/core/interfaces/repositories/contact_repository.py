@@ -7,7 +7,7 @@ This module defines the Contact repository interface.
 from abc import abstractmethod
 from typing import List, Optional, Tuple, Dict, Any
 from uuid import UUID
-from app.infrastructure.database.models.contact_model import ContactModel as Contact
+from app.modules.contacts.models import ContactModel as Contact
 from .base_repository import BaseRepository
 
 

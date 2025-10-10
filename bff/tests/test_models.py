@@ -6,17 +6,17 @@ import pytest
 from datetime import datetime, timedelta
 from uuid import uuid4
 
-from app.infrastructure.database.models import (
-    UserModel,
+from app.modules.users.models import UserModel
+from app.modules.conversations.models import (
     ConversationModel,
     ConversationUserSettingModel,
-    MessageModel,
-    ContactModel,
-    TimelinePostModel,
-    UserSubscriptionModel,
-    UserLLMSettingsModel,
-    UserPromptLibraryModel
 )
+from app.modules.conversations.messages.models import MessageModel
+from app.modules.contacts.models import ContactModel
+from app.modules.timeline.models import TimelinePostModel
+from app.modules.users.subscriptions.models import UserSubscriptionModel
+from app.modules.users.llm_settings.models import UserLLMSettingsModel
+from app.modules.users.prompt_library.models import UserPromptLibraryModel
 
 
 class TestUserModel:

@@ -1,15 +1,13 @@
-"""
-LangGraph Services Package
+"""Compatibility package for legacy LangGraph imports."""
 
-This package contains all LangGraph-based workflow and conversation services.
-"""
-
-from .workflow_engine import WorkflowEngine
-from .contact_manager import ContactInstanceManager
-from .mention_parser import MentionParser
+from app.modules.ai.workflows import (
+    WorkflowEngine,
+    ContactInstanceManager,
+    MentionParser,
+)
 
 __all__ = [
-    "WorkflowEngine", 
+    "WorkflowEngine",
     "ContactInstanceManager",
-    "MentionParser"
+    "MentionParser",
 ]

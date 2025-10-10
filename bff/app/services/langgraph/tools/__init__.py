@@ -1,37 +1,29 @@
-"""
-LangGraph Tools Package
+"""Compatibility shim for LangGraph tool registry and executor."""
 
-Provides tool management, execution, and registry functionality for workflows.
-"""
-
-from .tool_registry import (
+from app.modules.ai.workflows.tools.tool_registry import (
     ToolRegistry,
     ToolDefinition,
     ParameterDefinition,
     ToolType,
     ParameterType,
-    get_tool_registry
+    get_tool_registry,
 )
-
-from .tool_executor import (
+from app.modules.ai.workflows.tools.tool_executor import (
     ToolExecutor,
     ToolExecutionRequest,
     ToolExecutionResult,
-    ToolExecutionStatus
+    ToolExecutionStatus,
 )
 
 __all__ = [
-    # Registry
     "ToolRegistry",
-    "ToolDefinition", 
+    "ToolDefinition",
     "ParameterDefinition",
     "ToolType",
     "ParameterType",
     "get_tool_registry",
-    
-    # Executor
     "ToolExecutor",
     "ToolExecutionRequest",
-    "ToolExecutionResult", 
-    "ToolExecutionStatus"
+    "ToolExecutionResult",
+    "ToolExecutionStatus",
 ]

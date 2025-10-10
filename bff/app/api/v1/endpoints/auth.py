@@ -7,7 +7,7 @@ This module contains authentication and authorization endpoints.
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import HTTPAuthorizationCredentials
 
-from app.api.dependencies import get_current_user, get_user_service, get_supabase_auth_service, security
+from app.api.deps import get_current_user, get_user_service, get_supabase_auth_service, security
 from app.infrastructure.security.auth import JWTManager, get_jwt_manager
 from app.schemas.auth import (
     LoginRequest,
@@ -22,9 +22,8 @@ from app.schemas.auth import (
     OAuthUrlResponse,
 )
 from app.schemas.user import UserResponse
-from app.services.auth_service import AuthService, get_auth_service
 from app.services.supabase_auth_service import SupabaseAuthService
-from app.services.user_service import UserService
+from app.modules.users.service import UserService
 from app.utils.logging import get_logger
 
 logger = get_logger(__name__)

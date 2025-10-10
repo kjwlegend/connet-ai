@@ -7,9 +7,9 @@ import pytest
 from uuid import uuid4
 from datetime import datetime
 
-from app.infrastructure.database.models.contact_model import ContactModel, EntityType
-from app.infrastructure.database.models.agent_model import AIAgentModel
-from app.infrastructure.database.models.user_model import UserModel
+from app.modules.contacts.models import ContactModel, EntityType
+from app.modules.agents.models import AIAgentModel
+from app.modules.users.models import UserModel
 
 
 class TestContactRepositoryExtensions:
@@ -174,7 +174,7 @@ class TestContactRepositoryExtensions:
 
     def test_contact_repository_method_signatures(self):
         """Test that repository method signatures are correct."""
-        from app.infrastructure.database.repositories.contacts_repository_impl import ContactRepository
+        from app.modules.contacts.repository_impl import ContactRepository
         from sqlalchemy.ext.asyncio import AsyncSession
         from unittest.mock import Mock
         
@@ -199,7 +199,7 @@ class TestContactRepositoryExtensions:
 
     def test_contact_permissions_structure(self):
         """Test conversation permissions structure for participants."""
-        from app.infrastructure.database.models.conversation_participant_model import ConversationParticipantModel
+        from app.modules.conversations.models import ConversationParticipantModel
         
         permissions = {
             "can_initiate_workflow": True,

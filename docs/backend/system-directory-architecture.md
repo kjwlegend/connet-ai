@@ -1,567 +1,227 @@
 # Connet.AI 系统目录架构
 
-> 基于 LangGraph 多智能体协作的完整后端目录结构设计
+> BFF 后端在多 App 场景下的垂直切片（Vertical Slice）+ Clean/Hexagonal 组合目录指引
 
 ## 📋 目录
-
 - [总体架构概览](#总体架构概览)
 - [详细目录结构](#详细目录结构)
-- [核心模块说明](#核心模块说明)
-- [新增业务模块](#新增业务模块)
+- [核心层说明](#核心层说明)
+- [功能模块（modules/）规范](#功能模块modules规范)
+- [测试与运维](#测试与运维)
 - [文件命名规范](#文件命名规范)
 - [相关文档](#相关文档)
 
 ## 🎯 总体架构概览
 
 ### 设计原则
+- **垂直切片 + 分层**：每个业务模块带齐 router → schema → service → repository → model，模块之间通过接口交互，避免水平分层的跨目录耦合。
+- **核心设施内聚**：跨模块的基础能力（配置、数据库、鉴权、异常等）统一放在 `app/core` 与 `app/infrastructure`，可被任何模块安全复用。
+- **多 App 共享身份**：用户身份服务支撑多个 C 端 App，同一用户可在不同 App 拥有独立账号视图，邀请逻辑按 App 维度划分。
+- **可扩展的外部集成**：Supabase、OAuth、Redis、对象存储等外部系统通过 infrastructure 适配层隔离。
 
-- **渐进式扩展**: 基于现有 BFF 架构扩展，保持向后兼容
-- **模块化设计**: 清晰的功能模块划分，便于维护和扩展
-- **业务驱动**: 支持 Agent 市场 → Contact 实例 → Conversation → Group Chat 的完整业务流程
-- **游戏化集成**: 内置支持会员系统、积分体系、用户成长等商业化功能
-
-### 架构分层
-
+### 分层关系
 ```
-┌─────────────────────────────────────────┐
-│           API路由层 (api/)              │ ← 处理HTTP请求和WebSocket
-├─────────────────────────────────────────┤
-│           业务服务层 (services/)         │ ← 业务逻辑和服务编排
-├─────────────────────────────────────────┤
-│           智能体层 (agents/)            │ ← LangGraph集成和Agent管理
-├─────────────────────────────────────────┤
-│           数据模型层 (infrastructure/)   │ ← 数据库模型和仓库
-├─────────────────────────────────────────┤
-│           基础设施层 (infrastructure/)   │ ← 外部服务和配置管理
-└─────────────────────────────────────────┘
+┌──────────────────────────────┐
+│            api/              │ 依赖所有模块的 router
+├──────────────────────────────┤
+│           modules/           │ 垂直切片业务实现
+├──────────────────────────────┤
+│    core/ & infrastructure/   │ 共享设施、技术适配层
+└──────────────────────────────┘
 ```
 
 ## 🏗️ 详细目录结构
 
 ```
 bff/
-├── app/                                  # 主应用目录
-│   ├── main.py                           # ✅ FastAPI 主入口 (无需修改)
+├── app/
+│   ├── main.py                  # FastAPI 入口
 │   ├── __init__.py
-│   │
-│   ├── api/                              # API路由层
+│   ├── api/
 │   │   ├── __init__.py
-│   │   ├── dependencies.py               # ✅ 现有依赖注入 (扩展)
-│   │   ├── middleware.py                 # ✅ 现有中间件 (扩展)
-│   │   └── v1/
+│   │   ├── deps/                # 共享依赖：认证、RBAC、分页等
+│   │   │   ├── __init__.py
+│   │   │   ├── auth.py          # JWT / Supabase 解析
+│   │   │   ├── db.py            # Session / Repository / UnitOfWork
+│   │   │   ├── cache.py         # 缓存实例注入
+│   │   │   ├── pagination.py    # 分页参数校验
+│   │   │   ├── rbac.py          # RBAC 依赖，调用 core.security
+│   │   │   └── services.py      # 组合 Service 层依赖
+│   │   ├── routers.py           # include_router 聚合
+│   │   └── lifespan.py          # 启动/关闭生命周期钩子
+│   ├── core/
+│   │   ├── __init__.py
+│   │   ├── config.py            # Pydantic Settings / 环境变量
+│   │   ├── db.py                # Engine、Session、UnitOfWork
+│   │   ├── security.py          # 角色/权限基础逻辑
+│   │   ├── events.py            # 领域事件 / 消息总线（可选）
+│   │   ├── uow.py               # Unit of Work 抽象（可选）
+│   │   └── exceptions.py        # 统一异常与错误码
+│   ├── infrastructure/
+│   │   ├── __init__.py
+│   │   ├── sqlalchemy/
+│   │   │   ├── __init__.py
+│   │   │   ├── base.py          # Declarative Base / metadata
+│   │   │   ├── mixins.py        # 通用字段（时间戳、多租字段等）
+│   │   │   └── session.py       # Async engine & session 工厂
+│   │   ├── caches/
+│   │   │   ├── __init__.py
+│   │   │   └── redis.py
+│   │   ├── storages/
+│   │   │   ├── __init__.py
+│   │   │   └── s3.py
+│   │   ├── email_sms/
+│   │   │   ├── __init__.py
+│   │   │   └── provider.py
+│   │   └── supabase/
 │   │       ├── __init__.py
-│   │       ├── router.py                 # ✅ 路由注册器
-│   │       └── endpoints/
-│   │           ├── __init__.py
-│   │           │
-│   │           # 核心功能接口
-│   │           ├── ai_agents.py          # 🔄 Agent市场和管理
-│   │           ├── ai_chat.py            # 🔄 重构为LangGraph驱动
-│   │           ├── contacts.py           # ✅ Contact实例管理
-│   │           ├── conversations.py      # ✅ 对话管理
-│   │           │
-│   │           # 用户和认证
-│   │           ├── auth.py               # ✅ 认证接口
-│   │           ├── users.py              # ✅ 用户接口
-│   │           ├── settings.py           # ✅ 用户设置
-│   │           │
-│   │           # 业务功能接口 (🆕 新增)
-│   │           ├── membership.py         # 🆕 会员权益管理
-│   │           ├── gamification.py       # 🆕 游戏化系统 (积分/等级)
-│   │           ├── rewards.py            # 🆕 奖励和任务系统
-│   │           ├── marketplace.py        # 🆕 Agent市场交易
-│   │           │
-│   │           # AI工作流接口 (🆕 新增)
-│   │           ├── workflows.py          # 🆕 工作流管理
-│   │           ├── tools.py              # 🆕 工具管理和调用
-│   │           ├── analytics.py          # 🆕 分析统计
-│   │           │
-│   │           # 内容和社交
-│   │           ├── timeline.py           # ✅ 时间线接口
-│   │           ├── files.py              # ✅ 文件管理
-│   │           └── health.py             # ✅ 健康检查
-│   │
-│   ├── config/                           # 配置管理
+│   │       └── client.py
+│   ├── modules/
 │   │   ├── __init__.py
-│   │   ├── settings.py                   # ✅ 基础配置
-│   │   ├── agents_config.yaml            # 🆕 Agent配置
-│   │   ├── tools_config.yaml             # 🆕 工具配置
-│   │   ├── workflows_config.yaml         # 🆕 工作流配置
-│   │   └── business_config.yaml          # 🆕 商业化配置
-│   │
-│   ├── core/                             # 核心接口层
-│   │   ├── __init__.py
-│   │   └── interfaces/
-│   │       ├── __init__.py
-│   │       └── repositories/             # ✅ 仓库接口
-│   │
-│   ├── services/                         # 业务服务层
-│   │   ├── __init__.py
-│   │   ├── base.py                       # ✅ 基础服务类
-│   │   │
-│   │   # 现有核心服务 (扩展)
-│   │   ├── ai_agent_service.py           # 🔄 增强LangGraph集成
-│   │   ├── ai_memory_service.py          # 🔄 增强Mem0集成
-│   │   ├── auth_service.py               # ✅ 认证服务
-│   │   ├── contact_service.py            # ✅ 联系人服务
-│   │   ├── conversation_service.py       # ✅ 对话服务
-│   │   ├── knowledge_service.py          # ✅ 知识服务
-│   │   ├── rag_service.py                # 🔄 集成到工作流
-│   │   ├── supabase_auth_service.py      # ✅ Supabase认证
-│   │   ├── tools_service.py              # 🔄 扩展工具执行
-│   │   ├── user_service.py               # ✅ 用户服务
-│   │   │
-│   │   # 新增商业化服务 (🆕)
-│   │   ├── membership_service.py         # 🆕 会员权益服务
-│   │   ├── gamification_service.py       # 🆕 游戏化系统服务
-│   │   ├── points_service.py             # 🆕 积分管理服务
-│   │   ├── subscription_service.py       # 🆕 订阅管理服务
-│   │   ├── payment_service.py            # 🆕 支付处理服务
-│   │   ├── marketplace_service.py        # 🆕 市场交易服务
-│   │   │
-│   │   # LangGraph工作流服务 (🆕)
-│   │   ├── langgraph/
+│   │   ├── users/
 │   │   │   ├── __init__.py
-│   │   │   ├── workflow_engine.py        # 工作流引擎
-│   │   │   ├── node_registry.py          # 节点注册中心
-│   │   │   ├── state_manager.py          # 状态管理器
-│   │   │   ├── execution_tracker.py      # 执行追踪器
-│   │   │   ├── mention_router.py         # @mention路由器
-│   │   │   └── dynamic_builder.py        # 动态工作流构建器
-│   │   │
-│   │   # 工具和监控服务 (🆕)
-│   │   ├── tools/
-│   │   │   ├── __init__.py
-│   │   │   ├── tool_executor.py          # 工具执行器
-│   │   │   ├── tool_registry.py          # 工具注册中心
-│   │   │   ├── permission_checker.py     # 权限检查器
-│   │   │   └── builtin_tools/            # 内置工具
-│   │   │       ├── code_tools.py
-│   │   │       ├── search_tools.py
-│   │   │       ├── file_tools.py
-│   │   │       └── web_tools.py
-│   │   │
-│   │   └── monitoring/
-│   │       ├── __init__.py
-│   │       ├── execution_tracer.py       # 执行追踪器
-│   │       ├── metrics_collector.py      # 指标收集器
-│   │       ├── token_counter.py          # Token统计器
-│   │       ├── performance_monitor.py    # 性能监控器
-│   │       └── usage_analyzer.py         # 使用分析器
-│   │
-│   ├── schemas/                          # API模式定义
+│   │   │   ├── models.py        # SQLAlchemy/SQLModel 定义
+│   │   │   ├── schemas.py       # Pydantic DTO / 请求响应
+│   │   │   ├── repository.py    # 抽象接口（Protocol/ABC）
+│   │   │   ├── repository_impl.py
+│   │   │   ├── service.py       # 领域服务 & 协调逻辑
+│   │   │   ├── router.py        # FastAPI 路由
+│   │   │   ├── policies.py      # RBAC/ABAC 判定（可选）
+│   │   │   ├── events.py        # 模块自有领域事件定义
+│   │   │   ├── event_handlers.py # 注册本模块的事件监听
+│   │   │   └── tasks.py         # 背景任务（可选）
+│   │   │   ├── invitations/
+│   │   │   │   └── models.py    # 邀请码等扩展模型（后续补仓库/服务）
+│   │   │   ├── llm_settings/
+│   │   │   │   └── models.py    # 用户 LLM 偏好配置
+│   │   │   ├── prompt_library/
+│   │   │   │   └── models.py    # 用户自定义提示语库
+│   │   │   ├── registration/
+│   │   │   │   └── models.py    # 注册来源追踪
+│   │   │   └── subscriptions/
+│   │   │       └── models.py    # 会员订阅信息
+│   │   ├── contacts/
+│   │   │   ├── models.py
+│   │   │   ├── schemas.py
+│   │   │   ├── repository.py
+│   │   │   ├── repository_impl.py
+│   │   │   ├── service.py
+│   │   │   └── router.py
+│   │   ├── timeline/
+│   │   │   ├── models.py
+│   │   │   ├── schemas.py
+│   │   │   ├── repository.py
+│   │   │   ├── repository_impl.py
+│   │   │   ├── service.py
+│   │   │   └── router.py
+│   │   ├── conversations/
+│   │   │   ├── models.py
+│   │   │   ├── schemas.py
+│   │   │   ├── repository.py
+│   │   │   ├── repository_impl.py
+│   │   │   ├── service.py
+│   │   │   ├── router.py
+│   │   │   └── messages/
+│   │   │       ├── models.py
+│   │   │       ├── schemas.py
+│   │   │       ├── repository.py
+│   │   │       ├── repository_impl.py
+│   │   │       └── service.py
+│   │   │   └── topics/
+│   │   │       └── models.py
+│   │   ├── auth/
+│   │   │   ├── service.py       # Supabase / OAuth 组合
+│   │   │   ├── router.py
+│   │   │   └── provider_clients.py
+│   │   ├── memberships/
+│   │   │   ├── models.py
+│   │   │   ├── schemas.py
+│   │   │   ├── repository.py
+│   │   │   ├── repository_impl.py
+│   │   │   ├── service.py
+│   │   │   └── router.py
+│   │   ├── ai/
+│   │   │   ├── agents/
+│   │   │   ├── memory/
+│   │   │   ├── knowledge_bases/
+│   │   │   ├── rag/
+│   │   │   ├── tools/
+│   │   │   └── workflows/       # LangGraph & 工作流 slice
+│   │   ├── storage/
+│   │   │   └── files/
+│   │   └── ...                  # 其他业务模块按需新增
+│   ├── tests/
 │   │   ├── __init__.py
-│   │   ├── base.py                       # ✅ 基础模式
-│   │   ├── responses.py                  # ✅ 响应模式
-│   │   │
-│   │   # 现有模式 (扩展)
-│   │   ├── ai.py                         # 🔄 AI相关模式 - 扩展
-│   │   ├── auth.py                       # ✅ 认证模式
-│   │   ├── contact.py                    # ✅ 联系人模式
-│   │   ├── conversation.py               # ✅ 对话模式
-│   │   ├── knowledge.py                  # ✅ 知识模式
-│   │   ├── tools.py                      # 🔄 工具模式 - 扩展
-│   │   ├── user.py                       # ✅ 用户模式
-│   │   │
-│   │   # 新增业务模式 (🆕)
-│   │   ├── membership.py                 # 🆕 会员相关模式
-│   │   ├── gamification.py               # 🆕 游戏化模式
-│   │   ├── marketplace.py                # 🆕 市场交易模式
-│   │   ├── payment.py                    # 🆕 支付相关模式
-│   │   │
-│   │   # 新增工作流模式 (🆕)
-│   │   ├── workflows.py                  # 🆕 工作流相关模式
-│   │   ├── analytics.py                  # 🆕 分析统计模式
-│   │   └── langgraph.py                  # 🆕 LangGraph状态模式
-│   │
-│   ├── infrastructure/                   # 基础设施层
-│   │   ├── __init__.py
-│   │   │
-│   │   ├── cache/                        # ✅ 缓存系统
-│   │   │   ├── cache_decorators.py       # ✅ 缓存装饰器
-│   │   │   ├── cache_keys.py             # ✅ 缓存键管理
-│   │   │   └── redis_client.py           # 🆕 Redis客户端封装
-│   │   │
-│   │   ├── database/                     # 数据库层
-│   │   │   ├── __init__.py
-│   │   │   ├── connection.py             # ✅ 数据库连接
-│   │   │   │
-│   │   │   ├── models/                   # 数据库模型
-│   │   │   │   ├── __init__.py
-│   │   │   │   │
-│   │   │   │   # 现有模型 (扩展)
-│   │   │   │   ├── agent_model.py        # 🔄 扩展LangGraph字段
-│   │   │   │   ├── contact_model.py      # ✅ 联系人模型
-│   │   │   │   ├── conversation_model.py # ✅ 对话模型
-│   │   │   │   ├── file_model.py         # ✅ 文件模型
-│   │   │   │   ├── knowledge_model.py    # ✅ 知识模型
-│   │   │   │   ├── message_model.py      # ✅ 消息模型
-│   │   │   │   ├── tool_model.py         # 🔄 扩展工具模型
-│   │   │   │   ├── user_model.py         # ✅ 用户模型
-│   │   │   │   │
-│   │   │   │   # 新增商业化模型 (🆕)
-│   │   │   │   ├── membership_model.py   # 🆕 会员模型
-│   │   │   │   ├── subscription_model.py # 🆕 订阅模型
-│   │   │   │   ├── points_model.py       # 🆕 积分模型
-│   │   │   │   ├── level_model.py        # 🆕 等级模型
-│   │   │   │   ├── task_model.py         # 🆕 任务模型
-│   │   │   │   ├── reward_model.py       # 🆕 奖励模型
-│   │   │   │   ├── transaction_model.py  # 🆕 交易模型
-│   │   │   │   │
-│   │   │   │   # 新增工作流模型 (🆕)
-│   │   │   │   ├── workflow_execution_model.py  # 🆕 工作流执行
-│   │   │   │   ├── node_execution_model.py      # 🆕 节点执行
-│   │   │   │   ├── tool_execution_model.py      # 🆕 工具执行
-│   │   │   │   ├── token_usage_model.py         # 🆕 Token使用
-│   │   │   │   └── analytics_model.py           # 🆕 分析数据
-│   │   │   │
-│   │   │   └── repositories/             # 仓库实现层
-│   │   │       ├── __init__.py
-│   │   │       ├── base_repository.py    # ✅ 基础仓库
-│   │   │       │
-│   │   │       # 现有仓库 (扩展)
-│   │   │       ├── agent_repository_impl.py     # 🔄 扩展节点管理
-│   │   │       ├── ai_memory_repository_impl.py # 🔄 优化记忆管理
-│   │   │       ├── contacts_repository_impl.py  # ✅ 联系人仓库
-│   │   │       ├── conversation_repository_impl.py # ✅ 对话仓库
-│   │   │       ├── knowledge_repository_impl.py # ✅ 知识仓库
-│   │   │       ├── message_repository_impl.py   # ✅ 消息仓库
-│   │   │       ├── tools_repository_impl.py     # 🔄 扩展工具仓库
-│   │   │       ├── user_repository_impl.py      # ✅ 用户仓库
-│   │   │       │
-│   │   │       # 新增商业化仓库 (🆕)
-│   │   │       ├── membership_repository.py     # 🆕 会员仓库
-│   │   │       ├── subscription_repository.py   # 🆕 订阅仓库
-│   │   │       ├── points_repository.py         # 🆕 积分仓库
-│   │   │       ├── task_repository.py           # 🆕 任务仓库
-│   │   │       ├── reward_repository.py         # 🆕 奖励仓库
-│   │   │       │
-│   │   │       # 新增工作流仓库 (🆕)
-│   │   │       ├── workflow_execution_repository.py # 🆕 工作流执行仓库
-│   │   │       ├── node_execution_repository.py     # 🆕 节点执行仓库
-│   │   │       ├── tool_execution_repository.py     # 🆕 工具执行仓库
-│   │   │       ├── token_usage_repository.py        # 🆕 Token使用仓库
-│   │   │       └── analytics_repository.py          # 🆕 分析数据仓库
-│   │   │
-│   │   ├── external/                     # 外部服务集成
-│   │   │   ├── __init__.py
-│   │   │   │
-│   │   │   ├── supabase/                 # ✅ Supabase集成
-│   │   │   │   ├── __init__.py
-│   │   │   │   ├── auth.py               # ✅ 认证集成
-│   │   │   │   ├── client.py             # ✅ 客户端
-│   │   │   │   ├── realtime.py           # ✅ 实时通信
-│   │   │   │   └── storage.py            # ✅ 存储
-│   │   │   │
-│   │   │   ├── payment/                  # 🆕 支付服务集成
-│   │   │   │   ├── __init__.py
-│   │   │   │   ├── stripe_client.py      # 🆕 Stripe集成
-│   │   │   │   ├── creem_client.py       # 🆕 Creem.io集成
-│   │   │   │   └── webhook_handler.py    # 🆕 支付回调处理
-│   │   │   │
-│   │   │   ├── llm/                      # 🆕 智能LLM路由集成
-│   │   │   │   ├── __init__.py
-│   │   │   │   ├── unified_client.py     # 🆕 统一LLM客户端 (OpenAI格式)
-│   │   │   │   ├── model_router.py       # 🆕 智能模型路由器
-│   │   │   │   ├── task_analyzer.py      # 🆕 任务复杂度分析器
-│   │   │   │   ├── cost_calculator.py    # 🆕 成本计算器
-│   │   │   │   ├── tier_manager.py       # 🆕 会员等级模型管理器
-│   │   │   │   └── usage_monitor.py      # 🆕 用量监控器
-│   │   │   │
-│   │   │   └── mem0/                     # 🆕 Mem0记忆服务
-│   │   │       ├── __init__.py
-│   │   │       ├── memory_client.py      # 🆕 Mem0客户端
-│   │   │       └── memory_manager.py     # 🆕 记忆管理器
-│   │   │
-│   │   ├── messaging/                    # 消息系统
-│   │   │   ├── __init__.py
-│   │   │   ├── event_bus.py              # ✅ 事件总线
-│   │   │   ├── notification_service.py   # 🆕 通知服务
-│   │   │   └── websocket_manager.py      # 🆕 WebSocket管理器
-│   │   │
-│   │   └── security/                     # 安全系统
-│   │       ├── __init__.py
-│   │       ├── auth.py                   # ✅ 认证
-│   │       ├── permissions.py            # ✅ 权限管理
-│   │       ├── rate_limiter.py           # 🆕 限流器
-│   │       └── encryption.py             # 🆕 加密工具
-│   │
-│   ├── utils/                            # 工具函数
-│   │   ├── __init__.py
-│   │   ├── constants.py                  # ✅ 常量定义
-│   │   ├── datetime.py                   # ✅ 日期工具
-│   │   ├── helpers.py                    # ✅ 辅助函数
-│   │   ├── logging.py                    # ✅ 日志工具
-│   │   │
-│   │   # 新增工具 (🆕)
-│   │   ├── validation.py                 # 🆕 验证工具
-│   │   ├── serialization.py              # 🆕 序列化工具
-│   │   ├── token_counter.py              # 🆕 Token计数器
-│   │   ├── langgraph_helpers.py          # 🆕 LangGraph辅助工具
-│   │   ├── business_helpers.py           # 🆕 商业化辅助工具
-│   │   └── gamification_helpers.py       # 🆕 游戏化辅助工具
-│   │
-│   └── agents/                           # 智能体实现
-│       ├── __init__.py
-│       ├── base_agent.py                 # 基础智能体类
-│       ├── registry.py                   # 智能体注册器
-│       │
-│       ├── builtin/                      # 内置智能体
-│       │   ├── __init__.py
-│       │   ├── coder_agent.py            # 代码助手
-│       │   ├── analyst_agent.py          # 数据分析师
-│       │   ├── writer_agent.py           # 写作助手
-│       │   ├── researcher_agent.py       # 研究员
-│       │   ├── business_agent.py         # 🆕 商业分析师
-│       │   └── support_agent.py          # 🆕 客服助手
-│       │
-│       └── marketplace/                  # 🆕 市场智能体
-│           ├── __init__.py
-│           ├── agent_validator.py        # 🆕 Agent验证器
-│           ├── agent_publisher.py        # 🆕 Agent发布器
-│           └── agent_recommender.py      # 🆕 Agent推荐器
-│
-├── alembic/                              # 数据库迁移
-│   ├── versions/
-│   │   ├── 001_initial_migration.py
-│   │   ├── 002_add_business_tables.py    # 🆕 商业化表结构
-│   │   ├── 003_add_workflow_tables.py    # 🆕 工作流表结构
-│   │   └── 004_add_analytics_tables.py   # 🆕 分析统计表
-│   ├── env.py
-│   ├── script.py.mako
-│   └── alembic.ini
-│
-├── tests/                                # 测试目录
-│   ├── __init__.py
-│   ├── conftest.py
-│   │
-│   ├── test_api/                         # API测试
-│   │   ├── test_endpoints/
-│   │   ├── test_auth.py
-│   │   ├── test_business.py              # 🆕 商业化功能测试
-│   │   └── test_workflows.py             # 🆕 工作流测试
-│   │
-│   ├── test_services/                    # 服务测试
-│   │   ├── test_ai_services.py
-│   │   ├── test_business_services.py     # 🆕 商业化服务测试
-│   │   └── test_langgraph_services.py    # 🆕 LangGraph服务测试
-│   │
-│   ├── test_models/                      # 模型测试
-│   │   ├── test_user_models.py
-│   │   ├── test_business_models.py       # 🆕 商业化模型测试
-│   │   └── test_workflow_models.py       # 🆕 工作流模型测试
-│   │
-│   └── test_agents/                      # 智能体测试
-│       ├── test_builtin_agents.py
-│       ├── test_agent_registry.py
-│       └── test_marketplace_agents.py    # 🆕 市场智能体测试
-│
-├── scripts/                              # 脚本目录
-│   ├── __init__.py
-│   ├── init_db.py                        # 数据库初始化
-│   ├── seed_agents.py                    # 智能体数据种子
-│   ├── seed_business.py                  # 🆕 商业化数据种子
-│   ├── migrate_data.py                   # 数据迁移
-│   └── backup_db.py                      # 🆕 数据库备份
-│
-├── config/                               # 配置文件目录
-│   ├── __init__.py
-│   ├── settings.py                       # 基础配置
-│   ├── agents_config.yaml                # 智能体配置
-│   ├── tools_config.yaml                 # 工具配置
-│   ├── workflows_config.yaml             # 工作流配置
-│   ├── business_config.yaml              # 🆕 商业化配置
-│   ├── payment_config.yaml               # 🆕 支付配置
-│   └── deployment_config.yaml            # 🆕 部署配置
-│
-├── docs/                                 # 项目文档
-│   ├── api/                              # API文档
-│   ├── architecture/                     # 架构文档
-│   ├── deployment/                       # 部署文档
-│   └── business/                         # 🆕 商业化文档
-│
-├── requirements.txt                      # Python依赖
-├── pyproject.toml                        # 项目配置
-├── Dockerfile                            # Docker配置
-├── docker-compose.yml                    # Docker Compose
-├── .env.example                          # 环境变量示例
-├── Makefile                              # 构建脚本
-└── README.md                             # 项目说明
+│   │   ├── unit/                # 以模块命名（users/test_service.py 等）
+│   │   ├── integration/
+│   │   └── e2e/
+│   ├── alembic/
+│   │   ├── env.py
+│   │   ├── script.py.mako
+│   │   └── versions/            # 迁移文件按 `YYYYMMDD_module_desc.py`
+│   └── docs/
+│       └── module_guides/       # 各模块设计/决策记录（可选）
+├── requirements.txt
+├── pyproject.toml
+├── Dockerfile
+├── docker-compose.yml
+├── .env.example
+├── Makefile
+└── README.md
 ```
 
-## 🎯 核心模块说明
+## 🧩 核心层说明
 
-### 1. API 路由层 (api/)
+### api/
+- `deps/`：集中存放 FastAPI 依赖（`Depends`）函数，处理 JWT 校验、RBAC、分页、上下文注入等，供各 router 重用。
+- `routers.py`：聚合所有模块的 router，保持入口清晰。
+- `lifespan.py`：在应用启动/关闭时初始化数据库连接池、缓存、后台任务等资源。
 
-**职责**: HTTP 请求处理、参数验证、响应格式化
+### core/
+- `config.py`：封装配置加载逻辑，向模块提供类型安全的设置对象。
+- `db.py`：提供 `session()` 上下文/Unit of Work，保证事务控制。
+- `security.py`：统一角色/权限检查、RBAC 辅助。
+- `events.py`（规划中）：事件分发辅助、公共事件基类，可供模块共享。
+- `db.py` / `uow.py`：对外暴露获取 session、事务或 UnitOfWork 的入口，模块只依赖抽象对象。
+- `exceptions.py`：定义业务异常及错误码，结合 FastAPI 全局异常处理。
 
-**新增端点**:
+### infrastructure/
+- `sqlalchemy/`：集中放置 Base、通用 mixin、session 创建逻辑，便于所有模块复用。
+- `caches/`、`storages/`、`email_sms/`、`supabase/`：分别适配 Redis、对象存储、消息通道、Supabase 等外部服务，模块通过注入或接口调用。
 
-- `membership.py`: 会员权益管理接口
-- `gamification.py`: 积分、等级、任务系统接口
-- `rewards.py`: 奖励发放和统计接口
-- `marketplace.py`: Agent 市场交易接口
-- `workflows.py`: 工作流管理接口
+## 🧱 功能模块（modules/）规范
 
-### 2. 业务服务层 (services/)
+- **模块自洽**：每个模块是一个闭环，从 HTTP 接口到持久化逻辑全部就地实现，降低跨文件夹耦合。
+- **抽象接口优先**：`repository.py` 暴露 Protocol/ABC，实际实现放在 `repository_impl.py`，便于替换不同数据源（Postgres、Supabase、缓存等）。
+- **服务层职责**：`service.py` 负责组合仓库、外部服务、策略（如邀请逻辑、RBAC 检查），对 router 暴露清晰的应用层 API。
+- **策略/任务扩展**：`policies.py` 用于描述 ACL/ABAC 规则，`tasks.py` 用于 Celery/Arq 等异步任务或计划任务。
+- **多 App 支持**：`users` 模块内包含 `client_apps`、`user_app_accounts`、`user_auth_identities` 等模型，与邀请、角色表协同满足多 App 的独立账号视图。
 
-**职责**: 业务逻辑实现、服务编排
+推荐初始模块清单：
+1. `users`（身份、认证、RBAC、邀请）
+2. `contacts`（联系人与关系）
+3. `timeline`（社交动态、评论、点赞、分享）
+4. `conversations`（会话、参与者、消息）
+5. `auth`（Supabase + OAuth 登录流程）
+6. `memberships`（会员与订阅）
+7. `ai`（AI 相关能力：agents、memory、knowledge bases、RAG、tools、workflows 等子 slice）
+8. `storage`（文件元数据与权限管理，面向知识库和多媒体场景）
+   - `workflows/`：LangGraph 工作流引擎、会话服务、记忆管理、节点/工具注册与执行跟踪
 
-**新增服务模块**:
+## 🧪 测试与运维
+- `tests/unit/`：根据模块划分子目录，例如 `tests/unit/users/test_service.py`。
+- `tests/integration/`：覆盖数据库、缓存、外部依赖的组合测试。
+- `tests/e2e/`：端到端接口或业务流程回归。
+- `alembic/versions/`：命名建议 `YYYYMMDDHHMM_<module>_<change>.py`，便于追踪来源模块。
 
-- **商业化服务**: membership, gamification, points, subscription, payment
-- **LangGraph 服务**: workflow_engine, node_registry, state_manager
-- **工具服务**: tool_executor, tool_registry, permission_checker
-- **监控服务**: execution_tracer, metrics_collector, usage_analyzer
+## 🧾 文件命名规范
+- Python 模块全部使用 `snake_case`，类使用 `PascalCase`，函数/变量使用 `camel_case`。
+- 路由文件命名为 `router.py`，Pydantic 模式为 `schemas.py`，仓库接口为 `repository.py`。
+- 配置文件后缀保持 `.py` 或 `.yaml`，区分动态与静态配置。
 
-### 3. 智能体层 (agents/)
-
-**职责**: Agent 定义、注册、市场管理
-
-**组织结构**:
-
-- `builtin/`: 内置系统 Agent (代码助手、写作助手等)
-- `marketplace/`: 市场 Agent 管理 (验证器、发布器、推荐器)
-- `registry.py`: 统一 Agent 注册和发现机制
-
-### 4. 数据模型层 (infrastructure/database/models/)
-
-**职责**: 数据库实体定义、关系映射
-
-**新增模型类别**:
-
-- **商业化模型**: 会员、订阅、积分、等级、任务、奖励、交易
-- **工作流模型**: 工作流执行、节点执行、工具执行、Token 使用
-- **分析模型**: 用户行为、使用统计、性能指标
-
-### 5. 基础设施层 (infrastructure/)
-
-**职责**: 外部服务集成、配置管理
-
-**扩展集成**:
-
-- `payment/`: Stripe、Creem.io 支付集成
-- `llm/`: 智能 LLM 模型路由和成本优化
-- `mem0/`: Mem0 记忆服务集成
-
-## 🆕 新增业务模块
-
-### 商业化游戏化系统
-
-#### 会员权益管理
-
-```
-services/membership_service.py     # 会员权益逻辑
-models/membership_model.py         # 会员数据模型
-repositories/membership_repository.py  # 会员数据访问
-endpoints/membership.py           # 会员API接口
-```
-
-#### 积分等级体系
-
-```
-services/gamification_service.py  # 游戏化逻辑
-services/points_service.py         # 积分管理逻辑
-models/points_model.py             # 积分数据模型
-models/level_model.py              # 等级数据模型
-endpoints/gamification.py         # 游戏化API接口
-```
-
-#### 任务奖励系统
-
-```
-services/task_service.py           # 任务管理逻辑 (新增)
-models/task_model.py               # 任务数据模型
-models/reward_model.py             # 奖励数据模型
-repositories/task_repository.py    # 任务数据访问
-endpoints/rewards.py               # 奖励API接口
-```
-
-### LangGraph 工作流系统
-
-#### 工作流引擎
-
-```
-services/langgraph/workflow_engine.py     # 核心工作流引擎
-services/langgraph/dynamic_builder.py     # 动态工作流构建器
-services/langgraph/state_manager.py       # 状态管理器
-models/workflow_execution_model.py        # 工作流执行模型
-```
-
-#### 智能体协作
-
-```
-services/langgraph/node_registry.py       # 节点注册中心
-services/langgraph/mention_router.py      # @mention路由器
-models/node_execution_model.py            # 节点执行模型
-agents/base_agent.py                      # 基础智能体类
-```
-
-### 智能 LLM 路由系统
-
-#### 动态模型选择
-
-```
-infrastructure/external/llm/model_router.py       # 智能模型路由器
-infrastructure/external/llm/task_analyzer.py      # 任务复杂度分析器
-infrastructure/external/llm/cost_calculator.py    # 成本计算器
-infrastructure/external/llm/tier_manager.py       # 会员等级模型管理器
-```
-
-### 监控分析系统
-
-#### 执行追踪
-
-```
-services/monitoring/execution_tracer.py   # 执行追踪器
-services/monitoring/token_counter.py      # Token统计器
-models/token_usage_model.py               # Token使用模型
-repositories/analytics_repository.py      # 分析数据仓库
-```
-
-## 📝 文件命名规范
-
-### 模块命名
-
-- **模型文件**: `{domain}_model.py` (如 `membership_model.py`)
-- **服务文件**: `{domain}_service.py` (如 `gamification_service.py`)
-- **仓库文件**: `{domain}_repository.py` (如 `points_repository.py`)
-- **API 文件**: `{domain}.py` (如 `membership.py`)
-
-### 类命名
-
-- **模型类**: `{Domain}Model` (如 `MembershipModel`)
-- **服务类**: `{Domain}Service` (如 `GamificationService`)
-- **仓库类**: `{Domain}Repository` (如 `PointsRepository`)
-
-### 常量和配置
-
-- **常量文件**: `constants.py` (全局常量)
-- **配置文件**: `{domain}_config.yaml` (如 `business_config.yaml`)
-- **环境变量**: `{DOMAIN}_{SETTING}` (如 `MEMBERSHIP_TIER_COUNT`)
-
-## 📚 相关文档
-
-### 核心架构文档
-
-- **[架构概览](architecture-overview.md)** - 整体系统架构设计
-- **[数据库设计](database-design.md)** - 详细数据模型和关系
-- **[LangGraph 集成](langgraph-architecture.md)** - 工作流引擎架构
-- **[智能 LLM 路由](intelligent-llm-routing.md)** - 智能模型选择和成本优化策略
-
-### 业务设计文档
-
-- **[业务商业化模型](business-model.md)** - 游戏化和收费策略
-- **[用户体验策略](user-psychology-strategy.md)** - 用户心理学和转化设计
-
-### 实施文档
-
-- **[实施计划](implementation-plan.md)** - 分阶段开发计划
-- **[迁移策略](migration-strategy.md)** - 系统迁移方案
-- **[部署指南](deployment-guide.md)** - 生产环境部署
-
----
-
-> 📝 **文档维护**: 架构团队 + 开发团队  
-> 🔄 **最后更新**: 2025-08-22  
-> 📋 **相关决策**: [ADR-004: 系统目录架构设计](../decisions/adr-004-directory-architecture.md)
+## 🔗 相关文档
+- `docs/backend/user-refactor-guide.md`：用户与身份模块的重构规划。
+- `docs/backend/architecture-overview.md`：整体系统架构图。
+- `docs/backend/progress-tracker.md`：后端阶段计划与交付清单。
+- 若新增模块，请在 `docs/backend/module_guides/` 下记录设计决策与接口契约。
+- `docs/backend/event-bus-architecture.md`：事件总线模式与使用规范。

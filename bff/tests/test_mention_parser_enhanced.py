@@ -4,8 +4,8 @@ Tests the advanced context analysis and routing capabilities.
 """
 
 import pytest
-from app.services.langgraph.mention_parser import MentionParser
-from app.services.langgraph.state_models import ContactInfo
+from app.modules.ai.workflows.mention_parser import MentionParser
+from app.modules.ai.workflows.state_models import ContactInfo
 
 
 class TestMentionParserEnhanced:

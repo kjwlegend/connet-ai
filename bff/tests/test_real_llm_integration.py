@@ -11,11 +11,12 @@ from datetime import datetime
 from uuid import uuid4
 from unittest.mock import patch
 
-from app.services.langgraph.workflow_engine import WorkflowEngine
-from app.services.langgraph.conversation_service import ConversationService
-from app.services.langgraph.contact_manager import ContactInstanceManager
-from app.infrastructure.database.models import UserModel, AIAgentModel, ContactModel
-from app.infrastructure.database.models.contact_model import EntityType
+from app.modules.ai.workflows.workflow_engine import WorkflowEngine
+from app.modules.ai.workflows.conversation_service import ConversationService
+from app.modules.ai.workflows.contact_manager import ContactInstanceManager
+from app.modules.users.models import UserModel
+from app.modules.ai.agents.models import AIAgentModel
+from app.modules.contacts.models import ContactModel, EntityType
 from app.config.settings import get_settings
 
 
@@ -345,7 +346,7 @@ class TestPerformanceAndMonitoring:
         # This would test the monitoring services we need to implement
         # For now, just verify the structure exists
         
-        from app.services.langgraph.workflow_engine import WorkflowEngine
+        from app.modules.ai.workflows.workflow_engine import WorkflowEngine
         
         engine = WorkflowEngine(test_session)
         

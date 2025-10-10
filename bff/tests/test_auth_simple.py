@@ -10,7 +10,7 @@ from fastapi.testclient import TestClient
 from unittest.mock import AsyncMock, MagicMock
 
 from app.api.dependencies import get_supabase_auth_service, get_db_session
-from app.infrastructure.database.models.user_model import UserModel
+from app.modules.users.models import UserModel
 from uuid import uuid4
 
 

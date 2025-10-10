@@ -13,7 +13,7 @@ from fastapi.testclient import TestClient
 
 from app.schemas.auth import RegisterRequest, LoginRequest, RefreshTokenRequest
 from app.schemas.user import User
-from app.infrastructure.database.models.user_model import UserModel
+from app.modules.users.models import UserModel
 from app.api.dependencies import get_supabase_auth_service, get_current_user, get_db_session
 from app.infrastructure.security.auth import get_jwt_manager
 from app.services.user_service import get_user_service

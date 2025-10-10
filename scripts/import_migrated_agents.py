@@ -20,8 +20,8 @@ sys.path.append(str(Path(__file__).parent.parent / "bff"))
 from sqlalchemy import create_engine, text
 from sqlalchemy.orm import sessionmaker
 from sqlmodel import SQLModel, Session, select
-from app.infrastructure.database.models.agent_model import AIAgentModel
-from app.infrastructure.database.models.user_model import UserModel
+from app.modules.agents.models import AIAgentModel
+from app.modules.users.models import UserModel
 
 # Database configuration - update these with your actual database settings
 DATABASE_URL = (

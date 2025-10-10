@@ -7,10 +7,10 @@ import pytest
 from unittest.mock import AsyncMock, Mock
 from uuid import uuid4
 
-from app.services.langgraph.contact_manager import ContactInstanceManager
-from app.infrastructure.database.repositories.contacts_repository_impl import ContactRepository
-from app.infrastructure.database.models.contact_model import ContactModel, EntityType
-from app.infrastructure.database.models.agent_model import AIAgentModel
+from app.modules.ai.workflows.contact_manager import ContactInstanceManager
+from app.modules.contacts.repository_impl import ContactRepository
+from app.modules.contacts.models import ContactModel, EntityType
+from app.modules.ai.agents.models import AIAgentModel
 
 
 class TestContactInstanceIntegration:
@@ -365,7 +365,7 @@ class TestContactInstanceIntegration:
 
     def test_permission_validation_edge_cases(self):
         """Test edge cases in permission validation."""
-        from app.services.langgraph.contact_manager import ContactInstanceManager
+        from app.modules.ai.workflows.contact_manager import ContactInstanceManager
         
         manager = ContactInstanceManager(Mock())
         

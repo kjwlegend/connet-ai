@@ -11,9 +11,9 @@ from datetime import datetime
 from uuid import uuid4
 from unittest.mock import AsyncMock, MagicMock, patch
 
-from app.services.langgraph.workflow_engine import WorkflowEngine
-from app.services.langgraph.conversation_service import ConversationService
-from app.services.langgraph.contact_manager import ContactInstanceManager
+from app.modules.ai.workflows.workflow_engine import WorkflowEngine
+from app.modules.ai.workflows.conversation_service import ConversationService
+from app.modules.ai.workflows.contact_manager import ContactInstanceManager
 from app.config.settings import get_settings
 
 
@@ -126,7 +126,7 @@ class TestSimpleRealLLMIntegration:
     async def test_langgraph_graph_creation(self, skip_if_no_api_key):
         """Test LangGraph graph creation without database"""
         from langgraph.graph import StateGraph, END
-        from app.services.langgraph.state_models import ConversationState
+        from app.modules.ai.workflows.state_models import ConversationState
         
         # Create a basic state graph
         workflow = StateGraph(ConversationState)

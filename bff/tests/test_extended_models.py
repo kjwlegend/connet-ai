@@ -7,12 +7,9 @@ import pytest
 from datetime import datetime
 from uuid import uuid4
 
-from app.infrastructure.database.models import (
-    AIAgentModel,
-    ContactModel,
-    ConversationParticipantModel,
-    ConversationMemoryModel
-)
+from app.modules.ai.agents.models import AIAgentModel
+from app.modules.contacts.models import ContactModel
+from app.modules.conversations.models import ConversationParticipantModel, ConversationMemoryModel
 
 
 class TestAIAgentModelExtensions:

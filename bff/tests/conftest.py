@@ -12,10 +12,14 @@ from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.orm import sessionmaker
 from sqlmodel import SQLModel
 
-from app.infrastructure.database.models import (
-    UserModel, AIAgentModel, ContactModel, ConversationModel, 
-    ConversationParticipantModel, MessageModel
+from app.modules.users.models import UserModel
+from app.modules.ai.agents.models import AIAgentModel
+from app.modules.contacts.models import ContactModel
+from app.modules.conversations.models import (
+    ConversationModel,
+    ConversationParticipantModel,
 )
+from app.modules.conversations.messages.models import MessageModel
 from app.infrastructure.cache.cache_manager import CacheManager
 
 
@@ -260,6 +264,9 @@ def mock_timeline_service():
     service.share_post = AsyncMock()
     service.get_post_comments = AsyncMock(return_value=[])
     service.create_comment = AsyncMock()
+    service.delete_comment = AsyncMock()
+    service.get_user_timeline_stats = AsyncMock(return_value={})
+    service.toggle_pin_post = AsyncMock()
     return service
 
 

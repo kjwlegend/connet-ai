@@ -17,9 +17,26 @@ from sqlalchemy import text
 from sqlmodel import SQLModel
 
 from app.config.settings import get_settings
-from app.infrastructure.database.connection import create_engine
-from app.infrastructure.database.models import *  # Import all models
+from app.core.db import create_engine
 from app.utils.logging import get_logger
+from app.modules.users import models as user_models  # noqa: F401
+from app.modules.users.invitations import models as user_invitation_models  # noqa: F401
+from app.modules.users.registration import models as user_registration_models  # noqa: F401
+from app.modules.users.subscriptions import models as user_subscription_models  # noqa: F401
+from app.modules.users.llm_settings import models as user_llm_models  # noqa: F401
+from app.modules.users.prompt_library import models as user_prompt_models  # noqa: F401
+from app.modules.ai.agents import models as agent_models  # noqa: F401
+from app.modules.ai.memory import models as memory_models  # noqa: F401
+from app.modules.contacts import models as contact_models  # noqa: F401
+from app.modules.ai.knowledge_bases import models as knowledge_base_models  # noqa: F401
+from app.modules.ai.rag import models as rag_models  # noqa: F401
+from app.modules.ai.tools import models as tool_models  # noqa: F401
+from app.modules.conversations import models as conversation_models  # noqa: F401
+from app.modules.conversations.messages import models as message_models  # noqa: F401
+from app.modules.conversations.topics import models as topic_models  # noqa: F401
+from app.modules.timeline import models as timeline_models  # noqa: F401
+from app.modules.storage.files import models as file_models  # noqa: F401
+from app.modules.ai.workflows import models as workflow_models  # noqa: F401
 
 logger = get_logger(__name__)
 

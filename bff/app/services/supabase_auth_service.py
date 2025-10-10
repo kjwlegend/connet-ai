@@ -12,12 +12,12 @@ import uuid
 from datetime import datetime
 from typing import Dict, Optional, Tuple
 
-from gotrue.errors import AuthError
+from supabase_auth.errors import AuthError, AuthApiError
 from supabase import Client
 
-from app.core.interfaces.repositories.user_repository import UserRepository
+from app.modules.users.repository import UserRepository
 from app.infrastructure.external.supabase.client import get_supabase_client
-from app.schemas.user import User, UserCreate
+from app.modules.users.schemas import User, UserCreate
 from app.utils.logging import get_logger
 
 logger = get_logger(__name__)

@@ -8,9 +8,9 @@ from unittest.mock import Mock, AsyncMock
 from uuid import uuid4
 from datetime import datetime
 
-from app.services.langgraph.contact_manager import ContactInstanceManager
-from app.infrastructure.database.models.contact_model import ContactModel, EntityType
-from app.infrastructure.database.models.agent_model import AIAgentModel
+from app.modules.ai.workflows.contact_manager import ContactInstanceManager
+from app.modules.contacts.models import ContactModel, EntityType
+from app.modules.agents.models import AIAgentModel
 
 
 class TestContactInstanceManager:

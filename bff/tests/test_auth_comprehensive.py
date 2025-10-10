@@ -12,7 +12,7 @@ from fastapi import status
 from fastapi.testclient import TestClient
 
 from app.api.dependencies import get_supabase_auth_service, get_db_session, get_current_user
-from app.infrastructure.database.models.user_model import UserModel
+from app.modules.users.models import UserModel
 
 
 @pytest.fixture

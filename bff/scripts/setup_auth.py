@@ -71,7 +71,7 @@ async def test_database_connection():
     """Test connection to PostgreSQL database."""
     try:
         from sqlalchemy import text
-        from app.infrastructure.database.connection import create_engine
+        from app.core.db import create_engine
         settings = get_settings()
         
         engine = create_engine(settings.database_url)
@@ -113,7 +113,7 @@ async def test_auth_flow():
     """Test the authentication flow."""
     try:
         from app.api.dependencies import get_user_repository
-        from app.infrastructure.database.connection import get_session
+        from app.core.db import get_session
         
         # This is a basic test to ensure our auth service can be instantiated
         async with get_session() as session:

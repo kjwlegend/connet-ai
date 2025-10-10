@@ -19,7 +19,7 @@ from app.schemas.settings import (
     OrderHistoryResponse
 )
 from app.services.settings_service import SettingsService
-from app.infrastructure.database.models import UserModel
+from app.modules.users.models import UserModel
 
 router = APIRouter()
 

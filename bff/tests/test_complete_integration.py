@@ -16,14 +16,14 @@ from datetime import datetime
 from uuid import uuid4
 from unittest.mock import AsyncMock
 
-from app.services.langgraph.workflow_engine import WorkflowEngine
-from app.services.langgraph.conversation_service import ConversationService
-from app.services.langgraph.contact_manager import ContactInstanceManager
-from app.services.langgraph.mention_parser import MentionParser
-from app.services.langgraph.execution_tracker import ExecutionTracker
-from app.services.langgraph.monitoring_service import MonitoringService
-from app.services.langgraph.node_registry import get_node_registry
-from app.services.langgraph.tools import get_tool_registry
+from app.modules.ai.workflows.workflow_engine import WorkflowEngine
+from app.modules.ai.workflows.conversation_service import ConversationService
+from app.modules.ai.workflows.contact_manager import ContactInstanceManager
+from app.modules.ai.workflows.mention_parser import MentionParser
+from app.modules.ai.workflows.execution_tracker import ExecutionTracker
+from app.modules.ai.workflows.monitoring_service import MonitoringService
+from app.modules.ai.workflows.node_registry import get_node_registry
+from app.modules.ai.workflows.tools import get_tool_registry
 from app.config.settings import get_settings
 
 

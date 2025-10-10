@@ -9,9 +9,9 @@ from datetime import datetime
 from unittest.mock import Mock, patch
 from uuid import uuid4
 
-from app.services.langgraph.mention_parser import MentionParser
-from app.services.langgraph.workflow_engine import WorkflowEngine
-from app.services.langgraph.state_models import ContactInfo, WorkflowType
+from app.modules.ai.workflows.mention_parser import MentionParser
+from app.modules.ai.workflows.workflow_engine import WorkflowEngine
+from app.modules.ai.workflows.state_models import ContactInfo, WorkflowType
 
 
 class TestBasicLangGraphFunctionality:
@@ -60,7 +60,7 @@ class TestBasicLangGraphFunctionality:
     def test_workflow_type_determination(self):
         """Test workflow type selection logic"""
         # Mock a workflow engine (without database)
-        with patch('app.services.langgraph.workflow_engine.WorkflowEngine.__init__', 
+        with patch('app.modules.ai.workflows.workflow_engine.WorkflowEngine.__init__', 
                    return_value=None):
             engine = WorkflowEngine.__new__(WorkflowEngine)
             
@@ -87,7 +87,7 @@ class TestBasicLangGraphFunctionality:
     
     def test_state_models_structure(self):
         """Test that state models are properly structured"""
-        from app.services.langgraph.state_models import (
+        from app.modules.ai.workflows.state_models import (
             ConversationState, ContactInfo, MessageState, ContactResponse
         )
         
@@ -157,7 +157,7 @@ class TestBasicLangGraphFunctionality:
     
     def test_workflow_configuration(self):
         """Test workflow configuration structure"""
-        from app.services.langgraph.state_models import WorkflowConfig
+        from app.modules.ai.workflows.state_models import WorkflowConfig
         
         config = WorkflowConfig(
             max_parallel_contacts=3,

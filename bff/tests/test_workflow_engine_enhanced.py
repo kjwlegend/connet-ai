@@ -9,8 +9,8 @@ from unittest.mock import Mock, AsyncMock, patch
 from uuid import uuid4
 from datetime import datetime
 
-from app.services.langgraph.workflow_engine import WorkflowEngine
-from app.services.langgraph.state_models import (
+from app.modules.ai.workflows.workflow_engine import WorkflowEngine
+from app.modules.ai.workflows.state_models import (
     ConversationState, 
     ContactInfo, 
     ContactResponse,
@@ -35,14 +35,14 @@ class TestWorkflowEngineEnhanced:
     @pytest.fixture
     def workflow_engine(self, mock_session):
         """Create WorkflowEngine with mocked dependencies."""
-        with patch('app.services.langgraph.workflow_engine.get_settings') as mock_settings:
+        with patch('app.modules.ai.workflows.workflow_engine.get_settings') as mock_settings:
             mock_settings.return_value = Mock(
                 openai_api_key="test-key",
                 openai_base_url="https://api.openai.com/v1",
                 openai_default_model="gpt-4",
                 langsmith_tracing=False
             )
-            with patch('app.services.langgraph.workflow_engine.ChatOpenAI'):
+            with patch('app.modules.ai.workflows.workflow_engine.ChatOpenAI'):
                 engine = WorkflowEngine(mock_session)
                 # Mock the contact manager
                 engine.contact_manager = Mock()
@@ -161,7 +161,7 @@ class TestWorkflowEngineEnhanced:
         }
         
         # Mock ChatOpenAI
-        with patch('app.services.langgraph.workflow_engine.ChatOpenAI') as mock_llm_class:
+        with patch('app.modules.ai.workflows.workflow_engine.ChatOpenAI') as mock_llm_class:
             mock_llm = Mock()
             mock_response = Mock()
             mock_response.content = "Test response"
@@ -211,7 +211,7 @@ class TestWorkflowEngineEnhanced:
             "resource_limits": {"max_response_time": 1}  # Very short timeout
         }
         
-        with patch('app.services.langgraph.workflow_engine.ChatOpenAI') as mock_llm_class:
+        with patch('app.modules.ai.workflows.workflow_engine.ChatOpenAI') as mock_llm_class:
             mock_llm = Mock()
             # Simulate timeout
             mock_llm.ainvoke = AsyncMock(side_effect=asyncio.TimeoutError())
@@ -293,7 +293,7 @@ class TestWorkflowEngineEnhanced:
     @pytest.mark.asyncio
     async def test_synthesize_parallel_responses(self, workflow_engine):
         """Test parallel response synthesis."""
-        with patch('app.services.langgraph.workflow_engine.ChatOpenAI') as mock_llm_class:
+        with patch('app.modules.ai.workflows.workflow_engine.ChatOpenAI') as mock_llm_class:
             mock_llm = Mock()
             mock_response = Mock()
             mock_response.content = "Synthesized response combining all inputs"
@@ -330,7 +330,7 @@ class TestWorkflowEngineEnhanced:
     @pytest.mark.asyncio
     async def test_debate_summarization(self, workflow_engine):
         """Test debate summarization functionality."""
-        with patch('app.services.langgraph.workflow_engine.ChatOpenAI') as mock_llm_class:
+        with patch('app.modules.ai.workflows.workflow_engine.ChatOpenAI') as mock_llm_class:
             mock_llm = Mock()
             mock_response = Mock()
             mock_response.content = "Comprehensive debate summary with key points"
@@ -369,7 +369,7 @@ class TestWorkflowEngineEnhanced:
     @pytest.mark.asyncio
     async def test_expert_consensus_building(self, workflow_engine):
         """Test expert consensus building functionality."""
-        with patch('app.services.langgraph.workflow_engine.ChatOpenAI') as mock_llm_class:
+        with patch('app.modules.ai.workflows.workflow_engine.ChatOpenAI') as mock_llm_class:
             mock_llm = Mock()
             mock_response = Mock()
             mock_response.content = "Expert consensus recommendation"
@@ -441,7 +441,7 @@ class TestWorkflowEngineEnhanced:
         }
         
         # Build initial state
-        with patch('app.services.langgraph.workflow_engine.datetime') as mock_datetime:
+        with patch('app.modules.ai.workflows.workflow_engine.datetime') as mock_datetime:
             mock_datetime.utcnow.return_value.isoformat.return_value = "2024-01-01T00:00:00"
             
             state = await workflow_engine._build_initial_state(
@@ -464,7 +464,7 @@ class TestWorkflowEngineConfiguration:
     
     def test_default_workflow_config(self):
         """Test default workflow configuration."""
-        with patch('app.services.langgraph.workflow_engine.get_settings') as mock_settings:
+        with patch('app.modules.ai.workflows.workflow_engine.get_settings') as mock_settings:
             mock_settings.return_value = Mock(
                 openai_api_key="test-key",
                 langsmith_tracing=True,
@@ -472,7 +472,7 @@ class TestWorkflowEngineConfiguration:
                 langsmith_endpoint="https://api.smith.langchain.com",
                 langsmith_project="test-project"
             )
-            with patch('app.services.langgraph.workflow_engine.ChatOpenAI'):
+            with patch('app.modules.ai.workflows.workflow_engine.ChatOpenAI'):
                 with patch('os.environ'):
                     engine = WorkflowEngine(Mock())
                     
@@ -485,9 +485,9 @@ class TestWorkflowEngineConfiguration:
 
     def test_workflow_type_determination(self):
         """Test workflow type determination logic."""
-        with patch('app.services.langgraph.workflow_engine.get_settings') as mock_settings:
+        with patch('app.modules.ai.workflows.workflow_engine.get_settings') as mock_settings:
             mock_settings.return_value = Mock(openai_api_key="test-key", langsmith_tracing=False)
-            with patch('app.services.langgraph.workflow_engine.ChatOpenAI'):
+            with patch('app.modules.ai.workflows.workflow_engine.ChatOpenAI'):
                 engine = WorkflowEngine(Mock())
                 
                 # Test mention routing

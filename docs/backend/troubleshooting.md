@@ -28,7 +28,7 @@ redis-cli ping
 python -c "
 import os
 os.environ['LANGGRAPH_ENABLED'] = 'true'
-from app.services.langgraph.workflow_engine import WorkflowEngine
+from app.modules.ai.workflows.workflow_engine import WorkflowEngine
 print('LangGraph OK')
 "
 ```
@@ -63,7 +63,7 @@ sqlalchemy.exc.TimeoutError: QueuePool limit of size 5 exceeded
 ```bash
 # 检查连接池状态
 python -c "
-from app.infrastructure.database.connection import engine
+from app.core.db import engine
 print(f'Pool size: {engine.pool.size()}')
 print(f'Checked out: {engine.pool.checkedout()}')
 print(f'Overflow: {engine.pool.overflow()}')
@@ -576,7 +576,7 @@ async def process_large_workflow(workflow_data):
 async def monitor_connection_pool():
     """监控数据库连接池"""
     
-    from app.infrastructure.database.connection import engine
+    from app.core.db import engine
     
     while True:
         pool = engine.pool

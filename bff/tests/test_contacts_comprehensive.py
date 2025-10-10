@@ -13,15 +13,15 @@ from fastapi.testclient import TestClient
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.main import app
-from app.infrastructure.database.models.contact_model import (
+from app.modules.contacts.models import (
     ContactModel,
     ContactKnowledgeLink,
     ContactToolLink,
     EntityType
 )
-from app.infrastructure.database.models.user_model import UserModel
-from app.infrastructure.database.models.agent_model import AIAgentModel
-from app.infrastructure.database.repositories.contacts_repository_impl import ContactRepository
+from app.modules.users.models import UserModel
+from app.modules.ai.agents.models import AIAgentModel
+from app.modules.contacts.repository_impl import ContactRepository
 from app.services.contact_service import ContactService
 from app.schemas.contact import (
     ContactCreate,
@@ -471,7 +471,7 @@ class TestContactsIntegration:
         # For now, we'll just verify the structure exists
         
         from app.services.contact_service import ContactService
-        from app.infrastructure.database.repositories.contacts_repository_impl import ContactRepository
+        from app.modules.contacts.repository_impl import ContactRepository
         from app.schemas.contact import ContactCreate
         
         # Verify classes can be imported and instantiated

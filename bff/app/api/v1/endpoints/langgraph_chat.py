@@ -11,12 +11,12 @@ from fastapi import APIRouter, Depends, HTTPException, Query, BackgroundTasks
 from pydantic import BaseModel, Field
 
 from app.api.dependencies import get_current_user
-from app.infrastructure.database.connection import get_session
-from app.infrastructure.database.models import UserModel
-from app.services.langgraph.conversation_service import ConversationService
-from app.services.langgraph.contact_manager import ContactInstanceManager
-from app.services.langgraph.workflow_engine import WorkflowEngine
-from app.services.langgraph.mention_parser import MentionParser
+from app.api.deps.db import get_session
+from app.modules.users.models import UserModel
+from app.modules.ai.workflows.conversation_service import ConversationService
+from app.modules.ai.workflows.contact_manager import ContactInstanceManager
+from app.modules.ai.workflows.workflow_engine import WorkflowEngine
+from app.modules.ai.workflows.mention_parser import MentionParser
 from sqlalchemy.ext.asyncio import AsyncSession
 
 router = APIRouter()

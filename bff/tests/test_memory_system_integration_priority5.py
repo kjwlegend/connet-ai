@@ -8,9 +8,9 @@ from unittest.mock import Mock, AsyncMock, patch
 from uuid import uuid4
 from datetime import datetime, timedelta
 
-from app.services.langgraph.conversation_memory_manager import ConversationMemoryManager
-from app.services.langgraph.workflow_engine import WorkflowEngine
-from app.services.langgraph.state_models import ConversationState, ContactInfo
+from app.modules.ai.workflows.conversation_memory_manager import ConversationMemoryManager
+from app.modules.ai.workflows.workflow_engine import WorkflowEngine
+from app.modules.ai.workflows.state_models import ConversationState, ContactInfo
 from app.schemas.ai import MemoryResponse, MemoryType
 
 
@@ -298,14 +298,14 @@ class TestWorkflowEngineMemoryIntegration:
     @pytest.fixture
     def workflow_engine(self, mock_session):
         """Create WorkflowEngine with mocked dependencies."""
-        with patch('app.services.langgraph.workflow_engine.get_settings') as mock_settings:
+        with patch('app.modules.ai.workflows.workflow_engine.get_settings') as mock_settings:
             mock_settings.return_value = Mock(
                 openai_api_key="test-key",
                 openai_base_url="https://api.openai.com/v1",
                 openai_default_model="gpt-4",
                 langsmith_tracing=False
             )
-            with patch('app.services.langgraph.workflow_engine.ChatOpenAI'):
+            with patch('app.modules.ai.workflows.workflow_engine.ChatOpenAI'):
                 engine = WorkflowEngine(mock_session)
                 # Mock the memory manager with async methods
                 engine.memory_manager = Mock()

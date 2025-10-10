@@ -226,12 +226,12 @@ alembic upgrade head
 
 # 验证迁移
 python -c "
-from app.infrastructure.database.connection import get_db_session
+from app.core.db import get_session
 from sqlalchemy import text
 import asyncio
 
 async def verify_db():
-    async with get_db_session() as db:
+    async with get_session() as db:
         result = await db.execute(text('SELECT version()'))
         print(result.fetchone())
 
@@ -692,7 +692,7 @@ redis-cli CONFIG GET "*"
 ```python
 # 调试LangGraph执行
 import asyncio
-from app.services.langgraph.workflow_engine import WorkflowEngine
+from app.modules.ai.workflows.workflow_engine import WorkflowEngine
 
 async def debug_langgraph():
     engine = WorkflowEngine()
@@ -729,7 +729,7 @@ sudo tail -f /var/log/postgresql/postgresql-15-main.log | grep "duration:"
 
 # 检查连接池
 python -c "
-from app.infrastructure.database.connection import engine
+from app.core.db import engine
 print(f'Pool size: {engine.pool.size()}')
 print(f'Checked out: {engine.pool.checkedout()}')
 "

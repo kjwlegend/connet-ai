@@ -36,74 +36,63 @@ from sqlmodel import SQLModel
 # Import all database models for Alembic autogenerate support
 
 # User models
-from app.infrastructure.database.models.user_model import UserModel
-from app.infrastructure.database.models.user_invitation_model import UserInvitationModel
-from app.infrastructure.database.models.user_registration_source_model import (
-    UserRegistrationSourceModel,
-)
-from app.infrastructure.database.models.user_subscription_model import (
-    UserSubscriptionModel,
-)
-from app.infrastructure.database.models.user_llm_settings_model import (
-    UserLLMSettingsModel,
-)
-from app.infrastructure.database.models.user_prompt_library_model import (
-    UserPromptLibraryModel,
-)
+from app.modules.users.models import UserModel
+from app.modules.users.invitations.models import UserInvitationModel
+from app.modules.users.registration.models import UserRegistrationSourceModel
+from app.modules.users.subscriptions.models import UserSubscriptionModel
+from app.modules.users.llm_settings.models import UserLLMSettingsModel
+from app.modules.users.prompt_library.models import UserPromptLibraryModel
 
 # Agent models
-from app.infrastructure.database.models.agent_model import (
+from app.modules.agents.models import (
     AIAgentModel,
     AIAgentVersionModel,
+)
+from app.modules.ai.memory.models import (
     AIMemoryModel,
     AIConversationSummaryModel,
 )
 
 # Contact models (new architecture - contact-scoped)
-from app.infrastructure.database.models.contact_model import (
+from app.modules.contacts.models import (
     ContactModel,
     ContactKnowledgeLink,
     ContactToolLink,
 )
 
 # Knowledge models (new - for contact-scoped knowledge)
-from app.infrastructure.database.models.knowledge_model import (
+from app.modules.ai.knowledge_bases.models import (
     KnowledgeBaseModel,
     KnowledgeDocumentModel,
+)
+from app.modules.ai.rag.models import (
     RAGDocumentModel,
     RAGDocumentChunkModel,
 )
 
 # Tool models (new - for contact-scoped tools)
-from app.infrastructure.database.models.tool_model import (
+from app.modules.ai.tools.models import (
     ToolModel,
     WebhookModel,
     WebhookTriggerModel,
 )
 
 # Conversation models
-from app.infrastructure.database.models.conversation_model import ConversationModel
-from app.infrastructure.database.models.conversation_participant_model import (
-    ConversationParticipantModel,
-)
-from app.infrastructure.database.models.conversation_topic_model import (
-    ConversationTopicModel,
-)
-from app.infrastructure.database.models.conversation_user_setting_model import (
-    ConversationUserSettingModel,
-)
-from app.infrastructure.database.models.message_model import MessageModel
+from app.modules.conversations.models import ConversationModel
+from app.modules.conversations.models import ConversationParticipantModel
+from app.modules.conversations.topics.models import ConversationTopicModel
+from app.modules.conversations.models import ConversationUserSettingModel
+from app.modules.conversations.messages.models import MessageModel
 
 # Timeline/Social models
-from app.infrastructure.database.models.timeline_post_model import TimelinePostModel
-from app.infrastructure.database.models.timeline_comment_model import (
+from app.modules.timeline.models import (
     TimelineCommentModel,
+    TimelineLikeModel,
+    TimelinePostModel,
 )
-from app.infrastructure.database.models.timeline_like_model import TimelineLikeModel
 
 # File models
-from app.infrastructure.database.models.file_model import FileModel
-from app.infrastructure.database.models.file_permission_model import FilePermissionModel
+from app.modules.storage.files.models import FileModel, FilePermissionModel
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.

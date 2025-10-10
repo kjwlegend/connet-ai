@@ -9,7 +9,8 @@ from fastapi import APIRouter, Depends, HTTPException, Query, status
 from fastapi.responses import StreamingResponse
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.api.dependencies import get_current_user, get_db_session
+from app.api.dependencies import get_current_user
+from app.api.deps.db import get_db_session
 from app.schemas.ai import (
     ChatRequest,
     ChatResponse,
@@ -19,9 +20,9 @@ from app.schemas.ai import (
     AIErrorResponse,
 )
 from app.schemas.user import UserResponse
-from app.services.ai_memory_service import AIMemoryService
-from app.services.ai_agent_service import AIAgentService
-from app.services.langgraph.workflow_engine import WorkflowEngine
+from app.modules.ai.memory.service import AIMemoryService
+from app.modules.agents.service import AIAgentService
+from app.modules.ai.workflows.workflow_engine import WorkflowEngine
 
 router = APIRouter(prefix="/chat", tags=["AI Chat"])
 

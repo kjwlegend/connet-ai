@@ -4,79 +4,20 @@ FastAPI Application Entry Point
 This module contains the main FastAPI application factory and startup/shutdown logic.
 """
 
-import asyncio
-import logging
-from contextlib import asynccontextmanager
-from typing import AsyncGenerator
-
 import uvicorn
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.trustedhost import TrustedHostMiddleware
 
+from app.api.lifespan import lifespan
 from app.api.middleware import (
     PerformanceMonitoringMiddleware,
     RateLimitMiddleware,
     SecurityHeadersMiddleware,
 )
-from app.api.v1.router import api_router
+from app.api.routers import api
 from app.config.settings import get_settings
-from app.infrastructure.cache.redis_client import get_redis_client
-from app.infrastructure.database.connection import init_database
-from app.infrastructure.external.supabase.client import init_supabase
-from app.infrastructure.messaging.event_bus import get_event_bus
 from app.utils.logging import setup_logging
-
-logger = logging.getLogger(__name__)
-
-
-@asynccontextmanager
-async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
-    """Application lifespan manager."""
-    settings = get_settings()
-    logger.info(f"Starting {settings.app_name} v{settings.app_version}")
-    
-    try:
-        # Initialize core services
-        await init_database()
-        
-        # Try to connect to Redis (optional for development)
-        try:
-            redis_client = await get_redis_client()
-            await redis_client.ping()
-            logger.info("Redis connection established")
-        except Exception as e:
-            logger.warning(f"Redis connection failed (continuing without cache): {e}")
-        
-        await init_supabase()
-        
-        # Initialize event bus
-        event_bus = get_event_bus()
-        await event_bus.start()
-        
-        logger.info("All services initialized successfully")
-        yield
-        
-    except Exception as e:
-        logger.error(f"Failed to initialize services: {e}")
-        raise
-    finally:
-        # Cleanup
-        logger.info("Shutting down services...")
-        
-        # Close event bus
-        event_bus = get_event_bus()
-        await event_bus.stop()
-        
-        # Close Redis connection (if available)
-        try:
-            redis_client = await get_redis_client()
-            await redis_client.close()
-            logger.info("Redis connection closed")
-        except Exception as e:
-            logger.warning(f"Error closing Redis connection: {e}")
-        
-        logger.info("Shutdown complete")
 
 
 def create_app() -> FastAPI:
@@ -122,8 +63,8 @@ def create_app() -> FastAPI:
     # Add performance monitoring middleware
     app.add_middleware(PerformanceMonitoringMiddleware)
     
-    # Include API router
-    app.include_router(api_router, prefix="/api/v1")
+    # Include API router (versioned under /api)
+    app.include_router(api, prefix="/api")
     
     # Health check endpoint
     @app.get("/health")

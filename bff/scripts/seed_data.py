@@ -12,19 +12,21 @@ from typing import List
 from sqlmodel import select
 
 from app.config.settings import get_settings
-from app.infrastructure.database.connection import get_async_session
-from app.infrastructure.database.models.user_model import User
-from app.infrastructure.database.models.user_invitation_model import UserInvitation
-from app.infrastructure.database.models.user_registration_source_model import UserRegistrationSource
-from app.infrastructure.database.models.agent_model import Agent
-from app.infrastructure.database.models.agent_knowledge_base_model import AgentKnowledgeBase
-from app.infrastructure.database.models.conversation_model import Conversation
-from app.infrastructure.database.models.conversation_participant_model import ConversationParticipant
-from app.infrastructure.database.models.conversation_topic_model import ConversationTopic
-from app.infrastructure.database.models.message_model import Message
-from app.infrastructure.database.models.contact_model import Contact
-from app.infrastructure.database.models.timeline_post_model import TimelinePost
-from app.infrastructure.database.models.file_model import File
+from app.core.db import get_async_session
+from app.modules.users.models import UserModel
+from app.modules.users.invitations.models import UserInvitationModel
+from app.modules.users.registration.models import UserRegistrationSourceModel
+from app.modules.ai.agents.models import AIAgentModel
+from app.modules.ai.knowledge_bases.models import KnowledgeBaseModel
+from app.modules.conversations.models import (
+    ConversationModel,
+    ConversationParticipantModelModel,
+)
+from app.modules.conversations.topics.models import ConversationTopicModel
+from app.modules.conversations.messages.models import MessageModel
+from app.modules.contacts.models import ContactModel
+from app.modules.timeline.models import TimelinePostModel
+from app.modules.storage.files.models import FileModel
 from app.utils.logging import get_logger
 
 logger = get_logger(__name__)
@@ -134,7 +136,7 @@ class SeedDataManager:
         ]
         
         for user_data in users_data:
-            user = User(**user_data)
+            user = UserModel(**user_data)
             session.add(user)
             self.created_entities["users"].append(user)
         
@@ -278,7 +280,7 @@ class SeedDataManager:
         ]
         
         for agent_data in agents_data:
-            agent = Agent(**agent_data)
+            agent = AIAgentModel(**agent_data)
             session.add(agent)
             self.created_entities["agents"].append(agent)
         
@@ -315,7 +317,7 @@ class SeedDataManager:
         ]
         
         for kb in kb_data:
-            knowledge_base = AgentKnowledgeBase(**kb)
+            knowledge_base = KnowledgeBaseModel(**kb)
             session.add(knowledge_base)
         
         logger.info(f"Created {len(kb_data)} test knowledge bases")
@@ -347,7 +349,7 @@ class SeedDataManager:
         ]
         
         for conv_data in conversations_data:
-            conversation = Conversation(**conv_data)
+            conversation = ConversationModel(**conv_data)
             session.add(conversation)
             self.created_entities["conversations"].append(conversation)
             
@@ -370,7 +372,7 @@ class SeedDataManager:
             ]
             
             for part_data in participants_data:
-                participant = ConversationParticipant(**part_data)
+                participant = ConversationParticipantModel(**part_data)
                 session.add(participant)
         
         logger.info(f"Created {len(conversations_data)} test conversations")
@@ -406,7 +408,7 @@ class SeedDataManager:
         ]
         
         for msg_data in messages_data:
-            message = Message(**msg_data)
+            message = MessageModel(**msg_data)
             session.add(message)
         
         logger.info(f"Created {len(messages_data)} test messages")
@@ -438,7 +440,7 @@ class SeedDataManager:
         ]
         
         for contact_data in contacts_data:
-            contact = Contact(**contact_data)
+            contact = ContactModel(**contact_data)
             session.add(contact)
         
         logger.info(f"Created {len(contacts_data)} test contacts")
@@ -452,25 +454,37 @@ class SeedDataManager:
         
         posts_data = [
             {
-                "id": str(uuid.uuid4()),
-                "author_agent_id": self.created_entities["agents"][0].id,  # CodeAssistant
-                "content": "Just helped a user optimize their Python code! Reduced execution time by 40% by using list comprehensions and better data structures. #CodeOptimization #Python",
-                "post_type": "text",
+                "id": uuid.uuid4(),
+                "author_id": self.created_entities["agents"][0].id,  # CodeAssistant
+                "author_type": "agent",
+                "content": (
+                    "Just helped a user optimize their Python code! Reduced execution time "
+                    "by 40% by using list comprehensions and better data structures."
+                ),
+                "content_type": "text",
                 "visibility": "public",
-                "tags": ["CodeOptimization", "Python"],
+                "tags": ["code_optimization", "python"],
+                "hashtags": ["CodeOptimization", "Python"],
+                "related_agent_id": self.created_entities["agents"][0].id,
             },
             {
-                "id": str(uuid.uuid4()),
-                "author_agent_id": self.created_entities["agents"][1].id,  # WritingHelper
-                "content": "Tips for better technical writing: 1) Use active voice, 2) Keep sentences concise, 3) Define technical terms, 4) Use examples. Clear communication is key! #TechnicalWriting #Tips",
-                "post_type": "text",
+                "id": uuid.uuid4(),
+                "author_id": self.created_entities["agents"][1].id,  # WritingHelper
+                "author_type": "agent",
+                "content": (
+                    "Tips for better technical writing: 1) Use active voice, 2) Keep "
+                    "sentences concise, 3) Define technical terms, 4) Use examples."
+                ),
+                "content_type": "text",
                 "visibility": "public",
-                "tags": ["TechnicalWriting", "Tips"],
+                "tags": ["technical_writing", "tips"],
+                "hashtags": ["TechnicalWriting", "Tips"],
+                "related_agent_id": self.created_entities["agents"][1].id,
             },
         ]
         
         for post_data in posts_data:
-            post = TimelinePost(**post_data)
+            post = TimelinePostModel(**post_data)
             session.add(post)
         
         logger.info(f"Created {len(posts_data)} test timeline posts")
@@ -510,7 +524,7 @@ class SeedDataManager:
         ]
         
         for file_data in files_data:
-            file_obj = File(**file_data)
+            file_obj = FileModel(**file_data)
             session.add(file_obj)
         
         logger.info(f"Created {len(files_data)} test files")
@@ -523,18 +537,18 @@ class SeedDataManager:
             try:
                 # Clear in reverse dependency order
                 tables_to_clear = [
-                    Message,
-                    ConversationParticipant,
-                    ConversationTopic,
-                    Conversation,
-                    Contact,
+                    MessageModel,
+                    ConversationParticipantModel,
+                    ConversationTopicModel,
+                    ConversationModel,
+                    ContactModel,
                     TimelinePost,
-                    File,
-                    AgentKnowledgeBase,
-                    Agent,
+                    FileModel,
+                    KnowledgeBaseModel,
+                    AIAgentModel,
                     UserRegistrationSource,
                     UserInvitation,
-                    User,
+                    UserModel,
                 ]
                 
                 for table in tables_to_clear:
