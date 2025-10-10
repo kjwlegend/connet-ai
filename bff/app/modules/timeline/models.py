@@ -25,9 +25,7 @@ class TimelinePostModel(SQLModel, table=True):
         max_length=10, index=True, description="Author type: user or agent"
     )
 
-    title: Optional[str] = Field(
-        default=None, max_length=200, description="Post title"
-    )
+    title: Optional[str] = Field(default=None, max_length=200, description="Post title")
     content: str = Field(sa_column=SAColumn(Text), description="Post content")
     content_type: str = Field(
         default="text",
@@ -42,10 +40,12 @@ class TimelinePostModel(SQLModel, table=True):
         description="Visibility: public, followers, friends, private",
     )
     target_audience: List[str] = Field(
-        default=[], description="Target audience tags", sa_column=SAColumn(JSON)
+        default_factory=list,
+        description="Target audience tags",
+        sa_column=SAColumn(JSON),
     )
     category: str = Field(
-        default="public",
+        default="public_square",
         max_length=20,
         index=True,
         description="Post category: friends_circle, public_square, my_circle, favorites",
@@ -72,7 +72,9 @@ class TimelinePostModel(SQLModel, table=True):
         description="AI agent mood: excited, thoughtful, helpful, creative",
     )
     generated_context: Optional[Dict[str, str]] = Field(
-        default=None, description="AI content generation context", sa_column=SAColumn(JSON)
+        default=None,
+        description="AI content generation context",
+        sa_column=SAColumn(JSON),
     )
 
     like_count: int = Field(default=0, description="Number of likes")
@@ -81,21 +83,33 @@ class TimelinePostModel(SQLModel, table=True):
     view_count: int = Field(default=0, description="Number of views")
 
     attachments: List[str] = Field(
-        default=[], description="Attachment file IDs", sa_column=SAColumn(JSON)
+        default_factory=list,
+        description="Attachment file IDs",
+        sa_column=SAColumn(JSON),
     )
     media_urls: List[str] = Field(
-        default=[], description="Media file URLs", sa_column=SAColumn(JSON)
+        default_factory=list,
+        description="Media file URLs",
+        sa_column=SAColumn(JSON),
     )
 
-    tags: List[str] = Field(default=[], description="Post tags", sa_column=SAColumn(JSON))
+    tags: List[str] = Field(
+        default_factory=list, description="Post tags", sa_column=SAColumn(JSON)
+    )
     hashtags: List[str] = Field(
-        default=[], description="Hashtags for discovery", sa_column=SAColumn(JSON)
+        default_factory=list,
+        description="Hashtags for discovery",
+        sa_column=SAColumn(JSON),
     )
     mentioned_users: List[str] = Field(
-        default=[], description="Mentioned user IDs", sa_column=SAColumn(JSON)
+        default_factory=list,
+        description="Mentioned user IDs",
+        sa_column=SAColumn(JSON),
     )
     mentioned_agents: List[str] = Field(
-        default=[], description="Mentioned agent IDs", sa_column=SAColumn(JSON)
+        default_factory=list,
+        description="Mentioned agent IDs",
+        sa_column=SAColumn(JSON),
     )
 
     location: Optional[str] = Field(
@@ -152,13 +166,19 @@ class TimelineCommentModel(SQLModel, table=True):
     reply_count: int = Field(default=0)
 
     mentioned_users: List[str] = Field(
-        default=[], sa_column=SAColumn(JSON), description="Mentioned user IDs"
+        default_factory=list,
+        sa_column=SAColumn(JSON),
+        description="Mentioned user IDs",
     )
     mentioned_agents: List[str] = Field(
-        default=[], sa_column=SAColumn(JSON), description="Mentioned agent IDs"
+        default_factory=list,
+        sa_column=SAColumn(JSON),
+        description="Mentioned agent IDs",
     )
     attachments: List[str] = Field(
-        default=[], sa_column=SAColumn(JSON), description="Attachment file IDs"
+        default_factory=list,
+        sa_column=SAColumn(JSON),
+        description="Attachment file IDs",
     )
 
     created_at: datetime = Field(default_factory=datetime.utcnow, index=True)
