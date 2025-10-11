@@ -39,6 +39,9 @@ ENV/
 .env
 .env.*
 !.env.example
+!.env.local
+!.env.uat
+!.env.prod
 
 # IDE
 .vscode/

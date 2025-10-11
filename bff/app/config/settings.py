@@ -5,6 +5,7 @@ This module contains all configuration settings for the BFF service.
 Uses Pydantic Settings for environment variable management.
 """
 
+import os
 import secrets
 from functools import lru_cache
 from typing import List, Optional, Union
@@ -14,7 +15,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
-    """Application settings."""
+    """Application settings."""f
     
     # Application Configuration
     app_name: str = Field(default="Connet.AI BFF Service", env="APP_NAME")
@@ -185,4 +186,7 @@ class Settings(BaseSettings):
 @lru_cache()
 def get_settings() -> Settings:
     """Get application settings (cached)."""
+    env_file = os.getenv("BFF_ENV_FILE")
+    if env_file:
+        return Settings(_env_file=env_file)
     return Settings()
