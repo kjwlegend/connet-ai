@@ -5,7 +5,7 @@ export class StorageUtil {
     try {
       localStorage.setItem(key, JSON.stringify(value))
       
-      // Also set as cookie for middleware access
+      // Also set as cookie for proxy access
       if (key === 'auth-token') {
         document.cookie = `auth-token=${value}; path=/; max-age=${7 * 24 * 60 * 60}; SameSite=Lax`
       }
@@ -32,7 +32,7 @@ export class StorageUtil {
     try {
       localStorage.removeItem(key)
       
-      // Also remove cookie for middleware access
+      // Also remove cookie for proxy access
       if (key === 'auth-token') {
         document.cookie = 'auth-token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT'
       }
