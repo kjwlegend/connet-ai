@@ -20,7 +20,7 @@ from app.modules.conversations.models import (
     ConversationParticipantModel,
 )
 from app.modules.conversations.messages.models import MessageModel
-from app.infrastructure.cache.cache_manager import CacheManager
+from app.core.cache import CacheManager
 
 
 # Async test support

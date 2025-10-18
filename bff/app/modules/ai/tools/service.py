@@ -17,7 +17,7 @@ from app.modules.ai.tools.repository import (
     WebhookRepositoryProtocol,
     WebhookTriggerRepositoryProtocol,
 )
-from app.schemas.tools import (
+from app.modules.ai.tools.schemas import (
     ToolCreate,
     ToolExecutionRequest,
     ToolExecutionResponse,

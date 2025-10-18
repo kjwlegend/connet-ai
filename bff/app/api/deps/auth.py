@@ -7,7 +7,7 @@ from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 
 from app.modules.users.schemas import User
 from app.modules.users.service import UserService
-from app.services.supabase_auth_service import SupabaseAuthService
+from app.modules.auth.service import SupabaseAuthService
 from app.infrastructure.security.auth import JWTManager, get_jwt_manager
 from app.utils.logging import get_logger
 

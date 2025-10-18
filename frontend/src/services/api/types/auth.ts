@@ -22,7 +22,7 @@ export interface RegisterRequest {
 }
 
 export interface RefreshTokenRequest {
-  refresh_token: string
+  refresh_token?: string
 }
 
 export interface PasswordResetRequest {
@@ -66,7 +66,6 @@ export interface UserResponse extends User {}
 
 export interface LoginResponse {
   access_token: string
-  refresh_token: string
   token_type: string
   expires_in: number
   user: User
@@ -79,7 +78,6 @@ export interface RegisterResponse {
 
 export interface RefreshTokenResponse {
   access_token: string
-  refresh_token: string
   token_type: string
   expires_in: number
   user: User
@@ -101,7 +99,6 @@ export interface OAuthUrlResponse {
 
 export interface OAuthLoginResponse {
   access_token: string
-  refresh_token: string
   token_type: string
   expires_in: number
   user: User

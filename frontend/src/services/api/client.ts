@@ -217,10 +217,13 @@ class ApiClient {
         this.config.timeout
       );
 
-      let response = await fetch(url, {
+      const requestConfig: RequestInit = {
         ...config,
+        credentials: config.credentials ?? 'include',
         signal: controller.signal,
-      });
+      };
+
+      let response = await fetch(url, requestConfig);
 
       clearTimeout(timeoutId);
 

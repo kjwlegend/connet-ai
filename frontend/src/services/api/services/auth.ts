@@ -14,7 +14,6 @@ import type {
   OAuthCallbackRequest,
   LoginResponse,
   RegisterResponse,
-  RefreshTokenResponse,
   User,
   UserResponse,
   VerifyTokenResponse,
@@ -68,20 +67,13 @@ export class AuthService {
    * Refresh access token
    */
   static async refreshToken(
-    data: RefreshTokenRequest
-  ): Promise<RefreshTokenResponse> {
+    data?: RefreshTokenRequest
+  ): Promise<LoginResponse> {
     const response = await apiClient.post<LoginResponse>(
       `${this.BASE_PATH}/refresh`,
-      data
+      data && data.refresh_token ? data : undefined
     )
-    // BFF returns LoginResponse, map to RefreshTokenResponse
-    return {
-      access_token: response.data.access_token,
-      refresh_token: response.data.refresh_token,
-      token_type: response.data.token_type,
-      expires_in: response.data.expires_in,
-      user: response.data.user,
-    }
+    return response.data
   }
 
   /**

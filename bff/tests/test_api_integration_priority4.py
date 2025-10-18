@@ -8,17 +8,17 @@ from unittest.mock import Mock, AsyncMock, patch
 from uuid import uuid4
 from datetime import datetime
 
-from app.api.v1.endpoints.ai_chat import (
+from app.modules.ai.chat.router import (
     chat_with_agent,
-    stream_chat_with_agent
+    stream_chat_with_agent,
 )
-from app.api.v1.endpoints.ai_agents import (
+from app.modules.ai.agents.router import (
     add_agent_to_contacts,
     check_agent_compatibility,
-    get_marketplace_agents
+    get_marketplace_agents,
 )
-from app.schemas.ai import ChatRequest, ChatMessage
-from app.schemas.user import UserResponse
+from app.modules.ai.agents.schemas import ChatMessage, ChatRequest
+from app.modules.users.schemas import UserResponse
 
 
 class TestAIChatIntegration:
@@ -80,21 +80,21 @@ class TestAIChatIntegration:
         """Test chat endpoint with real LangGraph integration."""
         
         # Mock AI Agent Service
-        with patch('app.api.v1.endpoints.ai_chat.AIAgentService') as mock_agent_service:
+        with patch('app.modules.ai.chat.router.AIAgentService') as mock_agent_service:
             mock_service = Mock()
             mock_service.get_agent = AsyncMock(return_value=mock_agent)
             mock_service.update_usage_stats = AsyncMock()
             mock_agent_service.return_value = mock_service
             
             # Mock AI Memory Service
-            with patch('app.api.v1.endpoints.ai_chat.AIMemoryService') as mock_memory_service:
+            with patch('app.modules.ai.chat.router.AIMemoryService') as mock_memory_service:
                 mock_memory = Mock()
                 mock_memory.get_contextual_memories = AsyncMock(return_value=[])
                 mock_memory.store_short_term_memory = AsyncMock()
                 mock_memory_service.return_value = mock_memory
                 
                 # Mock WorkflowEngine
-                with patch('app.api.v1.endpoints.ai_chat.WorkflowEngine') as mock_workflow:
+                with patch('app.modules.ai.chat.router.WorkflowEngine') as mock_workflow:
                     mock_engine = Mock()
                     
                     # Mock workflow result
@@ -156,19 +156,19 @@ class TestAIChatIntegration:
         """Test chat endpoint when workflow fails."""
         
         # Mock services with workflow failure
-        with patch('app.api.v1.endpoints.ai_chat.AIAgentService') as mock_agent_service:
+        with patch('app.modules.ai.chat.router.AIAgentService') as mock_agent_service:
             mock_service = Mock()
             mock_service.get_agent = AsyncMock(return_value=mock_agent)
             mock_service.update_usage_stats = AsyncMock()
             mock_agent_service.return_value = mock_service
             
-            with patch('app.api.v1.endpoints.ai_chat.AIMemoryService') as mock_memory_service:
+            with patch('app.modules.ai.chat.router.AIMemoryService') as mock_memory_service:
                 mock_memory = Mock()
                 mock_memory.get_contextual_memories = AsyncMock(return_value=[])
                 mock_memory.store_short_term_memory = AsyncMock()
                 mock_memory_service.return_value = mock_memory
                 
-                with patch('app.api.v1.endpoints.ai_chat.WorkflowEngine') as mock_workflow:
+                with patch('app.modules.ai.chat.router.WorkflowEngine') as mock_workflow:
                     mock_engine = Mock()
                     
                     # Mock failed workflow result
@@ -208,18 +208,18 @@ class TestAIChatIntegration:
         """Test streaming chat endpoint simulation."""
         
         # Mock services
-        with patch('app.api.v1.endpoints.ai_chat.AIAgentService') as mock_agent_service:
+        with patch('app.modules.ai.chat.router.AIAgentService') as mock_agent_service:
             mock_service = Mock()
             mock_service.get_agent = AsyncMock(return_value=mock_agent)
             mock_agent_service.return_value = mock_service
             
-            with patch('app.api.v1.endpoints.ai_chat.AIMemoryService') as mock_memory_service:
+            with patch('app.modules.ai.chat.router.AIMemoryService') as mock_memory_service:
                 mock_memory = Mock()
                 mock_memory.get_contextual_memories = AsyncMock(return_value=[])
                 mock_memory.store_short_term_memory = AsyncMock()
                 mock_memory_service.return_value = mock_memory
                 
-                with patch('app.api.v1.endpoints.ai_chat.WorkflowEngine') as mock_workflow:
+                with patch('app.modules.ai.chat.router.WorkflowEngine') as mock_workflow:
                     mock_engine = Mock()
                     
                     workflow_result = {
@@ -285,7 +285,7 @@ class TestAgentMarketplaceIntegration:
         }
         
         # Mock ContactInstanceManager
-        with patch('app.api.v1.endpoints.ai_agents.ContactInstanceManager') as mock_contact_manager:
+        with patch('app.modules.ai.agents.router.ContactInstanceManager') as mock_contact_manager:
             mock_manager = Mock()
             
             # Mock successful conversion
@@ -337,12 +337,12 @@ class TestAgentMarketplaceIntegration:
         )
         
         # Mock services
-        with patch('app.api.v1.endpoints.ai_agents.AIAgentService') as mock_agent_service:
+        with patch('app.modules.ai.agents.router.AIAgentService') as mock_agent_service:
             mock_service = Mock()
             mock_service.get_agent = AsyncMock(return_value=mock_agent)
             mock_agent_service.return_value = mock_service
             
-            with patch('app.api.v1.endpoints.ai_agents.ContactInstanceManager') as mock_contact_manager:
+            with patch('app.modules.ai.agents.router.ContactInstanceManager') as mock_contact_manager:
                 mock_manager = Mock()
                 mock_manager.get_contact_effective_config = AsyncMock(return_value=None)  # Not already added
                 mock_contact_manager.return_value = mock_manager
@@ -392,7 +392,7 @@ class TestAgentMarketplaceIntegration:
         }
         
         # Mock AIAgentService
-        with patch('app.api.v1.endpoints.ai_agents.AIAgentService') as mock_agent_service:
+        with patch('app.modules.ai.agents.router.AIAgentService') as mock_agent_service:
             mock_service = Mock()
             mock_service.get_marketplace_agents = AsyncMock(return_value=marketplace_response)
             mock_agent_service.return_value = mock_service
@@ -444,7 +444,7 @@ class TestAPIPerformanceAndErrorHandling:
         )
         
         # Test agent not found
-        with patch('app.api.v1.endpoints.ai_chat.AIAgentService') as mock_agent_service:
+        with patch('app.modules.ai.chat.router.AIAgentService') as mock_agent_service:
             mock_service = Mock()
             mock_service.get_agent = AsyncMock(return_value=None)  # Agent not found
             mock_agent_service.return_value = mock_service
@@ -464,7 +464,7 @@ class TestAPIPerformanceAndErrorHandling:
         # This would be a integration test to verify response structure
         # For now, just verify that our response models are properly structured
         
-        from app.schemas.ai import ChatResponse
+        from app.modules.ai.agents.schemas import ChatResponse
         from datetime import datetime
         from uuid import uuid4
         

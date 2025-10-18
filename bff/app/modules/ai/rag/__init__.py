@@ -9,6 +9,7 @@ from app.modules.ai.rag.repository_impl import (
     RAGDocumentRepository,
     RAGDocumentChunkRepository,
 )
+from app.modules.ai.rag.schemas import RAGDocumentCreate, RAGDocumentResponse
 from app.modules.ai.rag.service import RAGService
 
 __all__ = [
@@ -18,5 +19,7 @@ __all__ = [
     "RAGDocumentChunkRepositoryProtocol",
     "RAGDocumentRepository",
     "RAGDocumentChunkRepository",
+    "RAGDocumentCreate",
+    "RAGDocumentResponse",
     "RAGService",
 ]

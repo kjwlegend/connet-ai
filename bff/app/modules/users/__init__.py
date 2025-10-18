@@ -4,10 +4,15 @@ from .models import UserModel
 from .repository import UserRepository
 from .repository_impl import UserRepositoryImpl
 from .schemas import (
+    InviteStatsResponse,
+    OrderHistoryResponse,
     User,
     UserBase,
     UserCreate,
+    UserLLMSettingsResponse,
+    UserLLMSettingsUpdate,
     UserResponse,
+    UserSubscriptionResponse,
     UserUpdate,
     UserUpdateRequest,
 )
@@ -35,11 +40,14 @@ from .llm_settings import (
     UserLLMSettingsService,
 )
 from .prompt_library import (
+    UserPromptLibraryCreate,
     UserPromptLibraryModel,
     UserPromptLibraryRepositoryProtocol,
     UserPromptLibraryRepository,
     UserPromptLibraryRepositoryImpl,
+    UserPromptLibraryResponse,
     UserPromptLibraryService,
+    UserPromptLibraryUpdate,
 )
 from .registration import (
     UserRegistrationSourceModel,
@@ -57,6 +65,11 @@ __all__ = [
     "User",
     "UserBase",
     "UserCreate",
+    "UserSubscriptionResponse",
+    "UserLLMSettingsResponse",
+    "UserLLMSettingsUpdate",
+    "InviteStatsResponse",
+    "OrderHistoryResponse",
     "UserResponse",
     "UserUpdate",
     "UserUpdateRequest",
@@ -77,9 +90,12 @@ __all__ = [
     "UserLLMSettingsRepositoryImpl",
     "UserLLMSettingsService",
     "UserPromptLibraryModel",
+    "UserPromptLibraryCreate",
     "UserPromptLibraryRepositoryProtocol",
     "UserPromptLibraryRepository",
     "UserPromptLibraryRepositoryImpl",
+    "UserPromptLibraryUpdate",
+    "UserPromptLibraryResponse",
     "UserPromptLibraryService",
     "UserRegistrationSourceModel",
     "UserRegistrationSourceRepositoryProtocol",

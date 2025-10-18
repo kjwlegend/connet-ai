@@ -13,7 +13,7 @@ from app.modules.agents.schemas import (
     PersonalityProfile,
     ModelPreferences,
 )
-from app.services.base import BaseService
+from app.core.services import BaseService
 
 
 class AIAgentService(BaseService):

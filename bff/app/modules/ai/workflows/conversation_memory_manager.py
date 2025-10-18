@@ -11,9 +11,9 @@ from uuid import UUID, uuid4
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.modules.ai.memory.service import AIMemoryService
-from app.schemas.ai import MemoryType, MemoryCategory
+from app.modules.ai.memory.schemas import MemoryCategory, MemoryType
 from app.modules.ai.workflows.state_models import ContactInfo, ConversationState
-from app.services.base import BaseService
+from app.core.services import BaseService
 
 
 class ConversationMemoryManager(BaseService):

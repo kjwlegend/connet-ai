@@ -13,7 +13,7 @@ from sqlalchemy import and_, or_, select
 
 from app.modules.ai.rag.models import RAGDocumentModel
 from app.modules.ai.rag.repository import RAGDocumentRepositoryProtocol
-from app.schemas.knowledge import RAGDocumentCreate, RAGDocumentResponse
+from app.modules.ai.rag.schemas import RAGDocumentCreate, RAGDocumentResponse
 
 
 class RAGService:

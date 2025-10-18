@@ -35,6 +35,14 @@ help:
 	@echo "  db-reset        - Reset database (WARNING: deletes all data)"
 	@echo "  db-shell        - Open database shell"
 	@echo ""
+	@echo "🌍 Environment Management:"
+	@echo "  env-list        - List all environment files"
+	@echo "  env-create      - Create environment files from template"
+	@echo "  env-validate    - Validate environment files"
+	@echo "  env-set-local   - Set active environment to local"
+	@echo "  env-set-uat     - Set active environment to UAT"
+	@echo "  env-set-prod    - Set active environment to production"
+	@echo ""
 	@echo "🧹 Cleanup:"
 	@echo "  clean          - Clean Python cache files"
 	@echo "  clean-all      - Clean everything (Python + Docker)"
@@ -155,3 +163,35 @@ debug-clean:
 	@docker-compose -f docker-compose.debug.yml down -v
 	@docker volume prune -f
 	@echo "⚠️  All debug data has been removed!"
+
+# Environment management commands
+env-list:
+	@echo "🌍 Environment Files Status:"
+	@python scripts/manage_env.py list
+
+env-create:
+	@echo "🌍 Creating environment files from template..."
+	@python scripts/manage_env.py create local
+	@python scripts/manage_env.py create uat
+	@python scripts/manage_env.py create prod
+	@python scripts/manage_env.py create test
+	@echo "✅ Environment files created successfully!"
+
+env-validate:
+	@echo "🌍 Validating environment files..."
+	@python scripts/manage_env.py validate local
+	@python scripts/manage_env.py validate uat
+	@python scripts/manage_env.py validate prod
+	@python scripts/manage_env.py validate test
+
+env-set-local:
+	@echo "🌍 Setting active environment to local..."
+	@python scripts/manage_env.py set local
+
+env-set-uat:
+	@echo "🌍 Setting active environment to UAT..."
+	@python scripts/manage_env.py set uat
+
+env-set-prod:
+	@echo "🌍 Setting active environment to production..."
+	@python scripts/manage_env.py set prod

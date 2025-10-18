@@ -9,6 +9,13 @@ from app.modules.ai.memory.repository_impl import (
     AIMemoryRepository,
     AIConversationSummaryRepository,
 )
+from app.modules.ai.memory.schemas import (
+    ConversationSummaryResponse,
+    MemoryCategory,
+    MemoryCreate,
+    MemoryResponse,
+    MemoryType,
+)
 from app.modules.ai.memory.service import AIMemoryService
 
 __all__ = [
@@ -18,5 +25,10 @@ __all__ = [
     "AIMemorySummaryRepositoryProtocol",
     "AIMemoryRepository",
     "AIConversationSummaryRepository",
+    "MemoryType",
+    "MemoryCategory",
+    "MemoryCreate",
+    "MemoryResponse",
+    "ConversationSummaryResponse",
     "AIMemoryService",
 ]

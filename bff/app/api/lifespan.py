@@ -7,7 +7,7 @@ from typing import AsyncGenerator
 from fastapi import FastAPI
 
 from app.config.settings import get_settings
-from app.infrastructure.cache.redis_client import get_redis_client
+from app.core.cache import get_redis_client
 from app.core.db import init_database
 from app.infrastructure.external.supabase.client import init_supabase
 from app.infrastructure.messaging.event_bus import get_event_bus

@@ -16,6 +16,17 @@ from app.modules.ai.tools.repository_impl import (
     WebhookRepository,
     WebhookTriggerRepository,
 )
+from app.modules.ai.tools.schemas import (
+    ToolCreate,
+    ToolExecutionRequest,
+    ToolExecutionResponse,
+    ToolResponse,
+    ToolUpdate,
+    WebhookCreate,
+    WebhookResponse,
+    WebhookTriggerResponse,
+    WebhookUpdate,
+)
 from app.modules.ai.tools.service import ToolsService
 
 __all__ = [
@@ -29,5 +40,14 @@ __all__ = [
     "ToolRepository",
     "WebhookRepository",
     "WebhookTriggerRepository",
+    "ToolCreate",
+    "ToolUpdate",
+    "ToolResponse",
+    "ToolExecutionRequest",
+    "ToolExecutionResponse",
+    "WebhookCreate",
+    "WebhookUpdate",
+    "WebhookResponse",
+    "WebhookTriggerResponse",
     "ToolsService",
 ]

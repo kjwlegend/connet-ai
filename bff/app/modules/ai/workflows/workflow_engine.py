@@ -26,7 +26,7 @@ from app.modules.ai.workflows.state_models import (
 from app.modules.ai.workflows.contact_manager import ContactInstanceManager
 from app.modules.ai.workflows.mention_parser import MentionParser
 from app.modules.ai.workflows.conversation_memory_manager import ConversationMemoryManager
-from app.services.base import BaseService
+from app.core.services import BaseService
 
 
 class WorkflowEngine(BaseService):

@@ -12,7 +12,7 @@ from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.responses import JSONResponse
 
 from app.config.settings import get_settings
-from app.infrastructure.cache.redis_client import get_redis_client
+from app.core.cache import get_redis_client
 from app.utils.logging import get_logger
 
 logger = get_logger(__name__)
@@ -151,7 +151,7 @@ class RateLimitMiddleware(BaseHTTPMiddleware):
     async def _is_request_allowed(self, client_id: str) -> bool:
         """Check if request is allowed based on rate limits."""
         try:
-            redis_client = await get_redis_client()
+            redis_client = get_redis_client()
             current_time = int(time.time())
             window_start = current_time - self.window_size
             

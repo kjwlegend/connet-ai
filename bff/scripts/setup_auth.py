@@ -18,7 +18,7 @@ sys.path.append(str(Path(__file__).parent.parent))
 
 from app.config.settings import get_settings
 from app.infrastructure.external.supabase.client import get_supabase_client
-from app.services.supabase_auth_service import SupabaseAuthService
+from app.modules.auth.service import SupabaseAuthService
 from app.utils.logging import get_logger
 
 logger = get_logger(__name__)

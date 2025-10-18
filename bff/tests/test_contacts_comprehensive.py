@@ -22,8 +22,8 @@ from app.modules.contacts.models import (
 from app.modules.users.models import UserModel
 from app.modules.ai.agents.models import AIAgentModel
 from app.modules.contacts.repository_impl import ContactRepository
-from app.services.contact_service import ContactService
-from app.schemas.contact import (
+from app.modules.contacts.service import ContactService
+from app.modules.contacts.schemas import (
     ContactCreate,
     ContactUpdate,
     ContactResponse
@@ -470,9 +470,9 @@ class TestContactsIntegration:
         # This would be a full integration test with a real database
         # For now, we'll just verify the structure exists
         
-        from app.services.contact_service import ContactService
+        from app.modules.contacts.service import ContactService
         from app.modules.contacts.repository_impl import ContactRepository
-        from app.schemas.contact import ContactCreate
+        from app.modules.contacts.schemas import ContactCreate
         
         # Verify classes can be imported and instantiated
         assert ContactService is not None

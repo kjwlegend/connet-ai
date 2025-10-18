@@ -15,7 +15,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
-    """Application settings."""f
+    """Application settings."""
     
     # Application Configuration
     app_name: str = Field(default="Connet.AI BFF Service", env="APP_NAME")
@@ -185,8 +185,31 @@ class Settings(BaseSettings):
 
 @lru_cache()
 def get_settings() -> Settings:
-    """Get application settings (cached)."""
+    """
+    Get application settings (cached).
+    
+    Environment file priority:
+    1. BFF_ENV_FILE environment variable (highest priority)
+    2. Environment-specific files (.env.local, .env.uat, .env.prod)
+    3. Default .env file (lowest priority)
+    """
+    # Check for explicit env file override
     env_file = os.getenv("BFF_ENV_FILE")
     if env_file:
         return Settings(_env_file=env_file)
+    
+    # Check for environment-specific files
+    app_env = os.getenv("APP_ENV", "development")
+    env_file_map = {
+        "development": ".env.local",
+        "staging": ".env.uat", 
+        "production": ".env.prod"
+    }
+    
+    # Try environment-specific file first
+    env_file = env_file_map.get(app_env)
+    if env_file and os.path.exists(env_file):
+        return Settings(_env_file=env_file)
+    
+    # Fall back to default .env file
     return Settings()

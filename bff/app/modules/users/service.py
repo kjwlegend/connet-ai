@@ -2,8 +2,7 @@
 
 from typing import List, Optional, Tuple
 
-from app.infrastructure.cache.cache_manager import CacheManager
-from app.infrastructure.cache.cache_keys import CacheExpiration, CacheKeys
+from app.core.cache import CacheManager, CacheExpiration, CacheKeys
 from app.modules.users.repository import UserRepository
 from app.modules.users.schemas import User, UserUpdateRequest
 from app.utils.logging import get_logger

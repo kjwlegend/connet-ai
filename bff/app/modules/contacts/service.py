@@ -12,7 +12,7 @@ from app.modules.contacts.repository_impl import ContactRepository
 from app.modules.ai.knowledge_bases.repository_impl import KnowledgeBaseRepository
 from app.modules.ai.tools.repository import ToolRepositoryProtocol
 from app.modules.users.service import UserService
-from app.services.ai_agent_service import AIAgentService
+from app.modules.agents.service import AIAgentService
 from app.modules.contacts.models import (
     ContactModel,
     ContactKnowledgeLink,
@@ -262,7 +262,7 @@ class ContactService:
             )
             
             # Get knowledge base details
-        knowledge_base = await self.knowledge_repository.get_by_id(knowledge_base_id)
+            knowledge_base = await self.knowledge_repository.get_by_id(knowledge_base_id)
             
             return ContactKnowledgeResponse(
                 id=knowledge_link.id,

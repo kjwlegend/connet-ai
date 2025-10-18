@@ -18,7 +18,7 @@ export interface RegisterRequest {
 }
 
 export interface RefreshTokenRequest {
-  refresh_token: string
+  refresh_token?: string
 }
 
 export interface PasswordResetRequest {
@@ -32,7 +32,6 @@ export interface VerifyTokenRequest {
 // API Response Types
 export interface LoginResponse {
   access_token: string
-  refresh_token: string
   token_type: string
   expires_in: number
   user: User
@@ -40,7 +39,6 @@ export interface LoginResponse {
 
 export interface RefreshTokenResponse {
   access_token: string
-  refresh_token: string
   token_type: string
   expires_in: number
   user: User

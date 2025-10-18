@@ -11,8 +11,10 @@ from fastapi.middleware.trustedhost import TrustedHostMiddleware
 
 from app.api.lifespan import lifespan
 from app.api.middleware import (
+    ErrorHandlingMiddleware,
     PerformanceMonitoringMiddleware,
     RateLimitMiddleware,
+    RequestLoggingMiddleware,
     SecurityHeadersMiddleware,
 )
 from app.api.routers import api
@@ -38,6 +40,12 @@ def create_app() -> FastAPI:
         lifespan=lifespan,
     )
     
+    # Add global error handling first so it wraps subsequent middleware
+    app.add_middleware(ErrorHandlingMiddleware)
+
+    # Add request logging
+    app.add_middleware(RequestLoggingMiddleware)
+
     # Add security middleware
     app.add_middleware(SecurityHeadersMiddleware)
     

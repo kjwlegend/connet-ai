@@ -54,7 +54,10 @@ export const useAuthOAuth = (): UseAuthOAuthReturn => {
         return null
       }
 
-      const result = await AuthService.getOAuthUrl(provider, redirectUri)
+      const result = await AuthService.getOAuthUrl({
+        provider,
+        redirect_uri: redirectUri,
+      })
       return result
     } catch (error) {
       const errorMessage = error instanceof Error 
@@ -91,10 +94,15 @@ export const useAuthOAuth = (): UseAuthOAuthReturn => {
         return null
       }
 
-      const result = await AuthService.handleOAuthCallback(provider, code, state, redirectUri)
+      const result = await AuthService.oauthCallback({
+        provider,
+        code,
+        state,
+        redirect_uri: redirectUri,
+      })
       
       // 登录成功，更新状态
-      login(result.user, result.access_token, result.refresh_token)
+      login(result.user, result.access_token, undefined)
       
       return {
         user: result.user,

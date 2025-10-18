@@ -61,7 +61,7 @@ export const useAuthLogin = (): UseAuthLoginReturn => {
       login(
         response.user,
         response.access_token,
-        rememberMe ? response.refresh_token : undefined
+        undefined
       )
 
       return response.user
@@ -90,7 +90,10 @@ export const useAuthLogin = (): UseAuthLoginReturn => {
       const redirectUri = `${window.location.origin}/auth/callback`
 
       // 直接调用AuthService获取OAuth URL
-      const { url } = await AuthService.getOAuthUrl(provider, redirectUri)
+      const { url } = await AuthService.getOAuthUrl({
+        provider,
+        redirect_uri: redirectUri,
+      })
 
       // 跳转到OAuth提供商
       window.location.href = url

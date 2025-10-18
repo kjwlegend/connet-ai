@@ -11,7 +11,7 @@ from datetime import datetime, timedelta
 from app.modules.ai.workflows.conversation_memory_manager import ConversationMemoryManager
 from app.modules.ai.workflows.workflow_engine import WorkflowEngine
 from app.modules.ai.workflows.state_models import ConversationState, ContactInfo
-from app.schemas.ai import MemoryResponse, MemoryType
+from app.modules.ai.memory.schemas import MemoryResponse, MemoryType
 
 
 class TestConversationMemoryManager:

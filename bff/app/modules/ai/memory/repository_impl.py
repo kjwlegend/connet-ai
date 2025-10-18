@@ -12,7 +12,7 @@ from app.modules.ai.memory.models import (
     AIConversationSummaryModel,
 )
 from app.core.repository import BaseRepository
-from app.schemas.ai import MemoryCreate, MemoryType, MemoryCategory
+from app.modules.ai.memory.schemas import MemoryCategory, MemoryCreate, MemoryType
 from app.modules.ai.memory.repository import (
     AIMemoryRepositoryProtocol,
     AIMemorySummaryRepositoryProtocol,

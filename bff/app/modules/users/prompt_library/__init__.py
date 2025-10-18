@@ -8,6 +8,11 @@ from app.modules.users.prompt_library.repository import (
 from app.modules.users.prompt_library.repository_impl import (
     UserPromptLibraryRepository as UserPromptLibraryRepositoryImpl,
 )
+from app.modules.users.prompt_library.schemas import (
+    UserPromptLibraryCreate,
+    UserPromptLibraryResponse,
+    UserPromptLibraryUpdate,
+)
 from app.modules.users.prompt_library.service import UserPromptLibraryService
 
 __all__ = [
@@ -15,5 +20,8 @@ __all__ = [
     "UserPromptLibraryRepositoryProtocol",
     "UserPromptLibraryRepository",
     "UserPromptLibraryRepositoryImpl",
+    "UserPromptLibraryCreate",
+    "UserPromptLibraryUpdate",
+    "UserPromptLibraryResponse",
     "UserPromptLibraryService",
 ]

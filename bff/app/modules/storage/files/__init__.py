@@ -9,6 +9,13 @@ from app.modules.storage.files.repository_impl import (
     FilePermissionRepository,
     FileRepository,
 )
+from app.modules.storage.files.schemas import (
+    FileCreate,
+    FilePermissionGrant,
+    FilePermissionResponse,
+    FileResponse,
+    FileUpdate,
+)
 from app.modules.storage.files.service import FileStorageService
 
 __all__ = [
@@ -18,5 +25,10 @@ __all__ = [
     "FilePermissionRepositoryProtocol",
     "FileRepository",
     "FilePermissionRepository",
+    "FileCreate",
+    "FileUpdate",
+    "FileResponse",
+    "FilePermissionGrant",
+    "FilePermissionResponse",
     "FileStorageService",
 ]

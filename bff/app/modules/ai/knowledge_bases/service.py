@@ -13,15 +13,14 @@ from app.modules.ai.knowledge_bases.models import (
 from app.modules.ai.knowledge_bases.repository import KnowledgeBaseRepositoryProtocol
 from app.modules.ai.rag.models import RAGDocumentModel
 from app.modules.ai.rag.repository import RAGDocumentRepositoryProtocol
-from app.schemas.knowledge import (
+from app.modules.ai.knowledge_bases.schemas import (
     KnowledgeBaseCreate,
     KnowledgeBaseResponse,
     KnowledgeBaseUpdate,
     KnowledgeDocumentCreate,
     KnowledgeDocumentResponse,
-    RAGDocumentCreate,
-    RAGDocumentResponse,
 )
+from app.modules.ai.rag.schemas import RAGDocumentCreate, RAGDocumentResponse
 from app.utils.logging import get_logger
 
 logger = get_logger(__name__)

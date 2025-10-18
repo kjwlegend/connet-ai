@@ -8,17 +8,19 @@ from uuid import UUID
 from fastapi import APIRouter, Depends, Query
 
 from app.api.dependencies import get_current_user
-from app.schemas.settings import (
-    UserSubscriptionResponse,
+from app.modules.users.prompt_library.schemas import (
+    UserPromptLibraryCreate,
+    UserPromptLibraryResponse,
+    UserPromptLibraryUpdate,
+)
+from app.modules.users.schemas import (
+    InviteStatsResponse,
+    OrderHistoryResponse,
     UserLLMSettingsResponse,
     UserLLMSettingsUpdate,
-    UserPromptLibraryResponse,
-    UserPromptLibraryCreate,
-    UserPromptLibraryUpdate,
-    InviteStatsResponse,
-    OrderHistoryResponse
+    UserSubscriptionResponse,
 )
-from app.services.settings_service import SettingsService
+from app.modules.settings import SettingsService
 from app.modules.users.models import UserModel
 
 router = APIRouter()

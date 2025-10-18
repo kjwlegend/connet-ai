@@ -11,7 +11,7 @@ from app.modules.storage.files.repository import (
     FilePermissionRepositoryProtocol,
     FileRepositoryProtocol,
 )
-from app.schemas.files import (
+from app.modules.storage.files.schemas import (
     FileCreate,
     FilePermissionGrant,
     FilePermissionResponse,

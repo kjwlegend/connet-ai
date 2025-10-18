@@ -25,7 +25,7 @@ from app.modules.conversations.messages.repository_impl import MessageRepository
 from app.modules.conversations.messages.service import MessageService
 from app.modules.conversations.service import ConversationService
 from app.modules.timeline.repository_impl import TimelineRepository
-from app.services.supabase_auth_service import SupabaseAuthService
+from app.modules.auth.service import SupabaseAuthService
 
 
 async def get_user_service(

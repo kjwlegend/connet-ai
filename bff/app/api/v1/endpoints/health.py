@@ -13,10 +13,10 @@ from sqlmodel.ext.asyncio.session import AsyncSession
 from sqlalchemy import text
 
 from app.config.settings import Settings, get_settings
-from app.infrastructure.cache.redis_client import get_redis_client
+from app.core.cache import get_redis_client
 from app.api.deps.db import get_session
 from app.infrastructure.external.supabase.client import get_supabase_client
-from app.schemas.responses import HealthResponse
+from app.core.schemas import HealthResponse
 from app.utils.logging import get_logger
 
 logger = get_logger(__name__)

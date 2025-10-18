@@ -138,7 +138,7 @@ class TestAuthComprehensive:
         assert response.status_code == status.HTTP_500_INTERNAL_SERVER_ERROR
         assert "Registration failed" in response.json()["detail"]
     
-    @patch('app.api.v1.endpoints.auth.get_jwt_manager')
+    @patch('app.modules.auth.router.get_jwt_manager')
     def test_login_complete_flow(self, mock_get_jwt_manager, client: TestClient, mock_auth_dependencies):
         """Test complete login flow with JWT token generation."""
         # Setup JWT manager mock
@@ -173,22 +173,24 @@ class TestAuthComprehensive:
         
         assert response.status_code == status.HTTP_200_OK
         response_data = response.json()
-        
+
         # Verify token structure
         assert response_data["access_token"] == "jwt_access_token_123"
-        assert response_data["refresh_token"] == "jwt_refresh_token_456"
         assert response_data["token_type"] == "bearer"
-        
+        assert "refresh_token" not in response_data
+        assert response.cookies.get("refresh_token") == "jwt_refresh_token_456"
+
         # Verify user data is included
         assert "user" in response_data
         user_data = response_data["user"]
         assert user_data["email"] == "login@example.com"
         assert user_data["full_name"] == "Login User"
         assert user_data["username"] == "loginuser"
-        
+
         # Verify JWT manager was called with correct parameters
         mock_jwt_manager.create_access_token.assert_called_once()
         mock_jwt_manager.create_refresh_token.assert_called_once()
+        client.cookies.clear()
     
     def test_login_invalid_credentials(self, client: TestClient, mock_auth_dependencies):
         """Test login with invalid credentials."""
@@ -256,7 +258,7 @@ class TestAuthComprehensive:
         
         assert response.status_code == status.HTTP_401_UNAUTHORIZED
     
-    @patch('app.api.v1.endpoints.auth.get_jwt_manager')
+    @patch('app.modules.auth.router.get_jwt_manager')
     @patch('app.api.dependencies.get_user_service')
     def test_refresh_token_flow(self, mock_get_user_service, mock_get_jwt_manager, 
                                client: TestClient, mock_auth_dependencies):
@@ -275,20 +277,20 @@ class TestAuthComprehensive:
         mock_user_service.get_user_by_id.return_value = mock_auth_dependencies["user"]
         mock_get_user_service.return_value = mock_user_service
         
-        refresh_data = {
-            "refresh_token": "valid_refresh_token"
-        }
-        
-        response = client.post("/api/v1/auth/refresh", json=refresh_data)
-        
+        client.cookies.set("refresh_token", "valid_refresh_token")
+
+        response = client.post("/api/v1/auth/refresh")
+
         assert response.status_code == status.HTTP_200_OK
         response_data = response.json()
-        
+
         assert response_data["access_token"] == "new_access_token"
-        assert response_data["refresh_token"] == "new_refresh_token"
+        assert "refresh_token" not in response_data
         assert response_data["token_type"] == "bearer"
+        assert response.cookies.get("refresh_token") == "new_refresh_token"
+        client.cookies.clear()
     
-    @patch('app.api.v1.endpoints.auth.get_jwt_manager')
+    @patch('app.modules.auth.router.get_jwt_manager')
     def test_logout_authenticated(self, mock_get_jwt_manager, client: TestClient, mock_auth_dependencies):
         """Test logout with authenticated user."""
         # Setup JWT manager mock
@@ -299,10 +301,12 @@ class TestAuthComprehensive:
         headers = {"Authorization": "Bearer valid_token"}
         
         response = client.post("/api/v1/auth/logout", headers=headers)
-        
+
         assert response.status_code == status.HTTP_200_OK
         response_data = response.json()
         assert response_data["message"] == "Logged out successfully"
+        assert response.cookies.get("refresh_token") == ""
+        client.cookies.clear()
     
     def test_logout_unauthenticated(self, test_app, client: TestClient):
         """Test logout without authentication."""
@@ -409,7 +413,7 @@ class TestAuthValidation:
 class TestAuthIntegration:
     """Integration tests for complete authentication flows."""
     
-    @patch('app.api.v1.endpoints.auth.get_jwt_manager')
+    @patch('app.modules.auth.router.get_jwt_manager')
     def test_register_then_login_flow(self, mock_get_jwt_manager, client: TestClient, mock_auth_dependencies):
         """Test complete register then login flow."""
         # Setup JWT manager
@@ -459,8 +463,10 @@ class TestAuthIntegration:
         
         login_response = client.post("/api/v1/auth/login", json=login_data)
         assert login_response.status_code == status.HTTP_200_OK
-        
+
         # Verify we got different tokens for login vs registration
         login_data = login_response.json()
         assert login_data["access_token"] == "login_access_token"
-        assert login_data["refresh_token"] == "login_refresh_token"
+        assert "refresh_token" not in login_data
+        assert login_response.cookies.get("refresh_token") == "login_refresh_token"
+        client.cookies.clear()

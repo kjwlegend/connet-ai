@@ -14,7 +14,7 @@ from app.api.deps import (
     get_user_service,
     require_permission,
 )
-from app.schemas.responses import PaginatedResponse
+from app.core.schemas import PaginatedResponse
 from app.modules.users.schemas import User, UserResponse, UserUpdateRequest
 from app.modules.users.service import UserService
 from app.utils.logging import get_logger

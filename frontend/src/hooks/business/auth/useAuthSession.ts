@@ -39,8 +39,6 @@ export const useAuthSession = (): UseAuthSessionReturn => {
     checkSessionTimeout,
     resetSession,
     setUser,
-    setToken,
-    setRefreshToken,
   } = useAuth()
 
   const initializeAuth = useCallback(async (): Promise<void> => {
@@ -59,20 +57,11 @@ export const useAuthSession = (): UseAuthSessionReturn => {
             extendSession()
             console.log('Session restored from persisted store')
           } else {
-            // Token无效，尝试使用refresh token刷新
-            if (auth.refreshToken) {
-              const refreshResult = await AuthService.refreshToken({ refresh_token: auth.refreshToken })
-              
-              // 更新token
-              setToken(refreshResult.access_token)
-              if (refreshResult.refresh_token) {
-                setRefreshToken(refreshResult.refresh_token)
-              }
-              
-              console.log('Token refreshed successfully')
-            } else {
-              throw new Error('No valid token or refresh token')
+            const refreshed = await refreshToken()
+            if (!refreshed) {
+              throw new Error('Unable to refresh token')
             }
+            console.log('Token refreshed successfully')
           }
         } catch (error) {
           console.warn('Failed to restore session:', error)
@@ -80,8 +69,11 @@ export const useAuthSession = (): UseAuthSessionReturn => {
           resetSession()
         }
       } else {
-        // 没有存储的认证信息，保持未认证状态
-        console.log('No stored authentication found')
+        // 没有存储的认证信息，尝试通过cookie刷新会话
+        const refreshed = await refreshToken()
+        if (!refreshed) {
+          console.log('No stored authentication found')
+        }
       }
     } catch (error) {
       console.error('Failed to initialize auth:', error)
@@ -90,7 +82,7 @@ export const useAuthSession = (): UseAuthSessionReturn => {
     } finally {
       setInitializing(false)
     }
-  }, [auth.token, auth.user, auth.refreshToken, setInitializing, setError, resetSession, setToken, setRefreshToken, extendSession])
+  }, [auth.token, auth.user, setInitializing, setError, resetSession, refreshToken, extendSession])
 
   const validateToken = useCallback(async (): Promise<boolean> => {
     try {
@@ -108,24 +100,15 @@ export const useAuthSession = (): UseAuthSessionReturn => {
 
   const refreshToken = useCallback(async (): Promise<boolean> => {
     try {
-      if (!auth.refreshToken) {
-        return false
-      }
-      
-      const result = await AuthService.refreshToken({ refresh_token: auth.refreshToken })
-      
-      // 更新store中的token（会自动持久化）
-      setToken(result.access_token)
-      if (result.refresh_token) {
-        setRefreshToken(result.refresh_token)
-      }
-      
+      const result = await AuthService.refreshToken()
+      login(result.user, result.access_token, undefined)
+      extendSession()
       return true
     } catch (error) {
       console.error('Token refresh failed:', error)
       return false
     }
-  }, [auth.refreshToken, setToken, setRefreshToken])
+  }, [login, extendSession])
 
   const getCurrentUser = useCallback(async (): Promise<User | null> => {
     try {
@@ -194,7 +177,7 @@ export const useAuthSession = (): UseAuthSessionReturn => {
 
   // 令牌自动刷新
   useEffect(() => {
-    if (!auth.isAuthenticated || !auth.refreshToken) return
+    if (!auth.isAuthenticated) return
 
     // 在令牌过期前10分钟尝试刷新
     const tokenRefreshInterval = setInterval(async () => {
@@ -209,7 +192,7 @@ export const useAuthSession = (): UseAuthSessionReturn => {
     }, 50 * 60 * 1000) // 50分钟检查一次
 
     return () => clearInterval(tokenRefreshInterval)
-  }, [auth.isAuthenticated, auth.refreshToken, validateToken, refreshToken, logout])
+  }, [auth.isAuthenticated, validateToken, refreshToken, logout])
 
   return {
     // State

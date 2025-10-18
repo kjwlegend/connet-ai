@@ -15,7 +15,7 @@ from app.modules.ai.memory.repository import (
     AIMemoryRepositoryProtocol,
     AIMemorySummaryRepositoryProtocol,
 )
-from app.schemas.ai import (
+from app.modules.ai.memory.schemas import (
     ConversationSummaryResponse,
     MemoryCategory,
     MemoryCreate,

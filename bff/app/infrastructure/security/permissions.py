@@ -7,7 +7,7 @@ This module provides permission and role-based access control.
 from functools import lru_cache
 from typing import Any, Dict, List, Optional
 
-from app.infrastructure.cache.cache_manager import get_cache_manager
+from app.core.cache import get_cache_manager
 from app.utils.logging import get_logger
 
 logger = get_logger(__name__)

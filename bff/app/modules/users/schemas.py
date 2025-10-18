@@ -10,7 +10,7 @@ from uuid import UUID
 
 from pydantic import EmailStr, Field, field_validator
 
-from app.schemas.base import BaseSchema, TimestampMixin, UUIDMixin
+from app.core.schemas import BaseSchema, TimestampMixin, UUIDMixin
 
 
 class UserBase(BaseSchema):
@@ -152,3 +152,120 @@ class User(UUIDMixin, UserBase, TimestampMixin):
     permissions: Optional[List[str]] = Field(None, description="User permissions")
     roles: Optional[List[str]] = Field(None, description="User roles")
     user_metadata: Optional[dict] = Field(None, description="Additional user metadata")
+
+
+class UserSubscriptionResponse(BaseSchema):
+    """Subscription details returned to the caller."""
+
+    plan: str = Field(..., description="Active subscription plan")
+    status: str = Field(..., description="Subscription status")
+    current_period_end: Optional[datetime] = Field(
+        None, description="End of current billing period"
+    )
+    cancel_at_period_end: bool = Field(
+        False, description="Whether cancellation takes effect at period end"
+    )
+    payment_method: Optional[str] = Field(
+        None, description="Last used payment method identifier"
+    )
+    seats_used: Optional[int] = Field(None, description="Seats currently in use")
+    seats_limit: Optional[int] = Field(None, description="Seat limit for the plan")
+
+
+class UserLLMSettingsResponse(BaseSchema):
+    """Persisted LLM configuration for a user."""
+
+    user_id: UUID = Field(..., description="User identifier")
+    default_provider: str = Field(..., description="Default LLM provider")
+    default_model: str = Field(..., description="Default model identifier")
+    provider_configs: dict = Field(
+        default_factory=dict, description="Per-provider configuration"
+    )
+    chat_model: Optional[str] = Field(None, description="Chat model override")
+    coding_model: Optional[str] = Field(None, description="Coding model override")
+    writing_model: Optional[str] = Field(None, description="Writing model override")
+    analysis_model: Optional[str] = Field(None, description="Analysis model override")
+    creative_model: Optional[str] = Field(None, description="Creative model override")
+    default_temperature: float = Field(..., description="Default temperature")
+    default_max_tokens: int = Field(..., description="Default maximum tokens")
+    default_top_p: float = Field(..., description="Default top-p value")
+    default_frequency_penalty: float = Field(
+        ..., description="Default frequency penalty"
+    )
+    default_presence_penalty: float = Field(
+        ..., description="Default presence penalty"
+    )
+    api_keys: dict = Field(default_factory=dict, description="Provider API keys")
+    auto_select_model: bool = Field(..., description="Allows automatic model choice")
+    cost_optimization_enabled: bool = Field(
+        ..., description="Cost optimisation toggle"
+    )
+    quality_preference: str = Field(..., description="Quality preference setting")
+    streaming_enabled: bool = Field(..., description="Streaming responses enabled")
+    response_format_preference: str = Field(
+        ..., description="Preferred response format"
+    )
+    content_filtering_level: str = Field(
+        ..., description="Content filtering strictness"
+    )
+    enable_fact_checking: bool = Field(
+        ..., description="Fact checking toggle"
+    )
+    global_system_prompt: Optional[str] = Field(
+        None, description="Global system prompt override"
+    )
+    context_length_preference: int = Field(
+        ..., description="Preferred context window length"
+    )
+    created_at: datetime = Field(..., description="Creation timestamp")
+    updated_at: datetime = Field(..., description="Last update timestamp")
+
+
+class UserLLMSettingsUpdate(BaseSchema):
+    """Update payload for user LLM settings."""
+
+    default_provider: Optional[str] = None
+    default_model: Optional[str] = None
+    provider_configs: Optional[dict] = None
+    chat_model: Optional[str] = None
+    coding_model: Optional[str] = None
+    writing_model: Optional[str] = None
+    analysis_model: Optional[str] = None
+    creative_model: Optional[str] = None
+    default_temperature: Optional[float] = Field(None, ge=0.0, le=2.0)
+    default_max_tokens: Optional[int] = Field(None, gt=0)
+    default_top_p: Optional[float] = Field(None, ge=0.0, le=1.0)
+    default_frequency_penalty: Optional[float] = Field(None, ge=-2.0, le=2.0)
+    default_presence_penalty: Optional[float] = Field(None, ge=-2.0, le=2.0)
+    api_keys: Optional[dict] = None
+    auto_select_model: Optional[bool] = None
+    cost_optimization_enabled: Optional[bool] = None
+    quality_preference: Optional[str] = None
+    streaming_enabled: Optional[bool] = None
+    response_format_preference: Optional[str] = None
+    content_filtering_level: Optional[str] = None
+    enable_fact_checking: Optional[bool] = None
+    global_system_prompt: Optional[str] = None
+    context_length_preference: Optional[int] = Field(None, gt=0)
+
+
+class InviteStatsResponse(BaseSchema):
+    """Summary of a user's invite program statistics."""
+
+    invite_code: Optional[str] = Field(None, description="Active invite code")
+    total_sent: int = Field(..., description="Total invites sent")
+    accepted: int = Field(..., description="Invites accepted")
+    pending: int = Field(..., description="Invites pending acceptance")
+    rewards_earned: float = Field(..., description="Total rewards earned")
+    currency: str = Field("USD", description="Reward currency")
+
+
+class OrderHistoryResponse(BaseSchema):
+    """Billing or order record returned from settings API."""
+
+    order_id: UUID = Field(..., description="Order identifier")
+    amount: float = Field(..., description="Order amount")
+    currency: str = Field(..., description="Currency code")
+    status: str = Field(..., description="Order status")
+    created_at: datetime = Field(..., description="Order creation time")
+    description: Optional[str] = Field(None, description="Order description")

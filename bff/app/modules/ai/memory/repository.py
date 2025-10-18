@@ -8,7 +8,7 @@ from typing import Any, Dict, List, Optional
 from uuid import UUID
 
 from app.modules.ai.memory.models import AIMemoryModel, AIConversationSummaryModel
-from app.schemas.ai import MemoryCategory, MemoryCreate, MemoryType
+from app.modules.ai.memory.schemas import MemoryCategory, MemoryCreate, MemoryType
 
 
 class AIMemoryRepositoryProtocol(ABC):

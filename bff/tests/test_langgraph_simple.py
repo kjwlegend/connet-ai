@@ -177,7 +177,7 @@ class TestAPIEndpointStructure:
     
     def test_langgraph_endpoints_exist(self):
         """Test that LangGraph endpoints are defined"""
-        from app.api.v1.endpoints.langgraph_chat import router
+        from app.modules.ai.workflows.router import router
         
         # Check that router exists and has routes
         assert router is not None

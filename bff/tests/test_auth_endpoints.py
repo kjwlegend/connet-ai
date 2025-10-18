@@ -11,12 +11,11 @@ from unittest.mock import AsyncMock, MagicMock, patch
 from fastapi import status
 from fastapi.testclient import TestClient
 
-from app.schemas.auth import RegisterRequest, LoginRequest, RefreshTokenRequest
-from app.schemas.user import User
+from app.modules.auth.schemas import LoginRequest, RefreshTokenRequest, RegisterRequest
+from app.modules.users.schemas import User
 from app.modules.users.models import UserModel
 from app.api.dependencies import get_supabase_auth_service, get_current_user, get_db_session
 from app.infrastructure.security.auth import get_jwt_manager
-from app.services.user_service import get_user_service
 
 
 @pytest.mark.api
@@ -152,14 +151,16 @@ class TestAuthEndpoints:
         }
         
         response = client.post("/api/v1/auth/login", json=login_data)
-        
+
         assert response.status_code == status.HTTP_200_OK
         response_data = response.json()
         assert response_data["access_token"] == "fake_access_token"
-        assert response_data["refresh_token"] == "fake_refresh_token"
         assert response_data["token_type"] == "bearer"
         assert "user" in response_data
         assert response_data["user"]["email"] == self.test_user_data["email"]
+        assert "refresh_token" not in response_data
+        assert response.cookies.get("refresh_token") == "fake_refresh_token"
+        client.cookies.clear()
 
     @patch('app.api.dependencies.get_supabase_auth_service')
     @patch('app.infrastructure.security.auth.get_jwt_manager')
@@ -215,41 +216,41 @@ class TestAuthEndpoints:
         """Test successful token refresh."""
         # Mock JWT manager
         mock_jwt_manager = MagicMock()
-        mock_jwt_manager.verify_refresh_token.return_value = {"sub": str(self.test_user_id)}
+        mock_jwt_manager.verify_token.return_value = {
+            "sub": str(self.test_user_id),
+            "type": "refresh",
+        }
         mock_jwt_manager.create_access_token.return_value = "new_access_token"
         mock_jwt_manager.create_refresh_token.return_value = "new_refresh_token"
         mock_get_jwt_manager.return_value = mock_jwt_manager
-        
-        refresh_data = {
-            "refresh_token": "valid_refresh_token"
-        }
+        client.cookies.set("refresh_token", "valid_refresh_token")
         
         with patch('app.api.dependencies.get_user_service') as mock_get_user_service:
             mock_user_service = AsyncMock()
             mock_user_service.get_user_by_id.return_value = self.mock_user
             mock_get_user_service.return_value = mock_user_service
-            
-            response = client.post("/api/v1/auth/refresh", json=refresh_data)
-        
+
+            response = client.post("/api/v1/auth/refresh")
+
         assert response.status_code == status.HTTP_200_OK
         response_data = response.json()
         assert response_data["access_token"] == "new_access_token"
-        assert response_data["refresh_token"] == "new_refresh_token"
+        assert "refresh_token" not in response_data
+        assert response.cookies.get("refresh_token") == "new_refresh_token"
+        client.cookies.clear()
 
     @patch('app.infrastructure.security.auth.get_jwt_manager')
     def test_refresh_token_invalid(self, mock_get_jwt_manager, client: TestClient):
         """Test token refresh with invalid token."""
         # Mock JWT manager to raise exception
         mock_jwt_manager = MagicMock()
-        mock_jwt_manager.verify_refresh_token.side_effect = ValueError("Invalid token")
+        mock_jwt_manager.verify_token.side_effect = ValueError("Invalid token")
         mock_get_jwt_manager.return_value = mock_jwt_manager
-        
-        refresh_data = {
-            "refresh_token": "invalid_refresh_token"
-        }
-        
-        response = client.post("/api/v1/auth/refresh", json=refresh_data)
-        
+
+        client.cookies.set("refresh_token", "invalid_refresh_token")
+
+        response = client.post("/api/v1/auth/refresh")
+
         assert response.status_code == status.HTTP_401_UNAUTHORIZED
 
     @patch('app.api.dependencies.get_current_user')
@@ -259,10 +260,12 @@ class TestAuthEndpoints:
         
         headers = {"Authorization": "Bearer fake_token"}
         response = client.post("/api/v1/auth/logout", headers=headers)
-        
+
         assert response.status_code == status.HTTP_200_OK
         response_data = response.json()
-        assert response_data["message"] == "Successfully logged out"
+        assert response_data["message"] == "Logged out successfully"
+        assert response.cookies.get("refresh_token") == ""
+        client.cookies.clear()
 
     def test_logout_unauthorized(self, client: TestClient):
         """Test logout without authentication."""
@@ -331,14 +334,13 @@ class TestAuthIntegration:
         
         login_response = client.post("/api/v1/auth/login", json=login_data)
         assert login_response.status_code == status.HTTP_200_OK
-        
+
         login_data = login_response.json()
         assert "access_token" in login_data
-        assert "refresh_token" in login_data
-        
-        # Verify tokens are different (not reused)
         assert login_data["access_token"] == "integration_access_token"
-        assert login_data["refresh_token"] == "integration_refresh_token"
+        assert "refresh_token" not in login_data
+        assert login_response.cookies.get("refresh_token") == "integration_refresh_token"
+        client.cookies.clear()
 
 
 # Test data validation

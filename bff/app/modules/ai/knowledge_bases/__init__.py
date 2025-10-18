@@ -6,6 +6,13 @@ from app.modules.ai.knowledge_bases.models import (
 )
 from app.modules.ai.knowledge_bases.repository import KnowledgeBaseRepositoryProtocol
 from app.modules.ai.knowledge_bases.repository_impl import KnowledgeBaseRepository
+from app.modules.ai.knowledge_bases.schemas import (
+    KnowledgeBaseCreate,
+    KnowledgeBaseResponse,
+    KnowledgeBaseUpdate,
+    KnowledgeDocumentCreate,
+    KnowledgeDocumentResponse,
+)
 from app.modules.ai.knowledge_bases.service import KnowledgeService
 
 __all__ = [
@@ -13,5 +20,10 @@ __all__ = [
     "KnowledgeDocumentModel",
     "KnowledgeBaseRepositoryProtocol",
     "KnowledgeBaseRepository",
+    "KnowledgeBaseCreate",
+    "KnowledgeBaseUpdate",
+    "KnowledgeBaseResponse",
+    "KnowledgeDocumentCreate",
+    "KnowledgeDocumentResponse",
     "KnowledgeService",
 ]

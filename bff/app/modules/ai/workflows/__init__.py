@@ -9,6 +9,7 @@ from app.modules.ai.workflows.mention_parser import MentionParser
 from app.modules.ai.workflows.monitoring_service import MonitoringService
 from app.modules.ai.workflows.node_registry import NodeRegistry, get_node_registry
 from app.modules.ai.workflows.workflow_engine import WorkflowEngine
+from app.modules.ai.workflows.router import router
 
 __all__ = [
     "ContactInstanceManager",
@@ -20,5 +21,6 @@ __all__ = [
     "NodeRegistry",
     "get_node_registry",
     "WorkflowEngine",
+    "router",
     "tools",
 ]

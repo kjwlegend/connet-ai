@@ -20,7 +20,7 @@ from app.modules.conversations.models import (
 from app.modules.users.models import UserModel
 from app.modules.ai.workflows.workflow_engine import WorkflowEngine
 from app.modules.ai.workflows.contact_manager import ContactInstanceManager
-from app.services.base import BaseService
+from app.core.services import BaseService
 
 
 class ConversationService(BaseService):
