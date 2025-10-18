@@ -92,7 +92,7 @@ export const ROUTE_CONFIG: RouteConfig[] = [
   // Root path - 根据认证状态重定向
   {
     pattern: '/',
-    access: 'public', // 特殊处理：在middleware中根据认证状态重定向
+    access: 'public', // 特殊处理：在代理层中根据认证状态重定向
   },
 
   // Default - 其他路由默认需要保护
@@ -195,7 +195,7 @@ export function canAccessRoute(
 }
 
 /**
- * 获取保护路由列表（用于middleware）
+ * 获取保护路由列表（用于代理层）
  */
 export function getProtectedRoutes(): string[] {
   return ROUTE_CONFIG
